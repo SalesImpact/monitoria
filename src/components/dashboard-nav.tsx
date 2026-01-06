@@ -3,7 +3,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import {
   BarChart3,
@@ -21,6 +22,7 @@ import {
   FileText,
   MessageSquare,
   GraduationCap,
+  LogOut,
 } from 'lucide-react';
 
 const navigation = [
@@ -36,7 +38,22 @@ const navigation = [
 
 export default function DashboardNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut({ redirect: false });
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      console.error('Error logging out:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <>
@@ -76,11 +93,20 @@ export default function DashboardNav() {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-slate-700">
+          <div className="p-4 border-t border-slate-700 space-y-3">
             <div className="text-xs text-gray-400">
               <p className="font-medium">Dashboard DEMO</p>
               <p className="mt-1">Sistema de análise de treinamento para SDRs</p>
             </div>
+            <Button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              variant="ghost"
+              className="w-full justify-start text-gray-300 hover:text-white hover:bg-slate-700"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              {isLoggingOut ? 'Saindo...' : 'Sair'}
+            </Button>
           </div>
         </div>
       </aside>
@@ -131,6 +157,18 @@ export default function DashboardNav() {
                 </Link>
               );
             })}
+            <Button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleLogout();
+              }}
+              disabled={isLoggingOut}
+              variant="ghost"
+              className="w-full justify-start text-gray-300 hover:text-white hover:bg-slate-700"
+            >
+              <LogOut className="w-5 h-5 mr-3" />
+              {isLoggingOut ? 'Saindo...' : 'Sair'}
+            </Button>
           </div>
         )}
       </div>

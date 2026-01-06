@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,9 +38,11 @@ export default function LoginForm() {
       } else {
         toast({
           title: 'Login realizado com sucesso',
-          description: 'Redirecionando para o dashboard...',
+          description: 'Redirecionando...',
         });
-        router.push('/dashboard');
+        
+        router.push('/select-organization');
+        router.refresh();
       }
     } catch (error) {
       toast({

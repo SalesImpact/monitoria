@@ -74,72 +74,8 @@ function generateTags(criterio: string, categoria: string): string[] {
 }
 
 export async function GET() {
-  try {
-    const calls = await prisma.call.findMany({
-      where: {
-        averageScore: {
-          gte: 4.0,
-        },
-      },
-      include: {
-        scores: true,
-        sdr: true,
-      },
-      orderBy: {
-        averageScore: 'desc',
-      },
-      take: 10,
-    });
-
-    const examples: BestPracticeExample[] = [];
-
-    calls.forEach((call: typeof calls[0]) => {
-      if (!call.scores) return;
-
-      const highScoreCriteria: { [key: string]: number } = {};
-
-      Object.entries(call.scores).forEach(([key, value]) => {
-        if (typeof value === 'number' && value >= 4 && key !== 'id' && key !== 'callId') {
-          highScoreCriteria[key] = value;
-        }
-      });
-
-      Object.entries(highScoreCriteria).forEach(([criterio, score]) => {
-        const transcriptionLines = call.transcription?.split('\n') || [];
-        const relevantLines = transcriptionLines.slice(0, 10);
-        
-        examples.push({
-          id: `${call.id}_${criterio}`,
-          call_id: call.id,
-          sdr_name: call.sdrName,
-          criterio: formatCriteriaName(criterio),
-          categoria: getCategoryForCriteria(criterio),
-          score: score,
-          trecho_transcricao: relevantLines.join('\n'),
-          timestamp_inicio: 0,
-          timestamp_fim: 0,
-          audio_url: call.audioFile || undefined,
-          explicacao: generateExplanation(criterio, score),
-          tags: generateTags(criterio, getCategoryForCriteria(criterio)),
-        });
-      });
-    });
-
-    // Agrupa por categoria
-    const categorizedExamples: { [key: string]: BestPracticeExample[] } = {};
-    examples.forEach(example => {
-      if (!categorizedExamples[example.categoria]) {
-        categorizedExamples[example.categoria] = [];
-      }
-      categorizedExamples[example.categoria].push(example);
-    });
-
-    return NextResponse.json({ examples, categorizedExamples });
-  } catch (error) {
-    console.error('Erro ao buscar exemplos:', error);
-    return NextResponse.json({ 
-      examples: [], 
-      categorizedExamples: {} 
-    }, { status: 200 });
-  }
+  return NextResponse.json({ 
+    examples: [], 
+    categorizedExamples: {} 
+  }, { status: 200 });
 }

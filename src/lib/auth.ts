@@ -1,12 +1,10 @@
 
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@/lib/db';
-import bcrypt from 'bcryptjs';
+import { verifyPassword } from '@/lib/auth-utils';
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -19,22 +17,37 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // For the test admin account (without password in DB)
-        if (credentials.email === 'john@doe.com' && credentials.password === 'johndoe123') {
-          const user = await prisma.user.findUnique({
-            where: { email: 'john@doe.com' }
-          });
-          if (user) {
-            return {
-              id: user.id,
-              email: user.email,
-              name: user.name,
-              role: user.role,
-            };
-          }
+        const user = await prisma.user.findFirst({
+          where: { email: credentials.email },
+          include: { organization: true },
+        });
+
+        if (!user) {
+          return null;
         }
 
-        return null;
+        if (!user.password) {
+          return null;
+        }
+
+        const isValid = await verifyPassword(credentials.password, user.password);
+
+        if (!isValid) {
+          return null;
+        }
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLogin: new Date() },
+        });
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          organizationId: user.organizationId,
+        };
       }
     })
   ],
@@ -42,16 +55,28 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt'
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.role = user.role;
+        token.organizationId = user.organizationId;
+        // Não definir selectedOrganizationId automaticamente para admins
+        if (user.role !== 'admin') {
+          token.selectedOrganizationId = user.organizationId;
+        }
       }
+
+      if (trigger === 'update' && session?.selectedOrganizationId) {
+        token.selectedOrganizationId = session.selectedOrganizationId;
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.sub || '';
         session.user.role = token.role;
+        session.user.organizationId = token.organizationId;
+        session.user.selectedOrganizationId = token.selectedOrganizationId;
       }
       return session;
     }

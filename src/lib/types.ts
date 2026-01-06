@@ -570,3 +570,27 @@ export type DateRange = {
   from: Date | undefined
   to: Date | undefined
 }
+
+// ====================================
+// ORGANIZAÇÃO E MULTI-TENANCY
+// ====================================
+export type Organization = {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type UserWithOrganization = {
+  id: string;
+  name: string | null;
+  email: string;
+  role: string | null;
+  organizationId: string;
+  organization: Organization;
+  meetimeId: string | null;
+  lastLogin: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
