@@ -1,0 +1,176 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  role          String?         @default("sdr")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map(name: "accounts")
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map(name: "verificationtokens")
+}
+
+model SDR {
+  id       String @id @default(cuid())
+  name     String
+  email    String @unique
+  status   String @default("active") // active, inactive
+  hireDate DateTime @default(now())
+  
+  calls    Call[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map(name: "sdrs")
+}
+
+model Call {
+  id            String   @id @default(cuid())
+  sdrId         String
+  sdrName       String   // Denormalized for easy querying
+  client        String
+  prospectName  String
+  date          DateTime
+  duration      String
+  callType      String   // call_real, roleplay
+  result        String   // agendado, não_agendado, qualificação_sucesso
+  audioFile     String?  // filename of the audio
+  transcription String?
+  averageScore  Float?
+  
+  // NEW: Análise de Sentimento
+  sentimentAnalysis    Json?  // {overall, client, sdr, confidence, emotionalTone}
+  sentimentJourney     Json?  // [{timestamp, sentiment, intensity, speaker, text}]
+  
+  // NEW: Detecção de Tópicos
+  detectedTopics       Json?  // [{category, mentions, relevance, keywords, firstMentionAt}]
+  
+  // NEW: Palavras-chave
+  detectedKeywords     Json?  // [{word, type, count, sentiment_impact}]
+  
+  // NEW: Análise de Objeções
+  detectedObjections   Json?  // [{type, text, timestamp, wasOvercome, response, effectiveness}]
+  
+  // NEW: Análise de Linguagem Avançada
+  languageAnalysis     Json?  // {tone, powerWordsCount, weakWordsCount, powerWordsRatio, questionAnalysis, speechPaceEstimate, topPowerWords, topWeakWords}
+  
+  sdr           SDR      @relation(fields: [sdrId], references: [id])
+  scores        CallScore?
+  keywords      Keyword[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map(name: "calls")
+}
+
+model CallScore {
+  id     String @id @default(cuid())
+  callId String @unique
+  
+  // Abertura scores
+  saudacaoApresentacao    Int
+  apresentacaoEmpresa     Int
+  solicitacaoConfirmacaoNome Int
+  tomVoz                  Int
+  rapport                 Int
+  
+  // Validação de Objetivo scores
+  perguntasValidacao      Int
+  escutaAtiva            Int
+  pitchSolucao           Int
+  historiaCliente        Int
+  
+  // SPIN Selling scores
+  perguntasSituacao      Int
+  perguntasProblema      Int
+  perguntasImplicacao    Int
+  perguntasNecessidadeSolucao Int
+  
+  // Próximos Passos scores
+  confirmouEntendimento  Int
+  vendeuProximoPasso     Int
+  agendouConcluiu        Int
+  
+  // NEW: Sentimento scores
+  nivelEngajamentoCliente Int?
+  confiancaSdr           Int?
+  
+  // AI Feedback
+  aiFeedback             String?
+  
+  call Call @relation(fields: [callId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map(name: "call_scores")
+}
+
+model Keyword {
+  id     String @id @default(cuid())
+  callId String
+  word   String
+  
+  call Call @relation(fields: [callId], references: [id])
+  
+  @@map(name: "keywords")
+}

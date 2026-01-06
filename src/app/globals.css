@@ -1,0 +1,169 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 100% 12%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 174 100% 59%;
+    --accent-foreground: 210 100% 12%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 174 100% 59%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 174 100% 59%;
+    --accent-foreground: 210 100% 12%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 174 100% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Sales Impact Brand Colors */
+:root {
+  --sales-impact-dark: #1e293b;
+  --sales-impact-green: #30E3CA;
+  --sales-impact-blue: #3b82f6;
+  --sales-impact-purple: #a855f7;
+  --sales-impact-orange: #f97316;
+  --sales-impact-red: #ef4444;
+}
+
+.bg-brand-dark {
+  background-color: var(--sales-impact-dark);
+}
+
+.bg-brand-green {
+  background-color: var(--sales-impact-green);
+}
+
+.bg-brand-blue {
+  background-color: var(--sales-impact-blue);
+}
+
+.bg-brand-purple {
+  background-color: var(--sales-impact-purple);
+}
+
+.bg-brand-orange {
+  background-color: var(--sales-impact-orange);
+}
+
+.bg-brand-red {
+  background-color: var(--sales-impact-red);
+}
+
+.text-brand-dark {
+  color: var(--sales-impact-dark);
+}
+
+.text-brand-green {
+  color: var(--sales-impact-green);
+}
+
+.text-brand-blue {
+  color: var(--sales-impact-blue);
+}
+
+.text-brand-purple {
+  color: var(--sales-impact-purple);
+}
+
+.text-brand-orange {
+  color: var(--sales-impact-orange);
+}
+
+.border-brand-green {
+  border-color: var(--sales-impact-green);
+}
+
+/* Custom scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Animation utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-count-up {
+  animation: countUp 0.8s ease-out;
+}
+
+/* Hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.15);
+}

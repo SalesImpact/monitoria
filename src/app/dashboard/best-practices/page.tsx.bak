@@ -1,0 +1,289 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { BookOpen, Award, Star, TrendingUp, Volume2, FileText, Video, Play, CheckCircle2, Clock, GraduationCap } from 'lucide-react';
+import AudioPlayer from '@/components/audio-player';
+
+// Função para extrair exemplos de melhores práticas
+async function getBestPracticeExamples() {
+  const calls = await prisma.call.findMany({
+    where: {
+      averageScore: {
+        gte: 4.0, // Apenas chamadas com score >= 4.0
+      },
+    },
+    include: {
+      scores: true,
+      sdr: true,
+    },
+    orderBy: {
+      averageScore: 'desc',
+    },
+    take: 10,
+  });
+
+  const examples: any[] = [];
+
+  calls.forEach(call => {
+    if (!call.scores) return;
+
+    // Critérios de alta performance (score >= 4)
+    const highScoreCriteria: { [key: string]: number } = {};
+
+    Object.entries(call.scores).forEach(([key, value]) => {
+      if (typeof value === 'number' && value >= 4 && key !== 'id' && key !== 'callId') {
+        highScoreCriteria[key] = value;
+      }
+    });
+
+    Object.entries(highScoreCriteria).forEach(([criterio, score]) => {
+      const transcriptionLines = call.transcription?.split('\n') || [];
+      const relevantLines = transcriptionLines.slice(0, 10); // Primeiras linhas como exemplo
+      
+      examples.push({
+        id: `${call.id}_${criterio}`,
+        call_id: call.id,
+        sdr_name: call.sdrName,
+        criterio: formatCriteriaName(criterio),
+        categoria: getCategoryForCriteria(criterio),
+        score: score,
+        trecho_transcricao: relevantLines.join('\n'),
+        audio_url: call.audioFile,
+        client: call.client,
+        date: call.date,
+        explicacao: generateExplanation(criterio, score),
+        tags: generateTags(criterio, getCategoryForCriteria(criterio)),
+      });
+    });
+  });
+
+  return examples;
+}
+
+function getCategoryForCriteria(criterio: string): string {
+  const categories: { [key: string]: string } = {
+    'saudacaoApresentacao': 'Abertura',
+    'apresentacaoEmpresa': 'Abertura',
+    'solicitacaoConfirmacaoNome': 'Abertura',
+    'tomVoz': 'Abertura',
+    'rapport': 'Abertura',
+    'perguntasValidacao': 'Validação de Objetivo',
+    'escutaAtiva': 'Validação de Objetivo',
+    'pitchSolucao': 'Validação de Objetivo',
+    'historiaCliente': 'Validação de Objetivo',
+    'perguntasSituacao': 'SPIN Selling',
+    'perguntasProblema': 'SPIN Selling',
+    'perguntasImplicacao': 'SPIN Selling',
+    'perguntasNecessidadeSolucao': 'SPIN Selling',
+    'confirmouEntendimento': 'Próximos Passos',
+    'vendeuProximoPasso': 'Próximos Passos',
+    'agendouConcluiu': 'Próximos Passos',
+  };
+  return categories[criterio] || 'Outros';
+}
+
+function formatCriteriaName(criterio: string): string {
+  const names: { [key: string]: string } = {
+    'saudacaoApresentacao': 'Saudação e Apresentação',
+    'apresentacaoEmpresa': 'Apresentação da Empresa',
+    'solicitacaoConfirmacaoNome': 'Confirmação do Nome',
+    'tomVoz': 'Tom de Voz',
+    'rapport': 'Rapport',
+    'perguntasValidacao': 'Perguntas de Validação',
+    'escutaAtiva': 'Escuta Ativa',
+    'pitchSolucao': 'Pitch da Solução',
+    'historiaCliente': 'História do Cliente',
+    'perguntasSituacao': 'Perguntas de Situação (SPIN)',
+    'perguntasProblema': 'Perguntas de Problema (SPIN)',
+    'perguntasImplicacao': 'Perguntas de Implicação (SPIN)',
+    'perguntasNecessidadeSolucao': 'Perguntas de Necessidade (SPIN)',
+    'confirmouEntendimento': 'Confirmação de Entendimento',
+    'vendeuProximoPasso': 'Venda do Próximo Passo',
+    'agendouConcluiu': 'Agendamento/Conclusão',
+  };
+  return names[criterio] || criterio;
+}
+
+function generateExplanation(criterio: string, score: number): string {
+  const explanations: { [key: string]: string } = {
+    'rapport': 'SDR demonstrou excelente capacidade de criar conexão genuína com o prospect, usando técnicas de espelhamento e demonstrando interesse real.',
+    'perguntasSituacao': 'Perguntas de situação bem estruturadas que revelaram o contexto completo do prospect.',
+    'perguntasProblema': 'Identificação precisa das dores e desafios do prospect através de perguntas direcionadas.',
+    'perguntasImplicacao': 'Expandiu o impacto percebido do problema, fazendo o prospect refletir sobre as consequências.',
+    'escutaAtiva': 'Demonstrou escuta ativa exemplar, fazendo pausas, parafraseando e validando o que foi dito.',
+    'agendouConcluiu': 'Fechamento impecável com confirmação clara de próximos passos e agendamento efetivo.',
+  };
+  return explanations[criterio] || `Execução exemplar deste critério com pontuação ${score}/5.`;
+}
+
+function generateTags(criterio: string, categoria: string): string[] {
+  const baseTags = [categoria];
+  
+  const criterioTags: { [key: string]: string[] } = {
+    'rapport': ['Conexão', 'Empatia', 'Relacionamento'],
+    'perguntasSituacao': ['SPIN', 'Descoberta', 'Contexto'],
+    'perguntasProblema': ['SPIN', 'Dores', 'Desafios'],
+    'perguntasImplicacao': ['SPIN', 'Valor', 'Impacto'],
+    'escutaAtiva': ['Comunicação', 'Atenção', 'Validação'],
+    'agendouConcluiu': ['Fechamento', 'Próximos Passos', 'Compromisso'],
+  };
+  
+  return [...baseTags, ...(criterioTags[criterio] || [])];
+}
+
+export default async function BestPracticesPage() {
+  const examples = await getBestPracticeExamples();
+  
+  // Agrupa por categoria
+  const categorizedExamples: { [key: string]: any[] } = {};
+  examples.forEach(example => {
+    if (!categorizedExamples[example.categoria]) {
+      categorizedExamples[example.categoria] = [];
+    }
+    categorizedExamples[example.categoria].push(example);
+  });
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
+        <div className="flex items-center mb-2">
+          <BookOpen className="w-8 h-8 text-green-500 mr-3" />
+          <h1 className="text-3xl font-bold text-gray-900">Biblioteca de Melhores Práticas</h1>
+        </div>
+        <p className="text-gray-600">
+          Repositório de exemplos excepcionais para aprendizado e referência
+        </p>
+      </div>
+
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="border-2">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Total de Exemplos</p>
+                <p className="text-3xl font-bold text-gray-900">{examples.length}</p>
+              </div>
+              <Award className="w-10 h-10 text-yellow-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-2">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Categorias</p>
+                <p className="text-3xl font-bold text-gray-900">{Object.keys(categorizedExamples).length}</p>
+              </div>
+              <TrendingUp className="w-10 h-10 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="border-2">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Score Médio</p>
+                <p className="text-3xl font-bold text-gray-900">
+                  {(examples.reduce((acc, ex) => acc + ex.score, 0) / examples.length).toFixed(1)}
+                </p>
+              </div>
+              <Star className="w-10 h-10 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Examples by Category */}
+      {Object.entries(categorizedExamples).map(([categoria, categoryExamples]) => (
+        <div key={categoria}>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <span className="w-2 h-8 bg-brand-green rounded"></span>
+            {categoria}
+          </h2>
+          
+          <div className="grid grid-cols-1 gap-4">
+            {categoryExamples.slice(0, 5).map((example) => (
+              <Card key={example.id} className="card-hover border-2">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg text-brand-dark flex items-center gap-2">
+                        <Award className="w-5 h-5 text-yellow-500" />
+                        {example.criterio}
+                      </CardTitle>
+                      <CardDescription className="mt-1">
+                        {example.sdr_name} • {example.client} • {new Date(example.date).toLocaleDateString('pt-BR')}
+                      </CardDescription>
+                    </div>
+                    <Badge className="bg-green-100 text-green-800 text-lg font-bold">
+                      {example.score}/5
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-6 space-y-4">
+                  {/* Explanation */}
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <p className="text-sm text-blue-900">
+                      <strong>Por que é exemplar:</strong> {example.explicacao}
+                    </p>
+                  </div>
+
+                  {/* Audio (if available) */}
+                  {example.audio_url && (
+                    <div className="bg-white p-4 rounded-lg border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Volume2 className="w-4 h-4 text-brand-green" />
+                        <span className="text-sm font-semibold text-gray-900">Ouça o Exemplo</span>
+                      </div>
+                      <AudioPlayer audioFile={example.audio_url} />
+                    </div>
+                  )}
+
+                  {/* Transcription Excerpt */}
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FileText className="w-4 h-4 text-gray-600" />
+                      <span className="text-sm font-semibold text-gray-900">Trecho da Ligação</span>
+                    </div>
+                    <pre className="text-xs leading-relaxed text-gray-700 whitespace-pre-wrap max-h-40 overflow-y-auto">
+                      {example.trecho_transcricao}
+                    </pre>
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {example.tags.map((tag: string, idx: number) => (
+                      <Badge key={idx} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {examples.length === 0 && (
+        <Card className="p-12 text-center">
+          <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-600 mb-2">
+            Nenhum exemplo disponível ainda
+          </h3>
+          <p className="text-gray-500">
+            Exemplos serão adicionados automaticamente conforme ligações de alta performance forem registradas.
+          </p>
+        </Card>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,2371 @@
+{
+  "metadata": {
+    "total_calls": 5,
+    "analysis_date": "2025-10-21",
+    "calls_analyzed": [
+      "1c3fdc4c-d48b-4cdd-ae39-f1e99cce3063.mp3",
+      "d90b5750-eb03-4c93-bccf-5c2aa20d9316.mp3",
+      "1cc7741d-7dae-4fc9-9a24-d773dba6de23.mp3",
+      "0f8222fc-9c61-4530-84e4-46a3705e180a.mp3",
+      "b906037c-e363-49bb-aacc-bcd55f379c94.mp3"
+    ]
+  },
+  "calls": [
+    {
+      "id": "call_001_marcelo_syngenta",
+      "sdr_name": "Marcelo Silva",
+      "client": "Syngenta",
+      "prospect_name": "Fábio",
+      "date": "2025-10-15",
+      "duration": "01:31",
+      "call_type": "call_real",
+      "result": "não_agendado",
+      "audio_file": "1c3fdc4c-d48b-4cdd-ae39-f1e99cce3063.mp3",
+      "transcription": "Fábio: Alô?\nMarcelo: Alô?\nFábio: Alô?\nMarcelo: Alô, Fábio?\nFábio: Oi?\nMarcelo: Ô Fábio, é o Marcelo aqui da Corp Ferry, tudo bem?\nFábio: Tudo bom.\nMarcelo: Então, tá. Fábio, eu queria conversar contigo, se você me permitir, sobre uma iniciativa nossa, Corp Ferry, pra equipe de vendas da Syngenta. Será que a gente pode falar?\nFábio: Então, ô Marcelo, agora eu tô no trânsito aqui, e... vamos tentar marcar amanhã. Hoje eu já tô... tô meio ruim aqui que eu tô meio gripado, tudo, tô no trânsito, tô indo embora pra casa, cara.\nMarcelo: Claro, fica tranquilo.\nFábio: Eu preciso ter um pouco mais de qualidade aí pra poder atender vocês, tá?\nMarcelo: Não, lógico. Você prefere manhã ou tarde?\nFábio: Ah, tem que ser na... puta, tarde amanhã tá tudo enrolado, cara.\nMarcelo: Se quiser mais pro final da semana, o que for melhor pra você.\nFábio: Acho que é melhor. Deixa eu te fazer uma pergunta. Você já conversou com o pessoal nosso de FFE?\nMarcelo: Não, ainda não.\nFábio: É... que talvez aí seria um primeiro passo, hein? Pra eles entenderem aí, porque... eu acho.\nMarcelo: Certo. Aham.\nFábio: É, eu acho melhor você conversar com eles aí primeiro, pra depois a gente evoluir aí.\nMarcelo: Entendi. Não, tranquilo.\nFábio: A gente já tem um... tem um programa aí. Você tem o contato da pessoa, tudo?\nMarcelo: Não, aqui, pelo menos comigo não.\nFábio: Se você... se tiver, eu te agradeço.\nMarcelo: Tá bom. Eu... eu dou um jeito aí, eu te mando aí, tá?\nFábio: Tá. Eu vou te mandar um oi no WhatsApp, aí depois com calma você vê pra mim.\nMarcelo: Obrigado, viu, Fábio. Melhoras, viu?\nFábio: Tchau, tchau, obrigado.\nMarcelo: Tchau, tchau.",
+      "scores": {
+        "abertura": {
+          "saudacao_apresentacao": 5,
+          "apresentacao_empresa": 2,
+          "solicitacao_confirmacao_nome": 5,
+          "tom_voz": 4,
+          "rapport": 2
+        },
+        "validacao_objetivo": {
+          "perguntas_validacao": 1,
+          "escuta_ativa": 3,
+          "pitch_solucao": 2,
+          "historia_cliente": 1
+        },
+        "spin_selling": {
+          "perguntas_situacao": 1,
+          "perguntas_problema": 1,
+          "perguntas_implicacao": 1,
+          "perguntas_necessidade_solucao": 1
+        },
+        "proximos_passos": {
+          "confirmou_entendimento": 4,
+          "vendeu_proximo_passo": 2,
+          "agendou_concluiu": 2
+        },
+        "sentimento": {
+          "nivel_engajamento_cliente": 1,
+          "confianca_sdr": 3
+        }
+      },
+      "average_score": 2.0092307692307694,
+      "ai_feedback": "**Pontos Fortes:**\n1. **Profissionalismo e Educação:** Marcelo foi extremamente educado e respeitoso, especialmente ao lidar com a objeção de tempo e saúde de Fábio. Sua resposta 'Claro, fica tranquilo' e o encerramento com 'Melhoras, viu?' são excelentes para manter uma porta aberta para contatos futuros.\n2. **Adaptação à Objeção:** Ele não insistiu de forma agressiva quando o prospect disse que não era um bom momento, o que é positivo. Ele imediatamente tentou reagendar, mostrando flexibilidade.\n3. **Tom de Voz Agradável:** Sua voz é calma e profissional, o que transmite confiança e não soa como um 'vendedor desesperado'.\n\n**Oportunidades de Melhoria:**\n1. **Abertura sem 'Gancho':** A abordagem foi muito direta e genérica: 'queria conversar contigo... sobre uma iniciativa nossa'. Isso não gera curiosidade nem estabelece valor imediato. Faltou um 'gancho' que fizesse Fábio pensar 'isso pode ser interessante para mim'.\n2. **Falta Total de Qualificação:** A chamada foi 100% focada em apresentar e 0% em descobrir. Marcelo não fez nenhuma pergunta para entender o contexto de Fábio, seus desafios ou se ele era a pessoa certa. A metodologia SPIN Selling foi completamente ignorada.\n3. **Pitch Vago e Centrado no Emissor:** A frase 'uma iniciativa nossa... pra equipe de vendas' é extremamente vaga. Não explica o que é, que problema resolve ou que benefício gera.\n4. **Perda de Controle da Chamada:** O prospect rapidamente assumiu o controle da conversa. Foi Fábio quem diagnosticou o problema ('fale com FFE primeiro'), ditou o próximo passo e encerrou a chamada.\n5. **Agendamento Ineficaz:** A chamada terminou sem um compromisso concreto. A responsabilidade de enviar o contato ficou com Fábio, o que diminui drasticamente a chance de o contato acontecer.",
+      "keywords": [
+        "Fábio",
+        "Marcelo",
+        "Corp Ferry",
+        "Syngenta",
+        "Equipe de vendas",
+        "Iniciativa",
+        "Conversar",
+        "Trânsito",
+        "Gripado",
+        "Marcar",
+        "Amanhã",
+        "Tarde",
+        "Final da semana",
+        "FFE",
+        "Primeiro passo",
+        "Programa",
+        "Contato",
+        "WhatsApp"
+      ],
+      "sentiment_analysis": {
+        "overall": "negativo",
+        "client": "frustrado",
+        "sdr": "neutro",
+        "confidence": 95,
+        "emotionalTone": "Análise geral: negativo. Cliente demonstrou atitude frustrado, SDR apresentou postura neutro."
+      },
+      "sentiment_journey": [
+        {
+          "timestamp": 0,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " alô?"
+        },
+        {
+          "timestamp": 3,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " alô?"
+        },
+        {
+          "timestamp": 6,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " alô?"
+        },
+        {
+          "timestamp": 9,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " alô, fábio?"
+        },
+        {
+          "timestamp": 13,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " oi?"
+        },
+        {
+          "timestamp": 16,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " ô fábio, é o marcelo aqui da corp ferry, tudo bem?"
+        },
+        {
+          "timestamp": 19,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " tudo bom."
+        },
+        {
+          "timestamp": 22,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "sdr",
+          "text": " então, tá. fábio, eu queria conversar contigo, se você me permitir, sobre uma iniciativa nossa, cor"
+        },
+        {
+          "timestamp": 26,
+          "sentiment": "frustrado",
+          "intensity": 80,
+          "speaker": "client",
+          "text": " então, ô marcelo, agora eu tô no trânsito aqui, e... vamos tentar marcar amanhã. hoje eu já tô... t"
+        },
+        {
+          "timestamp": 29,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " claro, fica tranquilo."
+        },
+        {
+          "timestamp": 32,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " eu preciso ter um pouco mais de qualidade aí pra poder atender vocês, tá?"
+        },
+        {
+          "timestamp": 35,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " não, lógico. você prefere manhã ou tarde?"
+        },
+        {
+          "timestamp": 39,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " ah, tem que ser na... puta, tarde amanhã tá tudo enrolado, cara."
+        },
+        {
+          "timestamp": 42,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " se quiser mais pro final da semana, o que for melhor pra você."
+        },
+        {
+          "timestamp": 45,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " acho que é melhor. deixa eu te fazer uma pergunta. você já conversou com o pessoal nosso de ffe?"
+        },
+        {
+          "timestamp": 48,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " não, ainda não."
+        },
+        {
+          "timestamp": 52,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é... que talvez aí seria um primeiro passo, hein? pra eles entenderem aí, porque... eu acho."
+        },
+        {
+          "timestamp": 55,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " certo. aham."
+        },
+        {
+          "timestamp": 58,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é, eu acho melhor você conversar com eles aí primeiro, pra depois a gente evoluir aí."
+        },
+        {
+          "timestamp": 61,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " entendi. não, tranquilo."
+        },
+        {
+          "timestamp": 65,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " a gente já tem um... tem um programa aí. você tem o contato da pessoa, tudo?"
+        },
+        {
+          "timestamp": 68,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " não, aqui, pelo menos comigo não."
+        },
+        {
+          "timestamp": 71,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " se você... se tiver, eu te agradeço."
+        },
+        {
+          "timestamp": 74,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "sdr",
+          "text": " tá bom. eu... eu dou um jeito aí, eu te mando aí, tá?"
+        },
+        {
+          "timestamp": 78,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tá. eu vou te mandar um oi no whatsapp, aí depois com calma você vê pra mim."
+        },
+        {
+          "timestamp": 81,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " obrigado, viu, fábio. melhoras, viu?"
+        },
+        {
+          "timestamp": 84,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tchau, tchau, obrigado."
+        },
+        {
+          "timestamp": 87,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tchau, tchau."
+        }
+      ],
+      "detected_topics": [
+        {
+          "category": "comparações",
+          "mentions": 4,
+          "relevance": 60,
+          "keywords": [
+            "melhor"
+          ],
+          "firstMentionAt": 90
+        },
+        {
+          "category": "urgência",
+          "mentions": 4,
+          "relevance": 60,
+          "keywords": [
+            "agora",
+            "já"
+          ],
+          "firstMentionAt": 38
+        },
+        {
+          "category": "tomada_decisão",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "equipe"
+          ],
+          "firstMentionAt": 29
+        }
+      ],
+      "detected_keywords": [
+        {
+          "word": "não",
+          "type": "negative",
+          "count": 6,
+          "sentiment_impact": -120
+        },
+        {
+          "word": "bom",
+          "type": "positive",
+          "count": 2,
+          "sentiment_impact": 40
+        },
+        {
+          "word": "ruim",
+          "type": "negative",
+          "count": 1,
+          "sentiment_impact": -20
+        },
+        {
+          "word": "talvez",
+          "type": "neutral",
+          "count": 1,
+          "sentiment_impact": 0
+        },
+        {
+          "word": "equipe",
+          "type": "neutral",
+          "count": 1,
+          "sentiment_impact": 0
+        }
+      ],
+      "detected_objections": [],
+      "language_analysis": {
+        "tone": "passivo",
+        "powerWordsCount": 0,
+        "weakWordsCount": 7,
+        "powerWordsRatio": 0,
+        "questionAnalysis": {
+          "openQuestions": 1,
+          "closedQuestions": 13,
+          "totalQuestions": 14,
+          "openQuestionsRatio": 7.142857142857142
+        },
+        "speechPaceEstimate": {
+          "wordsPerMinute": 148,
+          "category": "ideal"
+        },
+        "topPowerWords": [],
+        "topWeakWords": [
+          "talvez",
+          "acho",
+          "meio",
+          "tentar"
+        ]
+      }
+    },
+    {
+      "id": "call_002_dayane_familianet",
+      "sdr_name": "Dayane Costa",
+      "client": "Família Net Telecom",
+      "prospect_name": "Fábio",
+      "date": "2025-10-16",
+      "duration": "02:21",
+      "call_type": "call_real",
+      "result": "agendado",
+      "audio_file": "d90b5750-eb03-4c93-bccf-5c2aa20d9316.mp3",
+      "transcription": "Fábio: Alô?\nDayane: Alô, boa tarde!\nFábio: Boa tarde.\nDayane: É do telefone da Família Net?\nFábio: Isso. Com quem eu falo?\nDayane: É, quem fala aqui é a Dayane da empresa Sirion. Quem fala?\nFábio: Fábio.\nDayane: Fábio, tudo bem, Fábio?\nFábio: Tudo bem.\nDayane: Você consegue falar rapidamente?\nFábio: Tô um pouco ocupado. De onde você tá falando?\nDayane: É da... é da Dayane da empresa Sirion.\nFábio: É... é... sobre o que, amiga?\nDayane: Seria referente à Sirion mesmo. É, a Sirion é uma empresa de tecnologia que tem aí mais de 30 anos de mercado, que a gente fornece infraestrutura para empresas que provêm internet, como... como a Família Net, tá? E aí, eu entrei em contato a pedido aqui do meu gerente. O que que ele propõe? Hum, ele queria bater um papo, né, com vocês, né, explicar como que a gente ajuda outras empresas também desse mesmo segmento, eh, a crescer, né, ter uma internet mais estável, enfim, e aumentar aí a quantidade de... de clientes de vocês. Eh, e aí ele gostaria de bater um papo online, rápido, ali de uns 15, no máximo 20 minutos. E aí eu gostaria de saber se você tem alguma disponibilidade nessa semana ou na próxima.\nFábio: Próxima quarta-feira?\nDayane: Pode, pode ser sim. Eh, tem um horário que fica mais... mais fácil pra você, que você está mais disponível?\nFábio: Pode ser às... às 14 horas.\nDayane: Às 14 horas. Então fica pra quarta, dia 22, às 14 horas?\nFábio: Isso.\nDayane: Tá ótimo aí.\nDayane: Certo. Você só confirma pra mim, por favor, o seu e-mail, que eu vou te encaminhar aqui o convite por e-mail, pra você poder falar com o nosso gerente.\nFábio: familianet...\nDayane: Família Net...\nFábio: telecom...\nDayane: Telecom... Telecom com M no final, não é?\nFábio: Isso.\nDayane: Certo.\nFábio: @outlook...\nDayane: Opa.\nFábio: ...\nDayane: outlook.com. Tudo bem, então. Vou encaminhar o convite, tá? Eh, vai... essa... essa reunião vai ser eu, o gerente e você, tá? Vai alguns outros nomes, só pra você não estranhar. Vai alguns outros nomes no convite, mas é opcional. Por exemplo, caso você fique doente, aí meu chefe entra, e algumas outras pessoas que também não vão entrar na reunião.\nFábio: Ok.\nDayane: Tá bom? A gente se fala então na quarta. Muito obrigado, viu, Fábio?\nFábio: Nada, minha querida. Tchau, tchau.\nDayane: Tchau, tchau.",
+      "scores": {
+        "abertura": {
+          "saudacao_apresentacao": 5,
+          "apresentacao_empresa": 4,
+          "solicitacao_confirmacao_nome": 5,
+          "tom_voz": 5,
+          "rapport": 2
+        },
+        "validacao_objetivo": {
+          "perguntas_validacao": 1,
+          "escuta_ativa": 2,
+          "pitch_solucao": 4,
+          "historia_cliente": 2
+        },
+        "spin_selling": {
+          "perguntas_situacao": 1,
+          "perguntas_problema": 1,
+          "perguntas_implicacao": 1,
+          "perguntas_necessidade_solucao": 1
+        },
+        "proximos_passos": {
+          "confirmou_entendimento": 4,
+          "vendeu_proximo_passo": 3,
+          "agendou_concluiu": 5
+        },
+        "sentimento": {
+          "nivel_engajamento_cliente": 3,
+          "confianca_sdr": 3
+        }
+      },
+      "average_score": 2.581538461538462,
+      "ai_feedback": "**Pontos Fortes:**\n1. **Clareza e Profissionalismo:** A SDR Dayane tem uma comunicação excelente. Sua dicção é clara, o tom de voz é profissional e agradável, transmitindo confiança.\n2. **Objetividade e Eficiência:** A ligação foi rápida e direta ao ponto. Para um prospect que se declarou 'um pouco ocupado', essa abordagem pode ter sido eficaz para não perder a oportunidade.\n3. **Execução do Agendamento:** O processo de agendamento foi impecável. Ela conduziu a logística de forma natural, confirmou todos os detalhes, soletrou o e-mail mentalmente ('com M no final') e explicou os próximos passos de forma transparente.\n4. **Pitch Relevante:** Embora genérico, o pitch foi bem direcionado. Ao mencionar que a Sirion fornece 'infraestrutura para empresas que provêm internet', ela imediatamente criou relevância para o negócio da 'Família Net'.\n\n**Oportunidades de Melhoria:**\n1. **Falta de Qualificação:** A maior falha da ligação foi a ausência total de perguntas de descoberta. A SDR não qualificou o lead. Não sabemos se Fábio é o decisor, se a Família Net tem algum problema real de instabilidade ou se eles têm planos de crescimento.\n2. **Abordagem Transacional vs. Consultiva:** A ligação seguiu um roteiro de 'apresentar e agendar', em vez de uma abordagem consultiva de 'ouvir, entender e ajudar'.\n3. **Construção de Valor:** O valor da próxima reunião não foi totalmente construído. Foi apresentado como um 'bate-papo' para 'explicar como a gente ajuda'.",
+      "keywords": [
+        "Família Net",
+        "Sirion",
+        "Empresa de tecnologia",
+        "Infraestrutura",
+        "Provedor de internet",
+        "Clientes",
+        "Gerente",
+        "Bate-papo",
+        "Disponibilidade",
+        "Quarta-feira",
+        "14 horas",
+        "E-mail",
+        "Convite",
+        "Reunião",
+        "Telecom",
+        "Outlook",
+        "Internet mais estável"
+      ],
+      "sentiment_analysis": {
+        "overall": "neutro",
+        "client": "neutro",
+        "sdr": "neutro",
+        "confidence": 90,
+        "emotionalTone": "Análise geral: neutro. Cliente demonstrou atitude neutro, SDR apresentou postura neutro."
+      },
+      "sentiment_journey": [
+        {
+          "timestamp": 0,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " alô?"
+        },
+        {
+          "timestamp": 4,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " alô, boa tarde!"
+        },
+        {
+          "timestamp": 8,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " boa tarde."
+        },
+        {
+          "timestamp": 12,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " é do telefone da família net?"
+        },
+        {
+          "timestamp": 16,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " isso. com quem eu falo?"
+        },
+        {
+          "timestamp": 20,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " é, quem fala aqui é a dayane da empresa sirion. quem fala?"
+        },
+        {
+          "timestamp": 24,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " fábio."
+        },
+        {
+          "timestamp": 28,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " fábio, tudo bem, fábio?"
+        },
+        {
+          "timestamp": 32,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tudo bem."
+        },
+        {
+          "timestamp": 36,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " você consegue falar rapidamente?"
+        },
+        {
+          "timestamp": 40,
+          "sentiment": "frustrado",
+          "intensity": 80,
+          "speaker": "client",
+          "text": " tô um pouco ocupado. de onde você tá falando?"
+        },
+        {
+          "timestamp": 44,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " é da... é da dayane da empresa sirion."
+        },
+        {
+          "timestamp": 48,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é... é... sobre o que, amiga?"
+        },
+        {
+          "timestamp": 52,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " seria referente à sirion mesmo. é, a sirion é uma empresa de tecnologia que tem aí mais de 30 anos "
+        },
+        {
+          "timestamp": 56,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " próxima quarta-feira?"
+        },
+        {
+          "timestamp": 60,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "sdr",
+          "text": " pode, pode ser sim. eh, tem um horário que fica mais... mais fácil pra você, que você está mais dis"
+        },
+        {
+          "timestamp": 64,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " pode ser às... às 14 horas."
+        },
+        {
+          "timestamp": 68,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " às 14 horas. então fica pra quarta, dia 22, às 14 horas?"
+        },
+        {
+          "timestamp": 72,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " isso."
+        },
+        {
+          "timestamp": 76,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " tá ótimo aí."
+        },
+        {
+          "timestamp": 80,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "sdr",
+          "text": " certo. você só confirma pra mim, por favor, o seu e-mail, que eu vou te encaminhar aqui o convite p"
+        },
+        {
+          "timestamp": 84,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " familianet..."
+        },
+        {
+          "timestamp": 88,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " família net..."
+        },
+        {
+          "timestamp": 92,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " telecom..."
+        },
+        {
+          "timestamp": 96,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " telecom... telecom com m no final, não é?"
+        },
+        {
+          "timestamp": 100,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " isso."
+        },
+        {
+          "timestamp": 104,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " certo."
+        },
+        {
+          "timestamp": 108,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " @outlook..."
+        },
+        {
+          "timestamp": 112,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " opa."
+        },
+        {
+          "timestamp": 116,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " ..."
+        },
+        {
+          "timestamp": 120,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " outlook.com. tudo bem, então. vou encaminhar o convite, tá? eh, vai... essa... essa reunião vai ser"
+        },
+        {
+          "timestamp": 124,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " ok."
+        },
+        {
+          "timestamp": 128,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "sdr",
+          "text": " tá bom? a gente se fala então na quarta. muito obrigado, viu, fábio?"
+        },
+        {
+          "timestamp": 132,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " nada, minha querida. tchau, tchau."
+        },
+        {
+          "timestamp": 136,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tchau, tchau."
+        }
+      ],
+      "detected_topics": [
+        {
+          "category": "concorrência",
+          "mentions": 3,
+          "relevance": 45,
+          "keywords": [
+            "mercado",
+            "outro"
+          ],
+          "firstMentionAt": 42
+        },
+        {
+          "category": "suporte",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "ajuda"
+          ],
+          "firstMentionAt": 63
+        },
+        {
+          "category": "dúvidas_técnicas",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "tecnologia"
+          ],
+          "firstMentionAt": 39
+        },
+        {
+          "category": "objeções",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "mas"
+          ],
+          "firstMentionAt": 157
+        },
+        {
+          "category": "urgência",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "rápido"
+          ],
+          "firstMentionAt": 80
+        }
+      ],
+      "detected_keywords": [
+        {
+          "word": "não",
+          "type": "negative",
+          "count": 3,
+          "sentiment_impact": -60
+        },
+        {
+          "word": "rápido",
+          "type": "positive",
+          "count": 1,
+          "sentiment_impact": 20
+        },
+        {
+          "word": "fácil",
+          "type": "positive",
+          "count": 1,
+          "sentiment_impact": 20
+        },
+        {
+          "word": "bom",
+          "type": "positive",
+          "count": 1,
+          "sentiment_impact": 20
+        }
+      ],
+      "detected_objections": [
+        {
+          "type": "autoridade",
+          "text": "certo. você só confirma pra mim, por favor, o seu e-mail, que eu vou te encaminhar aqui o convite por e-mail, pra você poder falar com o nosso gerente",
+          "timestamp": 102,
+          "wasOvercome": false,
+          "response": "Família Net...",
+          "effectiveness": 50
+        }
+      ],
+      "language_analysis": {
+        "tone": "profissional",
+        "powerWordsCount": 0,
+        "weakWordsCount": 3,
+        "powerWordsRatio": 0,
+        "questionAnalysis": {
+          "openQuestions": 9,
+          "closedQuestions": 9,
+          "totalQuestions": 18,
+          "openQuestionsRatio": 50
+        },
+        "speechPaceEstimate": {
+          "wordsPerMinute": 134,
+          "category": "ideal"
+        },
+        "topPowerWords": [],
+        "topWeakWords": [
+          "mas",
+          "só"
+        ]
+      }
+    },
+    {
+      "id": "call_003_fernanda_mtc",
+      "sdr_name": "Fernanda Alves",
+      "client": "MTC Energia",
+      "prospect_name": "Diego",
+      "date": "2025-10-17",
+      "duration": "06:22",
+      "call_type": "call_real",
+      "result": "qualificação_sucesso",
+      "audio_file": "1cc7741d-7dae-4fc9-9a24-d773dba6de23.mp3",
+      "transcription": "Diego: Alô?\nFernanda: Alô. Alô, boa tarde. Diego?\nDiego: Pois não.\nFernanda: Diego, aqui é a Fernanda da Sales Impact, tudo bem?\nDiego: Da onde?\nFernanda: Da Sales Impact. Nós nos falamos... Isso, mas você... a gente nos... nos falamos há duas semanas atrás, porém a gente não conseguiu dar continuidade, eu tô retornando. Eh, bom, vou ser bem objetiva, Diego, pra não tomar muito do seu tempo, só pra saber, eh, se o que a gente gostaria de propor tá embaixo aí das suas responsabilidades. Eh, bom, tem alguns dias, tá, que eu venho tentando falar com a MTC Energia, pra nos apresentarmos como possíveis parceiros para geração de demanda e aceleração comercial. Eh, e aí te dando um um breve contexto, eh, nós não somos uma agência de marketing, tá, nem um call center tradicional. A gente atua de forma bem consultiva em tração comercial, então a gente entrega oportunidade de negócio com empresas que vocês gostariam de fazer negócio. A gente faz esse trabalho, por exemplo, pra Comgás, pra Siemens, pra, eh, Mosaic Fertilizantes. Então a gente entrega reuniões agendadas com decisores e com a dor, pro seu time de vendas conseguir apresentar uma proposta e fechar um contrato, tá? E aí toda a estrutura por nossa conta. Base de dados, enriquecimento de base, ferramenta, time, e na ponta você já recebe a oportunidade. E aí eu vi, né, que você tem um papel aí bem importante, você é gestor de contas de contratos comerciais, e aí eu queria saber se... se é olhando mais pra essa frente, ou se você tá mais lá fechando de fato a negociação.\nDiego: Então, eu, particularmente, eu sou o responsável que faço a gestão de todos os contratos comerciais da companhia, tá?\nFernanda: Tá.\nDiego: Eh, hoje nós temos uma segregação do time, onde tem o gestor de novos negócios, que eu posso te passar depois o contato, é ele que ele tá liderando essa parte.\nFernanda: Tá.\nDiego: De novas contratações, de novos leads, novos trabalhos, vamos dizer assim, de campo, né?\nFernanda: Aham.\nDiego: Então, eh, obviamente, eu dou o suporte, né? Eu também faço, também fiz parte há pouco tempo, eh, do time de novos negócios, só que agora eu tô sentado numa nova cadeira. Então, teoricamente, ele que cuida dessa parte. E eu acho que ele pode ser a pessoa mais indicada pra você tá propondo aí alguma... alguma oferta, né? Acho que é a pessoa mais propícia pra você tá... fazendo esse contato e tentando dar continuidade à conversa.\nFernanda: Tá ótimo.\nDiego: É, como eu falei, eu faço hoje a parte mais de estruturação do que é... do que foi firmado, né? E a manutenção desses contratos.\nFernanda: Aham.\nDiego: E aí a parte comercial, ela tá muito vinculada na... na parte mesmo da gestão mesmo do contrato. Então, ou seja, aditivos, renovações, eh, inclusão de novos produtos dentro do contrato. Então, isso aí quem faz esse gerenciamento sou eu.\nFernanda: Ah, tá. Entendi.\nDiego: Entendeu?\nFernanda: Entendi. Então, eu posso...\nDiego: Meio que vocês divide ali, né? Ele no caso ele valida, né? Se faz parte...\nFernanda: Isso, ele faz, ele... ele faz mais a prospecção de novos... novas oportunidades, né?\nDiego: Então, é... então ele vai ao mercado, ele procura novos clientes. Eu acho que tá o mais aderente ao que tu me propôs agora.\nFernanda: Isso.\nDiego: Né? Então, de levantar essas informações de lead, qualificar esses leads... Nós temos um time, né, eh, justamente de inteligência de mercado que hoje, eh, tá um pouco...\nFernanda: Time de SDR?\nDiego: Hã?\nFernanda: Vocês possuem time de SDR?\nDiego: Nós temos, temos um time de inteligência de mercado, né? E e e e a gente faz isso aí, eh, dentro do do perfil, né? A gente hoje não tá tão ativo, mas como eu falei, eu acho que ele pode ser a pessoa mais indicada pra você falar e tentar dar continuidade a esse papo, entendeu?\nFernanda: Não, ótimo, perfeito. Com quem seria, ô Diego?\nDiego: Seria o Oliver.\nFernanda: Oliver.\nDiego: É.\nFernanda: Tá. Oliver. E o Oliver... Oliver também tem um contato corporativo?\nDiego: Vou te passar aqui, só um minutinho.\nFernanda: Tá. É o Johnny? É o Oliver Johnny?\nDiego: Isso, Oliver Johnny, isso mesmo.\nFernanda: Ah, tá ótimo. Já tentou falar com ele?\nFernanda: Isso, ele... então, ele tava aqui, né? Na verdade, você tava em primeiro e ele tava em segundo aqui. Eu... eu queria... como... como tá você tava ali, tava descrito que era gestor de contas e contrato comerciais, eu achei que era diretamente com você, por isso que eu não entrei em contato com ele.\nDiego: A gente até não, a gente tá fazendo esse trabalho... a gente faz esse trabalho em conjunto, entendeu?\nFernanda: Ah, entendi.\nDiego: Mas a equipe é ele que tá cuidando dessas novas oportunidades.\nFernanda: Tá ótimo, então.\nDiego: Tá?\nFernanda: Quer anotar o telefone dele?\nDiego: Sim, claro, por favor.\nFernanda: Só um minutinho só.\nDiego: Tá.\nFernanda: Anota aí, por favor.\nDiego: Tá.\nFernanda: É o 21 também?\nDiego: É 21 também.\nFernanda: Tá.\nDiego: É 99...\nFernanda: Tá.\nDiego: 804...\nFernanda: Tá.\nDiego: 2585.\nFernanda: 2585. Perfeito. E aí, só uma dúvida, Diego, se no caso for interessante pro Oliver, eh, posso falar pra ele te convidar, né, caso a gente consiga apresentar algum bate-papo, pra você conhecer também, ou você pega depois se realmente só depois da...\nDiego: Eu acho que é mais fácil direcionar a ele, ele sendo o ponto focal e depois, tendo o desdobramento se for válido para a companhia, a gente marca uma nova etapa.\nFernanda: Com... com você também. Perfeito, então. Ótimo.\nDiego: Tá?\nFernanda: Muito obrigada pela ajuda, tá? Vou tentar falar com o Oliver.\nDiego: Nada, boa sorte aí, boas vendas.\nFernanda: Obrigada, tchau, tchau.\nDiego: Valeu, tchau, tchau.",
+      "scores": {
+        "abertura": {
+          "saudacao_apresentacao": 5,
+          "apresentacao_empresa": 4,
+          "solicitacao_confirmacao_nome": 5,
+          "tom_voz": 5,
+          "rapport": 4
+        },
+        "validacao_objetivo": {
+          "perguntas_validacao": 5,
+          "escuta_ativa": 5,
+          "pitch_solucao": 5,
+          "historia_cliente": 5
+        },
+        "spin_selling": {
+          "perguntas_situacao": 4,
+          "perguntas_problema": 1,
+          "perguntas_implicacao": 1,
+          "perguntas_necessidade_solucao": 1
+        },
+        "proximos_passos": {
+          "confirmou_entendimento": 5,
+          "vendeu_proximo_passo": 5,
+          "agendou_concluiu": 5
+        },
+        "sentimento": {
+          "nivel_engajamento_cliente": 2,
+          "confianca_sdr": 5
+        }
+      },
+      "average_score": 3.676923076923077,
+      "ai_feedback": "**Pontos Fortes:**\n1. **Adaptabilidade e Inteligência de Vendas:** O maior destaque da chamada. Ao perceber que Diego não era o decisor para 'novos negócios', Fernanda não desistiu. Ela habilmente transformou a chamada de uma tentativa de agendamento para uma chamada de investigação, extraindo informações valiosas sobre a estrutura da equipe e conseguindo o contato direto da pessoa certa.\n2. **Pitch de Valor Claro e Conciso:** A explicação sobre o que a Sales Impact faz foi excelente. Ela diferenciou a empresa de 'agências de marketing' e 'call centers', focando no resultado final: 'reuniões agendadas com decisores e com a dor'. O uso de cases de clientes (Comgás, Siemens) foi perfeito para construir autoridade rapidamente.\n3. **Profissionalismo e Tom de Voz:** Fernanda manteve um tom de voz calmo, profissional e confiante durante toda a ligação, o que ajudou a manter Diego engajado e disposto a colaborar.\n4. **Escuta Ativa:** Ela claramente ouviu e processou o que Diego disse, fazendo perguntas de confirmação que mostraram seu entendimento e mantiveram a conversa fluindo.\n\n**Oportunidades de Melhoria:**\n1. **Pedido de Introdução (Warm Intro):** A maior oportunidade perdida. Após conseguir o contato de Oliver, ela poderia ter elevado o nível pedindo uma introdução: 'Diego, muito obrigada! Você se importaria de enviar um e-mail rápido para o Oliver nos apresentando?'\n2. **Explorar a Dor Indiretamente:** Mesmo sabendo que Diego não era o decisor, ela poderia ter feito uma pergunta sutil para validar a necessidade na empresa, como: 'Entendi, Diego. E hoje, a geração de novas oportunidades de negócio é um foco importante para a equipe do Oliver?'",
+      "keywords": [
+        "Sales Impact",
+        "Geração de demanda",
+        "Aceleração comercial",
+        "Oportunidade de negócio",
+        "Reuniões agendadas",
+        "Decisores",
+        "Time de vendas",
+        "Fechar contrato",
+        "Gestor de contas",
+        "Contratos comerciais",
+        "Novos negócios",
+        "Leads",
+        "Prospecção",
+        "Inteligência de mercado",
+        "SDR",
+        "Comgás",
+        "Siemens",
+        "MTC Energia"
+      ],
+      "sentiment_analysis": {
+        "overall": "positivo",
+        "client": "negativo",
+        "sdr": "confiante",
+        "confidence": 95,
+        "emotionalTone": "Análise geral: positivo. Cliente demonstrou atitude negativo, SDR apresentou postura confiante."
+      },
+      "sentiment_journey": [
+        {
+          "timestamp": 0,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " alô?"
+        },
+        {
+          "timestamp": 5,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " alô. alô, boa tarde. diego?"
+        },
+        {
+          "timestamp": 11,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " pois não."
+        },
+        {
+          "timestamp": 17,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " diego, aqui é a fernanda da sales impact, tudo bem?"
+        },
+        {
+          "timestamp": 23,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " da onde?"
+        },
+        {
+          "timestamp": 28,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "sdr",
+          "text": " da sales impact. nós nos falamos... isso, mas você... a gente nos... nos falamos há duas semanas at"
+        },
+        {
+          "timestamp": 34,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " então, eu, particularmente, eu sou o responsável que faço a gestão de todos os contratos comerciais"
+        },
+        {
+          "timestamp": 40,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá."
+        },
+        {
+          "timestamp": 46,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " eh, hoje nós temos uma segregação do time, onde tem o gestor de novos negócios, que eu posso te pas"
+        },
+        {
+          "timestamp": 52,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá."
+        },
+        {
+          "timestamp": 57,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " de novas contratações, de novos leads, novos trabalhos, vamos dizer assim, de campo, né?"
+        },
+        {
+          "timestamp": 63,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " aham."
+        },
+        {
+          "timestamp": 69,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " então, eh, obviamente, eu dou o suporte, né? eu também faço, também fiz parte há pouco tempo, eh, d"
+        },
+        {
+          "timestamp": 75,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " tá ótimo."
+        },
+        {
+          "timestamp": 81,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é, como eu falei, eu faço hoje a parte mais de estruturação do que é... do que foi firmado, né? e a"
+        },
+        {
+          "timestamp": 86,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " aham."
+        },
+        {
+          "timestamp": 92,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " e aí a parte comercial, ela tá muito vinculada na... na parte mesmo da gestão mesmo do contrato. en"
+        },
+        {
+          "timestamp": 98,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " ah, tá. entendi."
+        },
+        {
+          "timestamp": 104,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " entendeu?"
+        },
+        {
+          "timestamp": 109,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " entendi. então, eu posso..."
+        },
+        {
+          "timestamp": 115,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " meio que vocês divide ali, né? ele no caso ele valida, né? se faz parte..."
+        },
+        {
+          "timestamp": 121,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " isso, ele faz, ele... ele faz mais a prospecção de novos... novas oportunidades, né?"
+        },
+        {
+          "timestamp": 127,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " então, é... então ele vai ao mercado, ele procura novos clientes. eu acho que tá o mais aderente ao"
+        },
+        {
+          "timestamp": 133,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " isso."
+        },
+        {
+          "timestamp": 138,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " né? então, de levantar essas informações de lead, qualificar esses leads... nós temos um time, né, "
+        },
+        {
+          "timestamp": 144,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " time de sdr?"
+        },
+        {
+          "timestamp": 150,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " hã?"
+        },
+        {
+          "timestamp": 156,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " vocês possuem time de sdr?"
+        },
+        {
+          "timestamp": 162,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " nós temos, temos um time de inteligência de mercado, né? e e e e a gente faz isso aí, eh, dentro do"
+        },
+        {
+          "timestamp": 167,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " não, ótimo, perfeito. com quem seria, ô diego?"
+        },
+        {
+          "timestamp": 173,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " seria o oliver."
+        },
+        {
+          "timestamp": 179,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " oliver."
+        },
+        {
+          "timestamp": 185,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é."
+        },
+        {
+          "timestamp": 191,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá. oliver. e o oliver... oliver também tem um contato corporativo?"
+        },
+        {
+          "timestamp": 196,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " vou te passar aqui, só um minutinho."
+        },
+        {
+          "timestamp": 202,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá. é o johnny? é o oliver johnny?"
+        },
+        {
+          "timestamp": 208,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " isso, oliver johnny, isso mesmo."
+        },
+        {
+          "timestamp": 214,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " ah, tá ótimo. já tentou falar com ele?"
+        },
+        {
+          "timestamp": 219,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " isso, ele... então, ele tava aqui, né? na verdade, você tava em primeiro e ele tava em segundo aqui"
+        },
+        {
+          "timestamp": 225,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " a gente até não, a gente tá fazendo esse trabalho... a gente faz esse trabalho em conjunto, entende"
+        },
+        {
+          "timestamp": 231,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " ah, entendi."
+        },
+        {
+          "timestamp": 237,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " mas a equipe é ele que tá cuidando dessas novas oportunidades."
+        },
+        {
+          "timestamp": 243,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " tá ótimo, então."
+        },
+        {
+          "timestamp": 248,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tá?"
+        },
+        {
+          "timestamp": 254,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " quer anotar o telefone dele?"
+        },
+        {
+          "timestamp": 260,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " sim, claro, por favor."
+        },
+        {
+          "timestamp": 266,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " só um minutinho só."
+        },
+        {
+          "timestamp": 272,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tá."
+        },
+        {
+          "timestamp": 277,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " anota aí, por favor."
+        },
+        {
+          "timestamp": 283,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tá."
+        },
+        {
+          "timestamp": 289,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " é o 21 também?"
+        },
+        {
+          "timestamp": 295,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é 21 também."
+        },
+        {
+          "timestamp": 300,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá."
+        },
+        {
+          "timestamp": 306,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é 99..."
+        },
+        {
+          "timestamp": 312,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá."
+        },
+        {
+          "timestamp": 318,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " 804..."
+        },
+        {
+          "timestamp": 324,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tá."
+        },
+        {
+          "timestamp": 329,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " 2585."
+        },
+        {
+          "timestamp": 335,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " 2585. perfeito. e aí, só uma dúvida, diego, se no caso for interessante pro oliver, eh, posso falar"
+        },
+        {
+          "timestamp": 341,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " eu acho que é mais fácil direcionar a ele, ele sendo o ponto focal e depois, tendo o desdobramento "
+        },
+        {
+          "timestamp": 347,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " com... com você também. perfeito, então. ótimo."
+        },
+        {
+          "timestamp": 353,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tá?"
+        },
+        {
+          "timestamp": 358,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " muito obrigada pela ajuda, tá? vou tentar falar com o oliver."
+        },
+        {
+          "timestamp": 364,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " nada, boa sorte aí, boas vendas."
+        },
+        {
+          "timestamp": 370,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " obrigada, tchau, tchau."
+        },
+        {
+          "timestamp": 376,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " valeu, tchau, tchau."
+        }
+      ],
+      "detected_topics": [
+        {
+          "category": "contratos",
+          "mentions": 7,
+          "relevance": 100,
+          "keywords": [
+            "contrato"
+          ],
+          "firstMentionAt": 37
+        },
+        {
+          "category": "objeções",
+          "mentions": 4,
+          "relevance": 60,
+          "keywords": [
+            "mas",
+            "porém"
+          ],
+          "firstMentionAt": 6
+        },
+        {
+          "category": "urgência",
+          "mentions": 4,
+          "relevance": 60,
+          "keywords": [
+            "agora",
+            "já"
+          ],
+          "firstMentionAt": 67
+        },
+        {
+          "category": "concorrência",
+          "mentions": 3,
+          "relevance": 45,
+          "keywords": [
+            "mercado"
+          ],
+          "firstMentionAt": 99
+        },
+        {
+          "category": "suporte",
+          "mentions": 3,
+          "relevance": 45,
+          "keywords": [
+            "suporte",
+            "ajuda",
+            "dúvida"
+          ],
+          "firstMentionAt": 64
+        },
+        {
+          "category": "prazos",
+          "mentions": 2,
+          "relevance": 30,
+          "keywords": [
+            "tempo"
+          ],
+          "firstMentionAt": 12
+        },
+        {
+          "category": "funcionalidades",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "ferramenta"
+          ],
+          "firstMentionAt": 40
+        },
+        {
+          "category": "tomada_decisão",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "equipe"
+          ],
+          "firstMentionAt": 146
+        }
+      ],
+      "detected_keywords": [
+        {
+          "word": "não",
+          "type": "negative",
+          "count": 8,
+          "sentiment_impact": -160
+        },
+        {
+          "word": "perfeito",
+          "type": "positive",
+          "count": 3,
+          "sentiment_impact": 60
+        },
+        {
+          "word": "bom",
+          "type": "positive",
+          "count": 2,
+          "sentiment_impact": 40
+        },
+        {
+          "word": "interessante",
+          "type": "positive",
+          "count": 1,
+          "sentiment_impact": 20
+        },
+        {
+          "word": "fácil",
+          "type": "positive",
+          "count": 1,
+          "sentiment_impact": 20
+        },
+        {
+          "word": "dúvida",
+          "type": "negative",
+          "count": 1,
+          "sentiment_impact": -20
+        },
+        {
+          "word": "equipe",
+          "type": "neutral",
+          "count": 1,
+          "sentiment_impact": 0
+        }
+      ],
+      "detected_objections": [
+        {
+          "type": "autoridade",
+          "text": "da sales impact. nós nos falamos... isso, mas você... a gente nos... nos falamos há duas semanas atrás, porém a gente não conseguiu dar continuidade, ",
+          "timestamp": 13,
+          "wasOvercome": false,
+          "response": "Tá.",
+          "effectiveness": 50
+        },
+        {
+          "type": "autoridade",
+          "text": "ah, tá ótimo. já tentou falar com ele?",
+          "timestamp": 100,
+          "wasOvercome": false,
+          "response": "Isso, ele... então, ele tava aqui, né? Na verdade, você tava em primeiro e ele tava em segundo aqui. Eu... eu queria... como... como tá você tava ali, tava descrito que era gestor de contas e contrato",
+          "effectiveness": 50
+        },
+        {
+          "type": "confiança",
+          "text": "2585. perfeito. e aí, só uma dúvida, diego, se no caso for interessante pro oliver, eh, posso falar pra ele te convidar, né, caso a gente consiga apre",
+          "timestamp": 158,
+          "wasOvercome": false,
+          "response": "Com... com você também. Perfeito, então. Ótimo.",
+          "effectiveness": 50
+        },
+        {
+          "type": "autoridade",
+          "text": "muito obrigada pela ajuda, tá? vou tentar falar com o oliver.",
+          "timestamp": 169,
+          "wasOvercome": false,
+          "response": "Obrigada, tchau, tchau.",
+          "effectiveness": 50
+        }
+      ],
+      "language_analysis": {
+        "tone": "passivo",
+        "powerWordsCount": 4,
+        "weakWordsCount": 19,
+        "powerWordsRatio": 16.666666666666664,
+        "questionAnalysis": {
+          "openQuestions": 17,
+          "closedQuestions": 16,
+          "totalQuestions": 33,
+          "openQuestionsRatio": 51.515151515151516
+        },
+        "speechPaceEstimate": {
+          "wordsPerMinute": 118,
+          "category": "lento"
+        },
+        "topPowerWords": [
+          "oportunidade"
+        ],
+        "topWeakWords": [
+          "acho",
+          "meio",
+          "tentar",
+          "mas",
+          "porém"
+        ]
+      }
+    },
+    {
+      "id": "call_004_ana_cargill",
+      "sdr_name": "Ana Paula Rodrigues",
+      "client": "Cargill",
+      "prospect_name": "Fernanda",
+      "date": "2025-10-18",
+      "duration": "04:35",
+      "call_type": "call_real",
+      "result": "não_agendado",
+      "audio_file": "0f8222fc-9c61-4530-84e4-46a3705e180a.mp3",
+      "transcription": "Ana: Alô, Fernanda?\nFernanda: Oi.\nAna: Oi, Fernanda, eu sou a Ana. Eu falo da Sales Impact, tudo bem?\nFernanda: Tudo bem.\nAna: Eh, Fernanda, eu tô mapeando o cenário referente à execução de eventos, né? De algumas empresas que entraram aí pra... pra nossa mira pra uma solução de gestão de audiência. Seria contigo dentro da Cargill?\nFernanda: Eh, então, depende. São várias... A Cargill é bem... a Cargill é bem grande. Eu sou responsável pela área de Food, uma das enterprises do Food Manufacturing. Eh...\nAna: E aí dentro dessa área vocês costumam executar eventos anualmente?\nFernanda: A gente... que tipo de evento? Por exemplo, convenção de vendas ou evento com clientes?\nAna: Isso, tanto convenção quanto evento com clientes. Por quê? Eh, só pra eu contextualizar pra ti, tá? Eh, a gente hoje trabalha com uma solução, que é o Audience IQ, eh, onde a gente ajuda aí, porque a gente acabou identificando que chega ali na hora de, de conseguir as confirmações, o público certo ali com o fit correto pro evento, eh, às vezes é uma, a parte que mais toma tempo do time de marketing e é uma correria, né? Então, identificando isso, a gente criou a solução onde nós fazemos isso pra empresa, né? Então, toda a parte desde a execução ali, eh, de uma base qualificada, né, de acordo com o que vocês segmentarem pra gente, até a parte de envio ali dos convites através de cadência, confirmações de forma ativa, né, então via telefone, LinkedIn, WhatsApp. E aí a gente faz toda essa parte de garantia que tenha um público correto dentro do evento, pra que realmente se torne oportunidades de venda, né? Pra que realmente se torne oportunidades comerciais. Eh, a gente até brinca que pior do que uma sala vazia é uma sala cheia de pessoas que não têm o fit correto ali pra estarem usufruindo, participando daquilo que foi proposto, né? E aí hoje é isso que a gente tem. Pra essa parte que você atua hoje, você acredita que faria sentido? Vocês já passaram por alguma situação parecida com essa de ter que correr atrás do público certo, de não ter ali...\nFernanda: Não. Hoje a gente... a gente tem uma operação bem madura e a gente já tem umas agências que a gente trabalha. Então, esse é um ponto, tá? Você já trabalha com a Cargill hoje, alguma unidade, algum...?\nAna: Hoje não.\nFernanda: Não, então, porque a gente não tá trabalhando com... A gente, nós somos três o que a gente chama enterprises aqui, né? Então, por isso que eu perguntei se você já trabalhava com alguma. Então eu sou responsável por uma dessas enterprises. Existem outras duas. Mas a gente não tá... não tá cadastrando, né, não tá trabalhando com fornecedores novos pra, pra nada. A gente tem um trabalho global que foi feito no ano passado pra esse cadastro de fornecedores. Então, de agora até o final do próximo ano, com certeza a gente não vai trabalhar com, com novos fornecedores. A não ser que seja alguma coisa muito que a gente não tenha, que a gente, né, apareça algo novo que a gente...\nAna: Algo que vocês não preveem.\nFernanda: Isso, que a gente, mas que a gente não tenha, né? Assim, ah, é uma coisa nova que eu não tenho nenhum fornecedor e alguma coisa urgente. Se não, a gente segue, que a gente fez esse trabalho de uniformização no ano passado. Então, todos, cada país tinha um, então teve um trabalho bem grande da área de procurement fazendo isso, né, então trabalhando com os negócios, pra todos os tipos de, de fornecedores, de eventos, de informação, não só de marketing, tem outros tipos também, eh, de serviços. Então, nesse, até, né, nesse um ano e, nesse próximo um ano e meio, a gente trabalha por ano fiscal americano. Então, que começa em junho. Então, até o final, até agosto de 27, a gente, certamente não, não vai trabalhar, a não ser que seja uma emergência, mas com novos fornecedores.\nAna: Tá bom, então, Fê. De alguma forma, assim, se surgir alguma demanda parecida, que seja necessária ali pra vocês, tiver, né, sei lá, às vezes pode acontecer de tá tudo um boom ali, precisar de uma ajuda externa, aí eu me deixo à disposição pra gente poder apresentar um pouquinho, tirar dúvidas, saber ali como poderíamos atuar, mas se surgir essa demanda. Tá bom?\nFernanda: Tá ótimo, muito obrigada.\nAna: Obrigada a você, viu? Beijo.\nFernanda: Tchau, tchau.\nAna: Tchau, tchau.",
+      "scores": {
+        "abertura": {
+          "saudacao_apresentacao": 5,
+          "apresentacao_empresa": 4,
+          "solicitacao_confirmacao_nome": 5,
+          "tom_voz": 4,
+          "rapport": 2
+        },
+        "validacao_objetivo": {
+          "perguntas_validacao": 4,
+          "escuta_ativa": 4,
+          "pitch_solucao": 5,
+          "historia_cliente": 1
+        },
+        "spin_selling": {
+          "perguntas_situacao": 3,
+          "perguntas_problema": 1,
+          "perguntas_implicacao": 1,
+          "perguntas_necessidade_solucao": 2
+        },
+        "proximos_passos": {
+          "confirmou_entendimento": 1,
+          "vendeu_proximo_passo": 3,
+          "agendou_concluiu": 1
+        },
+        "sentimento": {
+          "nivel_engajamento_cliente": 1,
+          "confianca_sdr": 3
+        }
+      },
+      "average_score": 2.4276923076923076,
+      "ai_feedback": "**Pontos Fortes:**\n1. **Clareza e Articulação:** A SDR tem uma comunicação excelente. Ela é clara, objetiva e explica o valor da sua solução de forma muito competente e detalhada. O pitch foi o ponto alto da ligação.\n2. **Profissionalismo e Educação:** Manteve um tom profissional durante toda a chamada, mesmo ao receber uma objeção forte. Sua forma de encerrar a ligação, aceitando a resposta e se colocando à disposição, foi muito madura.\n3. **Estrutura da Chamada:** A ligação teve uma estrutura lógica e bem definida: apresentação, motivo do contato, validação da pessoa, pitch da solução e tentativa de qualificação.\n\n**Oportunidades de Melhoria:**\n1. **Falar Menos, Perguntar Mais (SPIN Selling):** A maior oportunidade está na transição do pitch para a descoberta. Em vez de descrever os problemas que outras empresas enfrentam, ela deveria ter usado perguntas abertas para fazer a prospect falar sobre a sua própria realidade.\n2. **Objeção de 'Já temos agências':** A prospect mencionou que já tem agências. A SDR ignorou essa informação e continuou o pitch. Uma abordagem melhor seria pausar e explorar isso: 'Entendi, Fernanda. E essas agências que vocês trabalham hoje já entregam um serviço focado em garantir o fit do público?'\n3. **Construção de Rapport:** A chamada foi muito transacional. Uma pequena quebra de padrão no início poderia ter aquecido um pouco mais a conversa.",
+      "keywords": [
+        "Cargill",
+        "Execução de eventos",
+        "Gestão de audiência",
+        "Solução",
+        "Food Manufacturing",
+        "Convenção de vendas",
+        "Evento com clientes",
+        "Confirmações",
+        "Público certo",
+        "Time de marketing",
+        "Oportunidades de venda",
+        "Fornecedores",
+        "Procurement",
+        "Agências",
+        "Audience IQ"
+      ],
+      "sentiment_analysis": {
+        "overall": "negativo",
+        "client": "frustrado",
+        "sdr": "neutro",
+        "confidence": 95,
+        "emotionalTone": "Análise geral: negativo. Cliente demonstrou atitude frustrado, SDR apresentou postura neutro."
+      },
+      "sentiment_journey": [
+        {
+          "timestamp": 0,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " alô, fernanda?"
+        },
+        {
+          "timestamp": 14,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " oi."
+        },
+        {
+          "timestamp": 28,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " oi, fernanda, eu sou a ana. eu falo da sales impact, tudo bem?"
+        },
+        {
+          "timestamp": 43,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tudo bem."
+        },
+        {
+          "timestamp": 57,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " eh, fernanda, eu tô mapeando o cenário referente à execução de eventos, né? de algumas empresas que"
+        },
+        {
+          "timestamp": 72,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " eh, então, depende. são várias... a cargill é bem... a cargill é bem grande. eu sou responsável pel"
+        },
+        {
+          "timestamp": 86,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " e aí dentro dessa área vocês costumam executar eventos anualmente?"
+        },
+        {
+          "timestamp": 101,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " a gente... que tipo de evento? por exemplo, convenção de vendas ou evento com clientes?"
+        },
+        {
+          "timestamp": 115,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " isso, tanto convenção quanto evento com clientes. por quê? eh, só pra eu contextualizar pra ti, tá?"
+        },
+        {
+          "timestamp": 130,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " não. hoje a gente... a gente tem uma operação bem madura e a gente já tem umas agências que a gente"
+        },
+        {
+          "timestamp": 144,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " hoje não."
+        },
+        {
+          "timestamp": 159,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " não, então, porque a gente não tá trabalhando com... a gente, nós somos três o que a gente chama en"
+        },
+        {
+          "timestamp": 173,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " algo que vocês não preveem."
+        },
+        {
+          "timestamp": 188,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "sdr",
+          "text": " isso, que a gente, mas que a gente não tenha, né? assim, ah, é uma coisa nova que eu não tenho nenh"
+        },
+        {
+          "timestamp": 202,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " tá bom, então, fê. de alguma forma, assim, se surgir alguma demanda parecida, que seja necessária a"
+        },
+        {
+          "timestamp": 217,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "sdr",
+          "text": " tá ótimo, muito obrigada."
+        },
+        {
+          "timestamp": 231,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " obrigada a você, viu? beijo."
+        },
+        {
+          "timestamp": 246,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "sdr",
+          "text": " tchau, tchau."
+        },
+        {
+          "timestamp": 260,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tchau, tchau."
+        }
+      ],
+      "detected_topics": [
+        {
+          "category": "urgência",
+          "mentions": 6,
+          "relevance": 90,
+          "keywords": [
+            "urgente",
+            "agora",
+            "já"
+          ],
+          "firstMentionAt": 132
+        },
+        {
+          "category": "objeções",
+          "mentions": 4,
+          "relevance": 60,
+          "keywords": [
+            "mas"
+          ],
+          "firstMentionAt": 8
+        },
+        {
+          "category": "suporte",
+          "mentions": 3,
+          "relevance": 45,
+          "keywords": [
+            "ajuda",
+            "dúvida"
+          ],
+          "firstMentionAt": 36
+        },
+        {
+          "category": "concorrência",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "outro"
+          ],
+          "firstMentionAt": 146
+        },
+        {
+          "category": "prazos",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "tempo"
+          ],
+          "firstMentionAt": 44
+        },
+        {
+          "category": "contratos",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "acordo"
+          ],
+          "firstMentionAt": 53
+        },
+        {
+          "category": "comparações",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "pior"
+          ],
+          "firstMentionAt": 70
+        }
+      ],
+      "detected_keywords": [
+        {
+          "word": "não",
+          "type": "negative",
+          "count": 20,
+          "sentiment_impact": -400
+        },
+        {
+          "word": "bom",
+          "type": "positive",
+          "count": 2,
+          "sentiment_impact": 40
+        }
+      ],
+      "detected_objections": [
+        {
+          "type": "confiança",
+          "text": "isso, tanto convenção quanto evento com clientes. por quê? eh, só pra eu contextualizar pra ti, tá? eh, a gente hoje trabalha com uma solução, que é o",
+          "timestamp": 75,
+          "wasOvercome": false,
+          "response": "Não. Hoje a gente... a gente tem uma operação bem madura e a gente já tem umas agências que a gente trabalha. Então, esse é um ponto, tá? Você já trabalha com a Cargill hoje, alguma unidade, algum...?",
+          "effectiveness": 40
+        },
+        {
+          "type": "confiança",
+          "text": "tá bom, então, fê. de alguma forma, assim, se surgir alguma demanda parecida, que seja necessária ali pra vocês, tiver, né, sei lá, às vezes pode acon",
+          "timestamp": 132,
+          "wasOvercome": false,
+          "response": "Tá ótimo, muito obrigada.",
+          "effectiveness": 50
+        }
+      ],
+      "language_analysis": {
+        "tone": "casual",
+        "powerWordsCount": 5,
+        "weakWordsCount": 10,
+        "powerWordsRatio": 31.25,
+        "questionAnalysis": {
+          "openQuestions": 9,
+          "closedQuestions": 11,
+          "totalQuestions": 20,
+          "openQuestionsRatio": 45
+        },
+        "speechPaceEstimate": {
+          "wordsPerMinute": 131,
+          "category": "ideal"
+        },
+        "topPowerWords": [
+          "solução",
+          "oportunidade"
+        ],
+        "topWeakWords": [
+          "tipo",
+          "meio",
+          "mas",
+          "só"
+        ]
+      }
+    },
+    {
+      "id": "call_005_danielle_lcm",
+      "sdr_name": "Danielle Mendes",
+      "client": "LCM Consultoria",
+      "prospect_name": "Ramon",
+      "date": "2025-10-19",
+      "duration": "05:38",
+      "call_type": "call_real",
+      "result": "agendado",
+      "audio_file": "b906037c-e363-49bb-aacc-bcd55f379c94.mp3",
+      "transcription": "Recepcionista: LCM.\nDanielle: Oi, boa tarde. Aqui é a Danielle da Positivo. Eu gostaria de falar com o Ramon.\nRecepcionista: Só um momento.\n[Música de espera]\nRamon: Alô?\nDanielle: Oi, Ramon, boa tarde. Aqui quem fala é a Danielle da Positivo Tecnologia, tudo bem?\nRamon: Tudo, e com você?\nDanielle: Bem também. Ramon, obrigada por me atender. Eu prometo que vou ser breve no contato. Na verdade, eu venho tentando falar com você há alguns dias, porque no passado a Positivo teve um contato aí com a LCM e, recentemente, vocês foram citados numa reunião aqui de diretoria, né? A gente tá com uma nova gestora de contas regional, que é a Jessica, e ela pediu que eu entrasse em contato para alinhar um bate-papo com você. Ah, não sei se você vem acompanhando, Ramon, mas a Positivo, ela tem investido bastante na linha corporativa dela, e o contato que a gente está fazendo hoje é para falar sobre a parte de inovação, as novidades que estão acontecendo aqui internamente, né? Devido a gente ter feito aí a aquisição de serviços da Algar Tech, nos tornamos também parceiros da Microsoft na parte de licenciamento. E mesmo que vocês não tenham uma demanda por agora, a ideia é mesmo estreitar o relacionamento com vocês. Quem sabe também a gente conseguir enviar alguns equipamentos para vocês testarem, né? E eu queria verificar se você tem aí 30 minutinhos na sua agenda pra gente poder alinhar esse bate-papo.\nRamon: Tem. Coloca quinta-feira em algum... alguma parte da manhã, que eu consigo antes de uma hora.\nDanielle: Ah, perfeito. Deixa eu só já puxar aqui a agenda da Jessica, para ver esse horário aqui com você. Aproveitando, Ramon, pra gente ser bem assertivo durante esse bate-papo, deixa eu só confirmar uma informação. Hoje o parque de vocês está estruturado mais com uso de computadores ou notebooks?\nRamon: Computadores.\nDanielle: Computadores, né? E você sabe me dizer, eh, em média aí quantas máquinas vocês têm em operação?\nRamon: Aqui no escritório central deve ter umas 200.\nDanielle: Duzentas máquinas, tá. Eu tenho agenda aqui na quinta-feira, hã, às 9:30. Funciona pra você?\nRamon: Pode ser.\nDanielle: Perfeito. Como eu falei, é 30 minutinhos mesmo, tá? Hoje a empresa, ela tem mais de uma unidade, Ramon?\nRamon: É...\nDanielle: Tem filiais?\nRamon: A gente tem, mas a... eles trabalham de forma... eh... eles têm autonomia para comprar por eles, entendeu? Ou seja, a compra do escritório central não influencia na compra da obra, não.\nDanielle: Ah, sim. Perfeito. Mas se você for... mas assim, somando as duas... as outras unidades, então, daria um total aí que a empresa tem 200 computadores? Seria mais ou menos isso, né?\nRamon: Não. Ou você acha que passa? Somando... porque a gente tá no Brasil todo, né? Somando tudo, tem uns 13.000 computadores espalhados por aí.\nDanielle: É bastante. E aí você cuida das outras unidades também? Você tá à frente ou só dessa unidade?\nRamon: Não, a obra tem total autonomia para comprar por lá, para fazer da forma que eles quiserem.\nDanielle: Uhum. E hoje você cuida só dessa unidade específica, né? Seria...\nRamon: Só, só do escritório central.\nDanielle: Tá. E hoje o parque de vocês, ele é multimarca?\nRamon: É, é multimarca.\nDanielle: Multimarcas. E vocês têm alguma previsão aí de expansão ou renovação no parque nos próximos anos?\nRamon: Ah, depende. A gente trabalha muito com preventivo, então, ou seja, a gente vai substituindo peça, mais do que trocando a máquina toda em si.\nDanielle: Uhum, tá. Perfeito. Para finalizar, eu até comentei que a gente se tornou parceiro aí da Microsoft na parte de licenciamento, né? Esse é um tema, Ramon, que seria interessante a gente levar para vocês ali durante o bate-papo ou você acha que...\nRamon: Eu trabalho... eu trabalho com o Google Workspace, eu não trabalho com a Microsoft, não. E a licença eu já compro... o Windows já junto com... com o computador. E o Office eu não uso, né, que eu uso é o pacote Google Workspace, o Google Sheets, o Google Planilha...\nDanielle: Uhum.\nRamon: ...o Google Docs.\nDanielle: Tá, perfeito. Então, talvez nesse momento não seria tão interessante a gente trazer esse tema, né? Quem sabe aí um... um pouco mais pra frente.\nRamon: É, porque da Microsoft o que eu uso é a licença dos... dos computadores, né? O Windows 11, né?\nDanielle: Uhum, perfeito. Aí para finalizar, eu vou pedir uma gentileza: o teu e-mail, pra gente poder mandar o invite, e o teu telefone corporativo, só pra mandar um lembrete da... do bate-papo.\nRamon: É ramonf@lcmconsult.com.br.\nDanielle: lcmconsult.com.br. E o seu telefone?\nRamon: É 31.\nDanielle: Sim.\nRamon: 3298-7050.\nDanielle: Esse é o seu ramal direto, né?\nRamon: Esse é o meu direto, é.\nDanielle: Perfeito. Então vou fazer o contato por lá. Você tem um telefone celular também corporativo?\nRamon: Tenho. Peraí que eu vou te passar o número do que cai direto aqui em mim, peraí só um minutinho.\nDanielle: Só pra gente poder mandar um lembrete por lá.\nRamon: É 31. Uhum. 99647-5711.\nDanielle: Perfeito. Ramon, então ficou alinhado, tá bem? Agradeço seu tempinho e sua atenção. Desejo aí uma ótima semana, até quinta-feira.\nRamon: Até.\nDanielle: Tchau, tchau.\nRamon: Tchau.",
+      "scores": {
+        "abertura": {
+          "saudacao_apresentacao": 5,
+          "apresentacao_empresa": 4,
+          "solicitacao_confirmacao_nome": 5,
+          "tom_voz": 5,
+          "rapport": 4
+        },
+        "validacao_objetivo": {
+          "perguntas_validacao": 5,
+          "escuta_ativa": 5,
+          "pitch_solucao": 4,
+          "historia_cliente": 2
+        },
+        "spin_selling": {
+          "perguntas_situacao": 5,
+          "perguntas_problema": 1,
+          "perguntas_implicacao": 1,
+          "perguntas_necessidade_solucao": 2
+        },
+        "proximos_passos": {
+          "confirmou_entendimento": 5,
+          "vendeu_proximo_passo": 5,
+          "agendou_concluiu": 5
+        },
+        "sentimento": {
+          "nivel_engajamento_cliente": 3,
+          "confianca_sdr": 5
+        }
+      },
+      "average_score": 3.6953846153846155,
+      "ai_feedback": "**Pontos Fortes:**\n1. **Gancho de Abertura Excelente:** A menção de que a empresa do prospect foi 'citada em uma reunião de diretoria' é um dos melhores ganchos possíveis. Isso cria relevância instantânea e faz o prospect se sentir importante.\n2. **Objetividade e Eficiência:** A SDR foi direta ao ponto, respeitando o tempo do prospect. Ela conseguiu qualificar, apresentar o objetivo e agendar a reunião de forma muito eficiente.\n3. **Qualificação Eficaz:** As perguntas sobre o parque de máquinas (computadores vs. notebooks, quantidade, multimarca, processo de renovação) foram perfeitas para uma chamada inicial de qualificação.\n4. **Escuta Ativa e Adaptação:** Quando ela abordou o licenciamento Microsoft e ouviu que ele usa Google Workspace, ela imediatamente reconheceu que o tema não era relevante e concordou em deixá-lo de lado. Isso demonstra respeito e inteligência.\n5. **Fechamento para o Próximo Passo:** Ela foi assertiva e clara ao pedir os 30 minutos na agenda, sugerir um horário e coletar os dados para o convite. A execução do agendamento foi impecável.\n\n**Oportunidades de Melhoria:**\n1. **Aprofundamento em Dores (SPIN):** Quando Ramon mencionou que 'trabalha muito com preventivo... substituindo peça', essa era uma porta de entrada para investigar dores: 'Interessante essa abordagem. E quais os maiores desafios de gerenciar a substituição de peças em um parque multimarca com 200 máquinas?'\n2. **Conexão do Pitch com a Qualificação:** As informações coletadas não foram usadas para fortalecer o pitch da reunião. Ela poderia ter conectado: 'Como vocês gerenciam um parque multimarca, seria interessante a Jessica mostrar como nossa nova linha corporativa pode simplificar essa gestão.'",
+      "keywords": [
+        "Positivo Tecnologia",
+        "LCM",
+        "Ramon",
+        "Reunião de diretoria",
+        "Linha corporativa",
+        "Inovação",
+        "Algar Tech",
+        "Microsoft",
+        "Licenciamento",
+        "Google Workspace",
+        "Computadores",
+        "Parque de máquinas",
+        "Escritório central",
+        "Multimarca",
+        "Preventivo",
+        "Agendamento"
+      ],
+      "sentiment_analysis": {
+        "overall": "positivo",
+        "client": "neutro",
+        "sdr": "confiante",
+        "confidence": 95,
+        "emotionalTone": "Análise geral: positivo. Cliente demonstrou atitude neutro, SDR apresentou postura confiante."
+      },
+      "sentiment_journey": [
+        {
+          "timestamp": 0,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " lcm."
+        },
+        {
+          "timestamp": 6,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " oi, boa tarde. aqui é a danielle da positivo. eu gostaria de falar com o ramon."
+        },
+        {
+          "timestamp": 13,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " só um momento."
+        },
+        {
+          "timestamp": 26,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " alô?"
+        },
+        {
+          "timestamp": 33,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " oi, ramon, boa tarde. aqui quem fala é a danielle da positivo tecnologia, tudo bem?"
+        },
+        {
+          "timestamp": 39,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tudo, e com você?"
+        },
+        {
+          "timestamp": 46,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " bem também. ramon, obrigada por me atender. eu prometo que vou ser breve no contato. na verdade, eu"
+        },
+        {
+          "timestamp": 53,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tem. coloca quinta-feira em algum... alguma parte da manhã, que eu consigo antes de uma hora."
+        },
+        {
+          "timestamp": 59,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " ah, perfeito. deixa eu só já puxar aqui a agenda da jessica, para ver esse horário aqui com você. a"
+        },
+        {
+          "timestamp": 66,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " computadores."
+        },
+        {
+          "timestamp": 72,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " computadores, né? e você sabe me dizer, eh, em média aí quantas máquinas vocês têm em operação?"
+        },
+        {
+          "timestamp": 79,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " aqui no escritório central deve ter umas 200."
+        },
+        {
+          "timestamp": 86,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " duzentas máquinas, tá. eu tenho agenda aqui na quinta-feira, hã, às 9:30. funciona pra você?"
+        },
+        {
+          "timestamp": 92,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " pode ser."
+        },
+        {
+          "timestamp": 99,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " perfeito. como eu falei, é 30 minutinhos mesmo, tá? hoje a empresa, ela tem mais de uma unidade, ra"
+        },
+        {
+          "timestamp": 106,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é..."
+        },
+        {
+          "timestamp": 112,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tem filiais?"
+        },
+        {
+          "timestamp": 119,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " a gente tem, mas a... eles trabalham de forma... eh... eles têm autonomia para comprar por eles, en"
+        },
+        {
+          "timestamp": 125,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " ah, sim. perfeito. mas se você for... mas assim, somando as duas... as outras unidades, então, dari"
+        },
+        {
+          "timestamp": 132,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " não. ou você acha que passa? somando... porque a gente tá no brasil todo, né? somando tudo, tem uns"
+        },
+        {
+          "timestamp": 139,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é bastante. e aí você cuida das outras unidades também? você tá à frente ou só dessa unidade?"
+        },
+        {
+          "timestamp": 145,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " não, a obra tem total autonomia para comprar por lá, para fazer da forma que eles quiserem."
+        },
+        {
+          "timestamp": 152,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " uhum. e hoje você cuida só dessa unidade específica, né? seria..."
+        },
+        {
+          "timestamp": 159,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " só, só do escritório central."
+        },
+        {
+          "timestamp": 165,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tá. e hoje o parque de vocês, ele é multimarca?"
+        },
+        {
+          "timestamp": 172,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é, é multimarca."
+        },
+        {
+          "timestamp": 178,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " multimarcas. e vocês têm alguma previsão aí de expansão ou renovação no parque nos próximos anos?"
+        },
+        {
+          "timestamp": 185,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " ah, depende. a gente trabalha muito com preventivo, então, ou seja, a gente vai substituindo peça, "
+        },
+        {
+          "timestamp": 192,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " uhum, tá. perfeito. para finalizar, eu até comentei que a gente se tornou parceiro aí da microsoft "
+        },
+        {
+          "timestamp": 198,
+          "sentiment": "negativo",
+          "intensity": 65,
+          "speaker": "client",
+          "text": " eu trabalho... eu trabalho com o google workspace, eu não trabalho com a microsoft, não. e a licenç"
+        },
+        {
+          "timestamp": 205,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " uhum."
+        },
+        {
+          "timestamp": 212,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " ...o google docs."
+        },
+        {
+          "timestamp": 218,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " tá, perfeito. então, talvez nesse momento não seria tão interessante a gente trazer esse tema, né? "
+        },
+        {
+          "timestamp": 225,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é, porque da microsoft o que eu uso é a licença dos... dos computadores, né? o windows 11, né?"
+        },
+        {
+          "timestamp": 231,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " uhum, perfeito. aí para finalizar, eu vou pedir uma gentileza: o teu e-mail, pra gente poder mandar"
+        },
+        {
+          "timestamp": 238,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é ramonf@lcmconsult.com.br."
+        },
+        {
+          "timestamp": 245,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " lcmconsult.com.br. e o seu telefone?"
+        },
+        {
+          "timestamp": 251,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é 31."
+        },
+        {
+          "timestamp": 258,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " sim."
+        },
+        {
+          "timestamp": 265,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " 3298-7050."
+        },
+        {
+          "timestamp": 271,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " esse é o seu ramal direto, né?"
+        },
+        {
+          "timestamp": 278,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " esse é o meu direto, é."
+        },
+        {
+          "timestamp": 284,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " perfeito. então vou fazer o contato por lá. você tem um telefone celular também corporativo?"
+        },
+        {
+          "timestamp": 291,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tenho. peraí que eu vou te passar o número do que cai direto aqui em mim, peraí só um minutinho."
+        },
+        {
+          "timestamp": 298,
+          "sentiment": "positivo",
+          "intensity": 70,
+          "speaker": "client",
+          "text": " só pra gente poder mandar um lembrete por lá."
+        },
+        {
+          "timestamp": 304,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " é 31. uhum. 99647-5711."
+        },
+        {
+          "timestamp": 311,
+          "sentiment": "entusiasmado",
+          "intensity": 85,
+          "speaker": "client",
+          "text": " perfeito. ramon, então ficou alinhado, tá bem? agradeço seu tempinho e sua atenção. desejo aí uma ó"
+        },
+        {
+          "timestamp": 318,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " até."
+        },
+        {
+          "timestamp": 324,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tchau, tchau."
+        },
+        {
+          "timestamp": 331,
+          "sentiment": "neutro",
+          "intensity": 50,
+          "speaker": "client",
+          "text": " tchau."
+        }
+      ],
+      "detected_topics": [
+        {
+          "category": "objeções",
+          "mentions": 5,
+          "relevance": 75,
+          "keywords": [
+            "mas",
+            "não sei"
+          ],
+          "firstMentionAt": 26
+        },
+        {
+          "category": "urgência",
+          "mentions": 4,
+          "relevance": 60,
+          "keywords": [
+            "agora",
+            "já"
+          ],
+          "firstMentionAt": 40
+        },
+        {
+          "category": "dúvidas_técnicas",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "tecnologia"
+          ],
+          "firstMentionAt": 8
+        },
+        {
+          "category": "tomada_decisão",
+          "mentions": 1,
+          "relevance": 15,
+          "keywords": [
+            "diretoria"
+          ],
+          "firstMentionAt": 19
+        }
+      ],
+      "detected_keywords": [
+        {
+          "word": "não",
+          "type": "negative",
+          "count": 10,
+          "sentiment_impact": -200
+        },
+        {
+          "word": "perfeito",
+          "type": "positive",
+          "count": 8,
+          "sentiment_impact": 160
+        },
+        {
+          "word": "interessante",
+          "type": "positive",
+          "count": 2,
+          "sentiment_impact": 40
+        },
+        {
+          "word": "talvez",
+          "type": "neutral",
+          "count": 1,
+          "sentiment_impact": 0
+        },
+        {
+          "word": "verificar",
+          "type": "neutral",
+          "count": 1,
+          "sentiment_impact": 0
+        }
+      ],
+      "detected_objections": [
+        {
+          "type": "autoridade",
+          "text": "oi, boa tarde. aqui é a danielle da positivo. eu gostaria de falar com o ramon.",
+          "timestamp": 3,
+          "wasOvercome": false,
+          "effectiveness": 50
+        },
+        {
+          "type": "autoridade",
+          "text": "bem também. ramon, obrigada por me atender. eu prometo que vou ser breve no contato. na verdade, eu venho tentando falar com você há alguns dias, porq",
+          "timestamp": 24,
+          "wasOvercome": false,
+          "effectiveness": 50
+        }
+      ],
+      "language_analysis": {
+        "tone": "passivo",
+        "powerWordsCount": 0,
+        "weakWordsCount": 17,
+        "powerWordsRatio": 0,
+        "questionAnalysis": {
+          "openQuestions": 10,
+          "closedQuestions": 21,
+          "totalQuestions": 31,
+          "openQuestionsRatio": 32.25806451612903
+        },
+        "speechPaceEstimate": {
+          "wordsPerMinute": 118,
+          "category": "lento"
+        },
+        "topPowerWords": [],
+        "topWeakWords": [
+          "talvez",
+          "mais ou menos",
+          "não sei",
+          "mas",
+          "só"
+        ]
+      }
+    }
+  ]
+}
