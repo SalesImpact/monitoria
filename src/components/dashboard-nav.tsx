@@ -27,13 +27,13 @@ import {
 
 const navigation = [
   { name: 'Dashboards', href: '/dashboard', icon: BarChart3 },
-  { name: 'Monitoria de Ligações', href: '/dashboard/monitoring', icon: Phone },
-  { name: 'Análise por SDR', href: '/dashboard/sdr-analysis', icon: Users },
-  { name: 'Coaching com IA', href: '/dashboard/coaching', icon: Lightbulb },
-  { name: 'Roleplay', href: '/dashboard/simulator', icon: MessageSquare },
-  { name: 'Melhores Práticas', href: '/dashboard/best-practices', icon: Award },
-  { name: 'Tendências', href: '/dashboard/trends', icon: TrendingUp },
-  { name: 'Guia/Manual', href: '/dashboard/manual', icon: BookOpen },
+  { name: 'Monitoria de Ligações', href: '/monitoring', icon: Phone },
+  { name: 'Análise por SDR', href: '/sdr-analysis', icon: Users },
+  { name: 'Coaching com IA', href: '/coaching', icon: Lightbulb },
+  { name: 'Roleplay', href: '/simulator', icon: MessageSquare },
+  { name: 'Melhores Práticas', href: '/best-practices', icon: Award },
+  { name: 'Tendências', href: '/trends', icon: TrendingUp },
+  { name: 'Guia/Manual', href: '/manual', icon: BookOpen },
 ];
 
 export default function DashboardNav() {

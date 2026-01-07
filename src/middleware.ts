@@ -11,7 +11,27 @@ export default withAuth(
       return NextResponse.redirect(new URL('/', req.url));
     }
 
-    if (pathname.startsWith('/dashboard') || pathname.startsWith('/select-organization')) {
+    const protectedPaths = [
+      '/dashboard',
+      '/monitoring',
+      '/sdr-analysis',
+      '/coaching',
+      '/simulator',
+      '/best-practices',
+      '/trends',
+      '/manual',
+      '/objections',
+      '/reports',
+      '/criteria-analysis',
+      '/training',
+      '/select-organization',
+    ];
+
+    const isProtectedPath = protectedPaths.some(path => 
+      pathname === path || pathname.startsWith(path + '/')
+    );
+
+    if (isProtectedPath) {
       const selectedOrgId = token.selectedOrganizationId;
 
       // Admins sempre podem acessar a página de seleção
@@ -39,6 +59,20 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/select-organization/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/monitoring/:path*',
+    '/sdr-analysis/:path*',
+    '/coaching/:path*',
+    '/simulator/:path*',
+    '/best-practices/:path*',
+    '/trends/:path*',
+    '/manual/:path*',
+    '/objections/:path*',
+    '/reports/:path*',
+    '/criteria-analysis/:path*',
+    '/training/:path*',
+    '/select-organization/:path*',
+  ],
 };
 
