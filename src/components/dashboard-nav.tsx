@@ -23,6 +23,7 @@ import {
   MessageSquare,
   GraduationCap,
   LogOut,
+  UserCircle,
 } from 'lucide-react';
 
 const navigation = [
@@ -34,6 +35,7 @@ const navigation = [
   { name: 'Melhores Práticas', href: '/best-practices', icon: Award },
   { name: 'Tendências', href: '/trends', icon: TrendingUp },
   { name: 'Guia/Manual', href: '/manual', icon: BookOpen },
+  { name: 'Perfil', href: '/profile', icon: UserCircle },
 ];
 
 export default function DashboardNav() {

@@ -180,15 +180,15 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
   // Handle undefined or empty calls
   const safeCalls = calls || [];
 
-  const uniqueSDRs = [...new Set(safeCalls.map(call => call.sdrName))];
-  const uniqueResults = [...new Set(safeCalls.map(call => call.result))];
-  const uniqueTypes = [...new Set(safeCalls.map(call => call.callType))];
+  const uniqueSDRs = [...new Set(safeCalls.map(call => call.sdrName).filter(Boolean))];
+  const uniqueResults = [...new Set(safeCalls.map(call => call.result).filter(Boolean))];
+  const uniqueTypes = [...new Set(safeCalls.map(call => call.callType).filter(Boolean))];
   const uniqueSentiments = [...new Set(safeCalls.flatMap(call => 
     call.sentimentAnalysis ? [call.sentimentAnalysis.overall] : []
-  ))];
+  ).filter(Boolean))];
   const uniqueTopics = [...new Set(safeCalls.flatMap(call => 
     call.detectedTopics ? call.detectedTopics.map(t => t.category) : []
-  ))];
+  ).filter(Boolean))];
 
   const filteredCalls = safeCalls.filter((call) => {
     const matchesSearch =
@@ -262,7 +262,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os SDRs</SelectItem>
-                {uniqueSDRs.map((sdr) => (
+                {uniqueSDRs.filter(sdr => sdr && sdr.trim() !== '').map((sdr) => (
                   <SelectItem key={sdr} value={sdr}>
                     {sdr}
                   </SelectItem>
@@ -277,7 +277,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os resultados</SelectItem>
-                {uniqueResults.map((result) => (
+                {uniqueResults.filter(result => result && result.trim() !== '').map((result) => (
                   <SelectItem key={result} value={result}>
                     {getResultLabel(result)}
                   </SelectItem>
@@ -292,7 +292,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os tipos</SelectItem>
-                {uniqueTypes.map((type) => (
+                {uniqueTypes.filter(type => type && type.trim() !== '').map((type) => (
                   <SelectItem key={type} value={type}>
                     {type === 'call_real' ? 'Ligação Real' : 'Roleplay'}
                   </SelectItem>
@@ -307,7 +307,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os sentimentos</SelectItem>
-                {uniqueSentiments.map((sentiment) => (
+                {uniqueSentiments.filter(sentiment => sentiment && sentiment.trim() !== '').map((sentiment) => (
                   <SelectItem key={sentiment} value={sentiment}>
                     {sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}
                   </SelectItem>
@@ -324,7 +324,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos os tópicos</SelectItem>
-                {uniqueTopics.map((topic) => (
+                {uniqueTopics.filter(topic => topic && topic.trim() !== '').map((topic) => (
                   <SelectItem key={topic} value={topic}>
                     {topic.charAt(0).toUpperCase() + topic.slice(1)}
                   </SelectItem>
@@ -396,24 +396,29 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
                           <span className="text-sm capitalize">{call.sentimentAnalysis.overall}</span>
                         </div>
                       ) : (
-                        <span className="text-gray-400 text-sm">N/A</span>
+                        <span className="text-gray-400 text-sm">-</span>
                       )}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getResultBadgeVariant(call.result)}>
-                        {getResultLabel(call.result)}
-                      </Badge>
+                      {call.result ? (
+                        <Badge variant={getResultBadgeVariant(call.result)}>
+                          {getResultLabel(call.result)}
+                        </Badge>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )}
                     </TableCell>
                     <TableCell>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button 
-                            className="bg-brand-blue hover:bg-brand-blue/90 text-white"
-                            size="sm"
-                          >
-                            Ver Detalhes
-                          </Button>
-                        </DialogTrigger>
+                      {call.audioFile || call.transcription || call.scores ? (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button 
+                              className="bg-brand-blue hover:bg-brand-blue/90 text-white"
+                              size="sm"
+                            >
+                              Ver Detalhes
+                            </Button>
+                          </DialogTrigger>
                         <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle className="text-2xl font-bold text-brand-dark">
@@ -714,6 +719,9 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
                           </Tabs>
                         </DialogContent>
                       </Dialog>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))

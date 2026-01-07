@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "organizations" (
+CREATE TABLE "monitoria_organizations" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE "organizations" (
 );
 
 -- CreateTable
-CREATE TABLE "users" (
+CREATE TABLE "monitoria_users" (
     "id" TEXT NOT NULL,
     "name" TEXT,
     "email" TEXT NOT NULL,
@@ -28,10 +28,10 @@ CREATE TABLE "users" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
+CREATE UNIQUE INDEX "organizations_slug_key" ON "monitoria_organizations"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_email_organizationId_key" ON "users"("email", "organizationId");
+CREATE UNIQUE INDEX "users_email_organizationId_key" ON "monitoria_users"("email", "organizationId");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "monitoria_users" ADD CONSTRAINT "users_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "monitoria_organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

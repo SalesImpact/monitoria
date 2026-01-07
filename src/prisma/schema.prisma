@@ -9,32 +9,83 @@ datasource db {
 }
 
 model Organization {
-  id        String   @id @default(cuid())
+  id        String   @id
   name      String
   slug      String   @unique
   users     User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
 
   @@map(name: "monitoria_organizations")
+
 }
 
 model User {
-  id              String       @id @default(cuid())
+  id              String       @id
   name            String?
   email           String
   password        String?
-  emailVerified   DateTime?
+  emailVerified   DateTime?    @map("emailVerified")
   image           String?
   role            String?      @default("sdr")
-  organizationId  String
-  meetimeId       String?
-  lastLogin       DateTime?
+  organizationId  String       @map("organizationId")
+  meetimeId       String?      @map("meetimeId")
+  lastLogin       DateTime?    @map("lastLogin")
   organization    Organization @relation(fields: [organizationId], references: [id])
+  meetimeAccounts UserMeetimeAccount[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
 
   @@unique([email, organizationId])
   @@map(name: "monitoria_users")
+}
+
+model UserMeetimeAccount {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  meetimeUserId BigInt   @map("meetime_user_id")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, meetimeUserId])
+  @@map(name: "user_meetime_accounts")
+}
+
+model MonitoriaCallScore {
+  id                        String   @id @default(cuid())
+  callId                    String   @unique @map("call_id")
+  // ABERTURA
+  saudacaoApresentacao      Float    @map("saudacao_apresentacao")
+  apresentacaoEmpresa       Float    @map("apresentacao_empresa")
+  solicitacaoConfirmacaoNome Float   @map("solicitacao_confirmacao_nome")
+  tomVoz                    Float    @map("tom_voz")
+  rapport                   Float
+  // VALIDAÇÃO DO OBJETIVO
+  perguntasValidacao        Float    @map("perguntas_validacao")
+  escutaAtiva               Float    @map("escuta_ativa")
+  pitchSolucao              Float    @map("pitch_solucao")
+  historiaCliente           Float    @map("historia_cliente")
+  // SPIN SELLING
+  perguntasSituacao         Float    @map("perguntas_situacao")
+  perguntasProblema         Float    @map("perguntas_problema")
+  perguntasImplicacao       Float    @map("perguntas_implicacao")
+  perguntasNecessidadeSolucao Float  @map("perguntas_necessidade_solucao")
+  // PRÓXIMOS PASSOS
+  confirmouEntendimento     Float    @map("confirmou_entendimento")
+  vendeuProximoPasso        Float    @map("vendeu_proximo_passo")
+  agendouConcluiu           Float    @map("agendou_concluiu")
+  // Opcionais
+  nivelEngajamentoCliente    Float?   @map("nivel_engajamento_cliente")
+  confiancaSdr              Float?   @map("confianca_sdr")
+  // Scores calculados
+  averageScore              Float    @map("average_score")
+  weightedScore             Float    @map("weighted_score")
+  // Feedback da IA
+  aiFeedback                String?  @map("ai_feedback")
+  // Timestamps
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  @@map(name: "monitoria_call_scores")
 }
