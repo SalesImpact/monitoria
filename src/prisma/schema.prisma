@@ -16,7 +16,7 @@ model Organization {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map(name: "organizations")
+  @@map(name: "monitoria_organizations")
 }
 
 model User {
@@ -36,5 +36,5 @@ model User {
   updatedAt DateTime @updatedAt
 
   @@unique([email, organizationId])
-  @@map(name: "users")
+  @@map(name: "monitoria_users")
 }
