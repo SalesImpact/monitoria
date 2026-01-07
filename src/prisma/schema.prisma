@@ -9,32 +9,95 @@ datasource db {
 }
 
 model Organization {
-  id        String   @id @default(cuid())
+  id        String   @id
   name      String
   slug      String   @unique
   users     User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
 
-  @@map(name: "organizations")
+  @@map("monitoria_organizations")
 }
 
 model User {
-  id              String       @id @default(cuid())
+  id              String       @id
   name            String?
   email           String
   password        String?
-  emailVerified   DateTime?
+  emailVerified   DateTime?    @map("emailVerified")
   image           String?
   role            String?      @default("sdr")
-  organizationId  String
-  meetimeId       String?
-  lastLogin       DateTime?
+  organizationId  String       @map("organizationId")
+  meetimeId       String?      @map("meetimeId")
+  lastLogin       DateTime?    @map("lastLogin")
   organization    Organization @relation(fields: [organizationId], references: [id])
+  meetimeAccounts UserMeetimeAccount[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
 
-  @@unique([email, organizationId])
-  @@map(name: "users")
+  @@unique([email, organizationId], name: "monitoria_users_email_organizationId_key")
+  @@map("monitoria_users")
+}
+
+model MeetimeUser {
+  id          BigInt    @id
+  email       String?
+  name        String?
+  module      String?
+  role        String?
+  active      Boolean?  @default(true)
+  deletedAt   DateTime? @map("deleted_at")
+  syncedAt    DateTime? @default(now()) @map("synced_at")
+  userAccounts UserMeetimeAccount[]
+  calls       Call[]
+
+  @@map("meetime_users")
+}
+
+model UserMeetimeAccount {
+  id            String      @id @default(cuid())
+  userId        String      @map("user_id")
+  meetimeUserId BigInt      @map("meetime_user_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meetimeUser   MeetimeUser @relation(fields: [meetimeUserId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, meetimeUserId])
+  @@map("user_meetime_accounts")
+}
+
+model Call {
+  id                        BigInt    @id
+  date                      DateTime  @db.Timestamptz
+  userId                    BigInt?   @map("user_id")
+  userName                  String?   @map("user_name") @db.VarChar(255)
+  important                 Boolean?  @default(false)
+  startedAt                 DateTime? @map("started_at") @db.Timestamptz
+  originPhone               String?   @map("origin_phone") @db.VarChar(20)
+  originType                String?   @map("origin_type") @db.VarChar(20)
+  receiverPhone             String    @map("receiver_phone") @db.VarChar(20)
+  receiverType              String?   @map("receiver_type") @db.VarChar(20)
+  connectedDurationSeconds  Int?      @default(0) @map("connected_duration_seconds")
+  price                     Decimal?  @default(0) @map("price") @db.Decimal(10, 3)
+  output                    String?   @map("output") @db.VarChar(50)
+  status                    String    @db.VarChar(50)
+  callType                  String?   @map("call_type") @db.VarChar(20)
+  notes                     String?   @db.Text
+  callLink                  String?   @map("call_link") @db.VarChar(500)
+  updated                   DateTime? @map("updated") @db.Timestamptz
+  dialerParameters          Json?     @map("dialer_parameters")
+  recordingUrl              String?   @map("recording_url") @db.VarChar(1000)
+  recordingFetchedAt        DateTime? @map("recording_fetched_at") @db.Timestamptz
+  storedAudioUrl            String?   @map("stored_audio_url") @db.VarChar(1000)
+  storedAudioFilename       String?   @map("stored_audio_filename") @db.VarChar(255)
+  audioStoredAt             DateTime? @map("audio_stored_at") @db.Timestamptz
+  audioDurationSeconds      Int?      @map("audio_duration_seconds")
+  audioFileSizeBytes        BigInt?   @map("audio_file_size_bytes")
+  createdAt                 DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  
+  meetimeUser               MeetimeUser? @relation(fields: [userId], references: [id])
+
+  @@map("calls")
 }

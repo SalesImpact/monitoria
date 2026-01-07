@@ -25,6 +25,7 @@ export default withAuth(
       '/criteria-analysis',
       '/training',
       '/select-organization',
+      '/profile',
     ];
 
     const isProtectedPath = protectedPaths.some(path => 
@@ -73,6 +74,7 @@ export const config = {
     '/criteria-analysis/:path*',
     '/training/:path*',
     '/select-organization/:path*',
+    '/profile/:path*',
   ],
 };
 
