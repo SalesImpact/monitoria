@@ -59,13 +59,19 @@ export default function CallScoresDisplay({ call }: CallScoresDisplayProps) {
 
   const getScoreIcon = (score: number) => {
     if (score >= 4) return <CheckCircle className="w-4 h-4 text-green-600" />;
-    if (score >= 3) return <AlertCircle className="w-4 h-4 text-yellow-600" />;
+    if (score >= 2) return <AlertCircle className="w-4 h-4 text-yellow-600" />;
     return <XCircle className="w-4 h-4 text-red-600" />;
   };
 
   const getScoreColor = (score: number) => {
     if (score >= 4) return 'text-green-600';
-    if (score >= 3) return 'text-yellow-600';
+    if (score >= 2) return 'text-gray-600';
+    return 'text-red-600';
+  };
+
+  const getScoreLabelColor = (score: number) => {
+    if (score >= 4) return 'text-green-600';
+    if (score >= 2) return 'text-gray-600';
     return 'text-red-600';
   };
 
@@ -175,7 +181,7 @@ export default function CallScoresDisplay({ call }: CallScoresDisplayProps) {
                     <div className={`font-medium ${getScoreColor(item.score)}`}>
                       {item.score}/5
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className={`text-xs ${getScoreLabelColor(item.score)}`}>
                       {getScoreLabel(item.score)}
                     </div>
                   </div>
