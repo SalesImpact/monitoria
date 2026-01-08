@@ -45,6 +45,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AudioPlayer from '@/components/audio-player';
 import CallScoresDisplay from '@/components/call-scores-display';
 import SentimentJourneyChart from '@/components/sentiment-journey-chart';
+import TranscriptionChat from '@/components/transcription-chat';
 
 interface SentimentAnalysis {
   overall: string;
@@ -749,14 +750,16 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
                             {/* TRANSCRIPTION TAB */}
                             <TabsContent value="transcription">
                               <div className="bg-white p-6 rounded-xl border border-gray-200">
-                                <div className="flex items-center space-x-2 mb-3">
+                                <div className="flex items-center space-x-2 mb-4">
                                   <FileText className="w-5 h-5 text-brand-green" />
-                                  <h4 className="font-semibold text-brand-dark">Transcrição Completa</h4>
+                                  <h4 className="font-semibold text-brand-dark">Transcrição Diarizada</h4>
                                 </div>
-                                <div className="bg-gray-50 p-4 rounded-lg border max-h-[500px] overflow-y-auto">
-                                  <pre className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-                                    {call.transcription || 'Transcrição não disponível'}
-                                  </pre>
+                                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 p-4">
+                                  <TranscriptionChat
+                                    callId={call.id}
+                                    sdrName={call.sdrName}
+                                    prospectName={call.prospectName}
+                                  />
                                 </div>
                               </div>
                             </TabsContent>
