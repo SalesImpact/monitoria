@@ -20,36 +20,46 @@ import {
   Award,
   AlertCircle,
 } from 'lucide-react';
-import type { SDR, Call, CallScore, Keyword } from '@prisma/client';
+import { CRITERIA_MAP } from '@/lib/criteria-map';
 
-const CRITERIA_MAP = {
-  'Saudação e Apresentação': 'saudacaoApresentacao',
-  'Apresentação da Empresa': 'apresentacaoEmpresa',
-  'Confirmação do Nome': 'solicitacaoConfirmacaoNome',
-  'Tom de Voz': 'tomVoz',
-  'Rapport': 'rapport',
-  'Perguntas de Validação': 'perguntasValidacao',
-  'Escuta Ativa': 'escutaAtiva',
-  'Pitch da Solução': 'pitchSolucao',
-  'História do Cliente': 'historiaCliente',
-  'Perguntas de Situação': 'perguntasSituacao',
-  'Perguntas de Problema': 'perguntasProblema',
-  'Perguntas de Implicação': 'perguntasImplicacao',
-  'Perguntas de Necessidade': 'perguntasNecessidadeSolucao',
-  'Confirmou Entendimento': 'confirmouEntendimento',
-  'Vendeu Próximo Passo': 'vendeuProximoPasso',
-  'Agendou/Concluiu': 'agendouConcluiu',
-};
+interface CallScoreData {
+  id: string;
+  callId: string;
+  userId: number | null;
+  saudacaoApresentacao: number;
+  apresentacaoEmpresa: number;
+  solicitacaoConfirmacaoNome: number;
+  tomVoz: number;
+  rapport: number;
+  perguntasValidacao: number;
+  escutaAtiva: number;
+  pitchSolucao: number;
+  historiaCliente: number;
+  perguntasSituacao: number;
+  perguntasProblema: number;
+  perguntasImplicacao: number;
+  perguntasNecessidadeSolucao: number;
+  confirmouEntendimento: number;
+  vendeuProximoPasso: number;
+  agendouConcluiu: number;
+  nivelEngajamentoCliente: number | null;
+  confiancaSdr: number | null;
+  averageScore: number;
+  weightedScore: number;
+  aiFeedback: string | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
 
-interface SDRWithCalls extends SDR {
-  calls: (Call & {
-    scores: CallScore | null;
-    keywords: Keyword[];
-  })[];
+interface SDRData {
+  id: string;
+  name: string;
+  email: string;
+  callScores: CallScoreData[];
 }
 
 interface SDRAnalysisContentProps {
-  sdrs: SDRWithCalls[];
+  sdrs: SDRData[];
 }
 
 export default function SDRAnalysisContent({ sdrs }: SDRAnalysisContentProps) {
@@ -65,37 +75,38 @@ export default function SDRAnalysisContent({ sdrs }: SDRAnalysisContentProps) {
   const sdrMetrics = useMemo(() => {
     if (!selectedSDR) return null;
 
-    const { calls } = selectedSDR;
-    const callsWithScores = calls.filter((c) => c.averageScore !== null);
+    const { callScores } = selectedSDR;
+    const scoresWithAverage = callScores.filter(
+      (score) => score.averageScore !== null && score.averageScore !== undefined
+    );
 
-    const totalCalls = calls.length;
+    const totalCalls = callScores.length;
     const averageScore =
-      callsWithScores.length > 0
-        ? callsWithScores.reduce((sum, c) => sum + (c.averageScore || 0), 0) /
-          callsWithScores.length
+      scoresWithAverage.length > 0
+        ? scoresWithAverage.reduce(
+            (sum, score) => sum + (score.averageScore || 0),
+            0
+          ) / scoresWithAverage.length
         : 0;
 
-    const successfulCalls = calls.filter(
-      (c) => c.result === 'agendado' || c.result === 'qualificação_sucesso'
+    const successfulCalls = callScores.filter(
+      (score) => score.agendouConcluiu >= 4
     ).length;
     const conversionRate =
       totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
 
-    // Calcular média por critério
     const criteriaScores: Record<string, number[]> = {};
-    
-    calls.forEach((call) => {
-      if (call.scores) {
-        Object.entries(CRITERIA_MAP).forEach(([displayName, fieldName]) => {
-          const score = (call.scores as any)?.[fieldName];
-          if (typeof score === 'number') {
-            if (!criteriaScores[displayName]) {
-              criteriaScores[displayName] = [];
-            }
-            criteriaScores[displayName].push(score);
+
+    callScores.forEach((score) => {
+      Object.entries(CRITERIA_MAP).forEach(([displayName, fieldName]) => {
+        const value = (score as any)[fieldName];
+        if (typeof value === 'number') {
+          if (!criteriaScores[displayName]) {
+            criteriaScores[displayName] = [];
           }
-        });
-      }
+          criteriaScores[displayName].push(value);
+        }
+      });
     });
 
     const criteriaAverages = Object.entries(criteriaScores).map(
@@ -106,9 +117,12 @@ export default function SDRAnalysisContent({ sdrs }: SDRAnalysisContentProps) {
       })
     );
 
-    // Pontos fortes e fracos
-    const strengths = criteriaAverages.filter((c) => c.average >= 4).slice(0, 3);
-    const weaknesses = criteriaAverages.filter((c) => c.average < 3).slice(0, 3);
+    const strengths = criteriaAverages
+      .filter((c) => c.average >= 4)
+      .slice(0, 3);
+    const weaknesses = criteriaAverages
+      .filter((c) => c.average < 3)
+      .slice(0, 3);
 
     return {
       totalCalls,

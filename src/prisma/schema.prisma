@@ -16,8 +16,7 @@ model Organization {
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
-  @@map(name: "monitoria_organizations")
-
+  @@map("monitoria_organizations")
 }
 
 model User {
@@ -37,55 +36,111 @@ model User {
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
 
-  @@unique([email, organizationId])
-  @@map(name: "monitoria_users")
+  @@unique([email, organizationId], name: "monitoria_users_email_organizationId_key")
+  @@map("monitoria_users")
+}
+
+model MeetimeUser {
+  id          BigInt    @id
+  email       String?
+  name        String?
+  module      String?
+  role        String?
+  active      Boolean?  @default(true)
+  deletedAt   DateTime? @map("deleted_at")
+  syncedAt    DateTime? @default(now()) @map("synced_at")
+  userAccounts UserMeetimeAccount[]
+  calls       Call[]
+  callScores  CallScore[]
+
+  @@map("meetime_users")
 }
 
 model UserMeetimeAccount {
-  id            String   @id @default(cuid())
-  userId        String   @map("user_id")
-  meetimeUserId BigInt   @map("meetime_user_id")
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now()) @map("created_at")
+  id            String      @id @default(cuid())
+  userId        String      @map("user_id")
+  meetimeUserId BigInt      @map("meetime_user_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meetimeUser   MeetimeUser @relation(fields: [meetimeUserId], references: [id], onDelete: Cascade)
 
   @@unique([userId, meetimeUserId])
-  @@map(name: "user_meetime_accounts")
+  @@map("user_meetime_accounts")
 }
 
-model MonitoriaCallScore {
-  id                        String   @id @default(cuid())
-  callId                    String   @unique @map("call_id")
-  // ABERTURA
-  saudacaoApresentacao      Float    @map("saudacao_apresentacao")
-  apresentacaoEmpresa       Float    @map("apresentacao_empresa")
-  solicitacaoConfirmacaoNome Float   @map("solicitacao_confirmacao_nome")
-  tomVoz                    Float    @map("tom_voz")
-  rapport                   Float
-  // VALIDAÇÃO DO OBJETIVO
-  perguntasValidacao        Float    @map("perguntas_validacao")
-  escutaAtiva               Float    @map("escuta_ativa")
-  pitchSolucao              Float    @map("pitch_solucao")
-  historiaCliente           Float    @map("historia_cliente")
-  // SPIN SELLING
-  perguntasSituacao         Float    @map("perguntas_situacao")
-  perguntasProblema         Float    @map("perguntas_problema")
-  perguntasImplicacao       Float    @map("perguntas_implicacao")
-  perguntasNecessidadeSolucao Float  @map("perguntas_necessidade_solucao")
-  // PRÓXIMOS PASSOS
-  confirmouEntendimento     Float    @map("confirmou_entendimento")
-  vendeuProximoPasso        Float    @map("vendeu_proximo_passo")
-  agendouConcluiu           Float    @map("agendou_concluiu")
-  // Opcionais
-  nivelEngajamentoCliente    Float?   @map("nivel_engajamento_cliente")
-  confiancaSdr              Float?   @map("confianca_sdr")
-  // Scores calculados
-  averageScore              Float    @map("average_score")
-  weightedScore             Float    @map("weighted_score")
-  // Feedback da IA
-  aiFeedback                String?  @map("ai_feedback")
-  // Timestamps
-  createdAt                 DateTime @default(now()) @map("created_at")
-  updatedAt                 DateTime @updatedAt @map("updated_at")
+model Call {
+  id                        BigInt    @id
+  date                      DateTime  @db.Timestamptz
+  userId                    BigInt?   @map("user_id")
+  userName                  String?   @map("user_name") @db.VarChar(255)
+  important                 Boolean?  @default(false)
+  startedAt                 DateTime? @map("started_at") @db.Timestamptz
+  originPhone               String?   @map("origin_phone") @db.VarChar(20)
+  originType                String?   @map("origin_type") @db.VarChar(20)
+  receiverPhone             String    @map("receiver_phone") @db.VarChar(20)
+  receiverType              String?   @map("receiver_type") @db.VarChar(20)
+  connectedDurationSeconds  Int?      @default(0) @map("connected_duration_seconds")
+  price                     Decimal?  @default(0) @map("price") @db.Decimal(10, 3)
+  output                    String?   @map("output") @db.VarChar(50)
+  status                    String    @db.VarChar(50)
+  callType                  String?   @map("call_type") @db.VarChar(20)
+  notes                     String?   @db.Text
+  callLink                  String?   @map("call_link") @db.VarChar(500)
+  updated                   DateTime? @map("updated") @db.Timestamptz
+  dialerParameters          Json?     @map("dialer_parameters")
+  recordingUrl              String?   @map("recording_url") @db.VarChar(1000)
+  recordingFetchedAt        DateTime? @map("recording_fetched_at") @db.Timestamptz
+  storedAudioUrl            String?   @map("stored_audio_url") @db.VarChar(1000)
+  storedAudioFilename       String?   @map("stored_audio_filename") @db.VarChar(255)
+  audioStoredAt             DateTime? @map("audio_stored_at") @db.Timestamptz
+  audioDurationSeconds      Int?      @map("audio_duration_seconds")
+  audioFileSizeBytes        BigInt?   @map("audio_file_size_bytes")
+  createdAt                 DateTime? @default(now()) @map("created_at") @db.Timestamptz
+  
+  meetimeUser               MeetimeUser? @relation(fields: [userId], references: [id])
 
-  @@map(name: "monitoria_call_scores")
+  @@map("calls")
+}
+
+model CallScore {
+  id                        String    @id @default(cuid())
+  callId                    String    @unique @map("call_id")
+  userId                    BigInt?   @map("user_id")
+  saudacaoApresentacao      Float     @map("saudacao_apresentacao")
+  apresentacaoEmpresa       Float     @map("apresentacao_empresa")
+  solicitacaoConfirmacaoNome Float    @map("solicitacao_confirmacao_nome")
+  tomVoz                    Float     @map("tom_voz")
+  rapport                   Float
+  perguntasValidacao        Float     @map("perguntas_validacao")
+  escutaAtiva               Float     @map("escuta_ativa")
+  pitchSolucao              Float     @map("pitch_solucao")
+  historiaCliente           Float     @map("historia_cliente")
+  perguntasSituacao         Float     @map("perguntas_situacao")
+  perguntasProblema         Float     @map("perguntas_problema")
+  perguntasImplicacao       Float     @map("perguntas_implicacao")
+  perguntasNecessidadeSolucao Float   @map("perguntas_necessidade_solucao")
+  confirmouEntendimento     Float     @map("confirmou_entendimento")
+  vendeuProximoPasso        Float     @map("vendeu_proximo_passo")
+  agendouConcluiu           Float     @map("agendou_concluiu")
+  nivelEngajamentoCliente   Float?    @map("nivel_engajamento_cliente")
+  confiancaSdr              Float?    @map("confianca_sdr")
+  averageScore              Float     @map("average_score")
+  weightedScore             Float     @map("weighted_score")
+  aiFeedback                String?   @map("ai_feedback") @db.Text
+  resultado                 String?   @db.VarChar(50)
+  sentimentoGeral           String?   @map("sentimento_geral") @db.VarChar(20)
+  sentimentoCliente         String?   @map("sentimento_cliente") @db.VarChar(20)
+  sentimentoSdr             String?   @map("sentimento_sdr") @db.VarChar(20)
+  objeções                  Json?     @map("objeções")
+  objeçõesSuperadas         Json?     @map("objeções_superadas")
+  palavrasChavePositivas    Json?     @map("palavras_chave_positivas")
+  palavrasChaveNegativas    Json?     @map("palavras_chave_negativas")
+  palavrasChaveNeutras      Json?     @map("palavras_chave_neutras")
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @updatedAt @map("updated_at")
+  
+  meetimeUser               MeetimeUser? @relation(fields: [userId], references: [id])
+
+  @@map("monitoria_call_scores")
 }

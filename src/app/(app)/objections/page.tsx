@@ -15,6 +15,7 @@ import {
   Lightbulb
 } from 'lucide-react';
 import { OBJECTION_LIBRARY, DetectedObjection } from '@/lib/types';
+import { objectionTypeLabels, objectionTypeColors } from '@/lib/objections-constants';
 
 export const dynamic = 'force-dynamic';
 
@@ -115,28 +116,6 @@ async function getObjectionsData() {
     };
   }
 }
-
-const objectionTypeLabels: Record<string, string> = {
-  'preço': 'Preço',
-  'timing': 'Timing',
-  'concorrência': 'Concorrência',
-  'funcionalidades': 'Funcionalidades',
-  'autoridade': 'Autoridade',
-  'necessidade': 'Necessidade',
-  'confiança': 'Confiança',
-  'outros': 'Outros',
-};
-
-const objectionTypeColors: Record<string, string> = {
-  'preço': 'bg-red-500',
-  'timing': 'bg-orange-500',
-  'concorrência': 'bg-purple-500',
-  'funcionalidades': 'bg-blue-500',
-  'autoridade': 'bg-yellow-500',
-  'necessidade': 'bg-pink-500',
-  'confiança': 'bg-green-500',
-  'outros': 'bg-gray-500',
-};
 
 export default async function ObjectionsPage() {
   const data = await getObjectionsData();

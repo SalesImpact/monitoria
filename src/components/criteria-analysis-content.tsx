@@ -47,24 +47,7 @@ interface CriteriaAnalysisContentProps {
   sdrs: SDR[];
 }
 
-const CRITERIA_MAP = {
-  'Saudação e Apresentação': 'saudacaoApresentacao',
-  'Apresentação da Empresa': 'apresentacaoEmpresa',
-  'Confirmação do Nome': 'solicitacaoConfirmacaoNome',
-  'Tom de Voz': 'tomVoz',
-  'Rapport': 'rapport',
-  'Perguntas de Validação': 'perguntasValidacao',
-  'Escuta Ativa': 'escutaAtiva',
-  'Pitch da Solução': 'pitchSolucao',
-  'História do Cliente': 'historiaCliente',
-  'Perguntas de Situação': 'perguntasSituacao',
-  'Perguntas de Problema': 'perguntasProblema',
-  'Perguntas de Implicação': 'perguntasImplicacao',
-  'Perguntas de Necessidade': 'perguntasNecessidadeSolucao',
-  'Confirmou Entendimento': 'confirmouEntendimento',
-  'Vendeu Próximo Passo': 'vendeuProximoPasso',
-  'Agendou/Concluiu': 'agendouConcluiu',
-};
+import { CRITERIA_MAP } from '@/lib/criteria-map';
 
 export default function CriteriaAnalysisContent({ calls, sdrs }: CriteriaAnalysisContentProps) {
   const [selectedSDRs, setSelectedSDRs] = useState<string>('all');
@@ -330,7 +313,7 @@ export default function CriteriaAnalysisContent({ calls, sdrs }: CriteriaAnalysi
               {/* Distribution */}
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-3">
-                  Distribuição de Pontuações (clique para ver detalhes)
+                  Distribuição de Pontuações
                 </h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <button

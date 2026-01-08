@@ -2,9 +2,23 @@ import { Pool, PoolConfig } from 'pg';
 import OpenAI from 'openai';
 import { randomUUID } from 'crypto';
 
+interface TranscriptionSegment {
+  end: number;
+  text: string;
+  start: number;
+  speaker: string;
+}
+
 interface CallTranscription {
   call_id: number;
   transcription_text: string;
+  transcription_segments?: TranscriptionSegment[] | null;
+}
+
+interface SeparatedTranscription {
+  sdrText: string;
+  prospectText: string;
+  fullText: string;
 }
 
 interface CallScores {
@@ -32,6 +46,16 @@ interface CallScores {
   nivel_engajamento_cliente?: number;
   confianca_sdr?: number;
   ai_feedback: string;
+  // Novos campos
+  resultado?: string;
+  sentimento_geral?: string;
+  sentimento_cliente?: string;
+  sentimento_sdr?: string;
+  objeções?: Record<string, boolean>;
+  objeções_superadas?: Record<string, boolean>;
+  palavras_chave_positivas?: Record<string, number>;
+  palavras_chave_negativas?: Record<string, number>;
+  palavras_chave_neutras?: Record<string, number>;
 }
 
 interface AnalysisResult {
@@ -50,6 +74,39 @@ interface Stats {
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+function separateTranscriptionBySpeaker(
+  transcription: CallTranscription
+): SeparatedTranscription {
+  let sdrText = '';
+  let prospectText = '';
+  let fullText = transcription.transcription_text;
+
+  if (transcription.transcription_segments && Array.isArray(transcription.transcription_segments)) {
+    const sdrSegments: string[] = [];
+    const prospectSegments: string[] = [];
+
+    for (const segment of transcription.transcription_segments) {
+      const text = segment.text?.trim() || '';
+      if (!text) continue;
+
+      if (segment.speaker === 'SDR') {
+        sdrSegments.push(text);
+      } else if (segment.speaker === 'PROSPECT') {
+        prospectSegments.push(text);
+      }
+    }
+
+    sdrText = sdrSegments.join(' ');
+    prospectText = prospectSegments.join(' ');
+  }
+
+  return {
+    sdrText,
+    prospectText,
+    fullText,
+  };
+}
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -81,13 +138,23 @@ function parseArgs() {
   return parsed;
 }
 
-function buildAnalysisPrompt(transcription: string): string {
-  return `Você é um especialista em análise de ligações de vendas. Analise a seguinte transcrição de uma ligação de vendas e avalie o desempenho do SDR (Sales Development Representative) segundo 16 critérios específicos.
+function buildAnalysisPrompt(
+  separated: SeparatedTranscription
+): string {
+  const { fullText, sdrText, prospectText } = separated;
+  
+  return `Você é um especialista em análise de ligações de vendas. Analise a seguinte transcrição de uma ligação de vendas e avalie o desempenho do SDR (Sales Development Representative) segundo 16 critérios específicos, além de extrair informações adicionais sobre resultado, sentimentos, objeções e palavras-chave.
 
-TRANSCRIÇÃO DA LIGAÇÃO:
-${transcription}
+TRANSCRIÇÃO COMPLETA DA LIGAÇÃO:
+${fullText}
 
-INSTRUÇÕES:
+${sdrText ? `TEXTO DO SDR:
+${sdrText}
+
+` : ''}${prospectText ? `TEXTO DO PROSPECT/CLIENTE:
+${prospectText}
+
+` : ''}INSTRUÇÕES:
 1. Avalie cada critério de 0 a 5 (0 = ausente/péssimo, 5 = excelente)
 2. Seja rigoroso mas justo na avaliação
 3. Retorne APENAS um JSON válido, sem markdown, sem texto adicional
@@ -118,6 +185,39 @@ CRITÉRIOS DE AVALIAÇÃO:
    4.2 Vendeu Próximo Passo (0-5): Clareza sobre o que virá a seguir. 5 = Propõe próximo passo com valor claro. 0-2 = Não propõe continuidade.
    4.3 Agendou/Concluiu (0-5): Fechou compromisso concreto. 5 = Agendamento confirmado com data/hora. 0-2 = Sem compromisso definido.
 
+5. RESULTADO DA LIGAÇÃO:
+   Analise o desfecho da ligação e classifique em uma das três categorias:
+   - "Agendado": Houve agendamento de reunião/demo/next step com data/hora definida
+   - "Não Agendado": Ligação não resultou em agendamento
+   - "Qualificação Sucesso": Cliente foi qualificado com sucesso mesmo sem agendamento (ex: interessado, fit identificado, mas timing não é agora)
+
+6. SENTIMENTOS:
+   Analise o sentimento durante a conversa:
+   - sentimento_geral: Sentimento geral da conversa (POSITIVO, NEGATIVO, NEUTRO)
+   - sentimento_cliente: Sentimento do cliente/prospect (POSITIVO, NEGATIVO, NEUTRO)
+   - sentimento_sdr: Sentimento do SDR durante a conversa (POSITIVO, NEGATIVO, NEUTRO)
+
+7. OBJEÇÕES:
+   Identifique quais objeções foram levantadas pelo cliente durante a conversa. As 8 categorias são:
+   - Preço: Objeções relacionadas a custo, preço alto, orçamento
+   - Timing: Objeções sobre momento, tempo, prioridades
+   - Concorrência: Mencionou soluções/concorrentes existentes
+   - Funcionalidades: Falta de recursos ou funcionalidades
+   - Autoridade: Precisa consultar outra pessoa/equipe
+   - Necessidade: Não vê necessidade ou problema não existe
+   - Confiança: Dúvidas sobre empresa, produto, credibilidade
+   - Outros: Outras objeções não categorizadas
+   
+   Para cada objeção detectada, identifique se foi superada pelo SDR (objeções_superadas). Uma objeção é considerada superada quando o cliente demonstra aceitação da resposta do SDR ou muda de posição.
+
+8. PALAVRAS-CHAVE:
+   Extraia palavras-chave significativas da conversa e categorize por sentimento:
+   - palavras_chave_positivas: Palavras que indicam sentimento positivo (ex: "perfeito", "excelente", "ótimo", "interessante") com contagem de ocorrências
+   - palavras_chave_negativas: Palavras que indicam sentimento negativo (ex: "não", "problema", "difícil", "caro") com contagem de ocorrências
+   - palavras_chave_neutras: Palavras neutras (ex: "talvez", "possivelmente", "ver", "analisar") com contagem de ocorrências
+   
+   Formato: objeto JSON onde a chave é a palavra e o valor é o número de vezes que apareceu na conversa.
+
 FORMATO DE RESPOSTA (JSON):
 {
   "scores": {
@@ -140,16 +240,52 @@ FORMATO DE RESPOSTA (JSON):
     "nivel_engajamento_cliente": 0-5 (opcional),
     "confianca_sdr": 0-5 (opcional)
   },
+  "resultado": "Agendado" | "Não Agendado" | "Qualificação Sucesso",
+  "sentimento_geral": "POSITIVO" | "NEGATIVO" | "NEUTRO",
+  "sentimento_cliente": "POSITIVO" | "NEGATIVO" | "NEUTRO",
+  "sentimento_sdr": "POSITIVO" | "NEGATIVO" | "NEUTRO",
+  "objeções": {
+    "Preço": true/false,
+    "Timing": true/false,
+    "Concorrência": true/false,
+    "Funcionalidades": true/false,
+    "Autoridade": true/false,
+    "Necessidade": true/false,
+    "Confiança": true/false,
+    "Outros": true/false
+  },
+  "objeções_superadas": {
+    "Preço": true/false,
+    "Timing": true/false,
+    "Concorrência": true/false,
+    "Funcionalidades": true/false,
+    "Autoridade": true/false,
+    "Necessidade": true/false,
+    "Confiança": true/false,
+    "Outros": true/false
+  },
+  "palavras_chave_positivas": {
+    "palavra1": quantidade,
+    "palavra2": quantidade
+  },
+  "palavras_chave_negativas": {
+    "palavra1": quantidade,
+    "palavra2": quantidade
+  },
+  "palavras_chave_neutras": {
+    "palavra1": quantidade,
+    "palavra2": quantidade
+  },
   "ai_feedback": "Feedback qualitativo detalhado sobre a ligação, destacando pontos fortes e oportunidades de melhoria (máximo 500 palavras)"
 }`;
 }
 
 async function analyzeWithOpenAI(
   openai: OpenAI,
-  transcription: string,
+  separated: SeparatedTranscription,
   maxRetries = 3
 ): Promise<AnalysisResult> {
-  const prompt = buildAnalysisPrompt(transcription);
+  const prompt = buildAnalysisPrompt(separated);
   let lastError: Error | null = null;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -206,6 +342,24 @@ async function analyzeWithOpenAI(
         }
       }
 
+      // Validar resultado
+      const validResults = ['Agendado', 'Não Agendado', 'Qualificação Sucesso'];
+      if (parsed.resultado && !validResults.includes(parsed.resultado)) {
+        throw new Error(`Resultado inválido: ${parsed.resultado}. Deve ser um de: ${validResults.join(', ')}`);
+      }
+
+      // Validar sentimentos
+      const validSentimentos = ['POSITIVO', 'NEGATIVO', 'NEUTRO'];
+      if (parsed.sentimento_geral && !validSentimentos.includes(parsed.sentimento_geral)) {
+        throw new Error(`Sentimento geral inválido: ${parsed.sentimento_geral}`);
+      }
+      if (parsed.sentimento_cliente && !validSentimentos.includes(parsed.sentimento_cliente)) {
+        throw new Error(`Sentimento cliente inválido: ${parsed.sentimento_cliente}`);
+      }
+      if (parsed.sentimento_sdr && !validSentimentos.includes(parsed.sentimento_sdr)) {
+        throw new Error(`Sentimento SDR inválido: ${parsed.sentimento_sdr}`);
+      }
+
       // Calcular média simples
       const averageScore =
         allScores.reduce((sum, s) => sum + s, 0) / allScores.length;
@@ -247,6 +401,15 @@ async function analyzeWithOpenAI(
         scores: {
           ...scores,
           ai_feedback: aiFeedback,
+          resultado: parsed.resultado,
+          sentimento_geral: parsed.sentimento_geral,
+          sentimento_cliente: parsed.sentimento_cliente,
+          sentimento_sdr: parsed.sentimento_sdr,
+          objeções: parsed.objeções || {},
+          objeções_superadas: parsed.objeções_superadas || {},
+          palavras_chave_positivas: parsed.palavras_chave_positivas || {},
+          palavras_chave_negativas: parsed.palavras_chave_negativas || {},
+          palavras_chave_neutras: parsed.palavras_chave_neutras || {},
         },
         average_score: Math.round(averageScore * 100) / 100,
         weighted_score: Math.round(weightedScore * 100) / 100,
@@ -285,28 +448,44 @@ async function fetchTranscriptions(
   limit?: number,
   force = false
 ): Promise<CallTranscription[]> {
+  const params: any[] = [];
+  let paramIndex = 1;
+
+  // Hardcoded: Filtrar apenas calls do usuário Vitor (meetime_user_id: 41888)
+  const MEETIME_USER_ID = 41888;
+
   let query = `
-    SELECT ct.call_id, ct.transcription_text
+    SELECT ct.call_id, ct.transcription_text, ct.transcription_segments
     FROM call_transcriptions ct
+    INNER JOIN calls c ON ct.call_id = c.id
   `;
+
+  const whereConditions: string[] = [];
 
   if (!force) {
     query += `
       LEFT JOIN monitoria_call_scores mcs ON ct.call_id::text = mcs.call_id
-      WHERE mcs.call_id IS NULL
     `;
+    whereConditions.push(`mcs.call_id IS NULL`);
+  }
+
+  // Filtrar apenas calls do usuário especificado
+  whereConditions.push(`c.user_id = $${paramIndex}::bigint`);
+  params.push(MEETIME_USER_ID);
+  paramIndex++;
+
+  if (whereConditions.length > 0) {
+    query += ` WHERE ${whereConditions.join(' AND ')}`;
   }
 
   query += ` ORDER BY ct.created_at DESC`;
 
   if (limit) {
-    query += ` LIMIT $1`;
+    query += ` LIMIT $${paramIndex}`;
+    params.push(limit);
   }
 
-  const result = await pool.query<CallTranscription>(
-    limit ? query : query.replace('LIMIT $1', ''),
-    limit ? [limit] : []
-  );
+  const result = await pool.query<CallTranscription>(query, params);
 
   return result.rows;
 }
@@ -328,7 +507,8 @@ async function processTranscription(
       return { success: false, error: 'Transcrição vazia' };
     }
 
-    const analysis = await analyzeWithOpenAI(openai, transcription.transcription_text);
+    const separated = separateTranscriptionBySpeaker(transcription);
+    const analysis = await analyzeWithOpenAI(openai, separated);
     await saveScores(pool, transcription.call_id, analysis, dryRun);
 
     console.log(
@@ -413,9 +593,15 @@ async function saveScores(
   const id = randomUUID();
   const now = new Date();
 
+  const userIdQuery = await pool.query(
+    'SELECT user_id FROM calls WHERE id = $1',
+    [callId]
+  );
+  const userId = userIdQuery.rows[0]?.user_id || null;
+
   const query = `
     INSERT INTO monitoria_call_scores (
-      id, call_id,
+      id, call_id, user_id,
       saudacao_apresentacao, apresentacao_empresa, solicitacao_confirmacao_nome,
       tom_voz, rapport,
       perguntas_validacao, escuta_ativa, pitch_solucao, historia_cliente,
@@ -424,19 +610,26 @@ async function saveScores(
       confirmou_entendimento, vendeu_proximo_passo, agendou_concluiu,
       nivel_engajamento_cliente, confianca_sdr,
       average_score, weighted_score, ai_feedback,
+      resultado, sentimento_geral, sentimento_cliente, sentimento_sdr,
+      objeções, objeções_superadas,
+      palavras_chave_positivas, palavras_chave_negativas, palavras_chave_neutras,
       created_at, updated_at
     ) VALUES (
-      $1, $2::text,
-      $3, $4, $5, $6, $7,
-      $8, $9, $10, $11,
-      $12, $13, $14, $15,
-      $16, $17, $18,
-      $19, $20,
-      $21, $22, $23,
-      $24, $25
+      $1, $2::text, $3,
+      $4, $5, $6, $7, $8,
+      $9, $10, $11, $12,
+      $13, $14, $15, $16,
+      $17, $18, $19,
+      $20, $21,
+      $22, $23, $24,
+      $25, $26, $27, $28,
+      $29::jsonb, $30::jsonb,
+      $31::jsonb, $32::jsonb, $33::jsonb,
+      $34, $35
     )
     ON CONFLICT (call_id) 
     DO UPDATE SET
+      user_id = EXCLUDED.user_id,
       saudacao_apresentacao = EXCLUDED.saudacao_apresentacao,
       apresentacao_empresa = EXCLUDED.apresentacao_empresa,
       solicitacao_confirmacao_nome = EXCLUDED.solicitacao_confirmacao_nome,
@@ -458,12 +651,22 @@ async function saveScores(
       average_score = EXCLUDED.average_score,
       weighted_score = EXCLUDED.weighted_score,
       ai_feedback = EXCLUDED.ai_feedback,
+      resultado = EXCLUDED.resultado,
+      sentimento_geral = EXCLUDED.sentimento_geral,
+      sentimento_cliente = EXCLUDED.sentimento_cliente,
+      sentimento_sdr = EXCLUDED.sentimento_sdr,
+      objeções = EXCLUDED.objeções,
+      objeções_superadas = EXCLUDED.objeções_superadas,
+      palavras_chave_positivas = EXCLUDED.palavras_chave_positivas,
+      palavras_chave_negativas = EXCLUDED.palavras_chave_negativas,
+      palavras_chave_neutras = EXCLUDED.palavras_chave_neutras,
       updated_at = EXCLUDED.updated_at
-  `;
+    `;
 
   await pool.query(query, [
     id,
     callId.toString(),
+    userId,
     analysis.scores.saudacao_apresentacao,
     analysis.scores.apresentacao_empresa,
     analysis.scores.solicitacao_confirmacao_nome,
@@ -485,6 +688,15 @@ async function saveScores(
     analysis.average_score,
     analysis.weighted_score,
     analysis.scores.ai_feedback,
+    analysis.scores.resultado || null,
+    analysis.scores.sentimento_geral || null,
+    analysis.scores.sentimento_cliente || null,
+    analysis.scores.sentimento_sdr || null,
+    analysis.scores.objeções ? JSON.stringify(analysis.scores.objeções) : null,
+    analysis.scores.objeções_superadas ? JSON.stringify(analysis.scores.objeções_superadas) : null,
+    analysis.scores.palavras_chave_positivas ? JSON.stringify(analysis.scores.palavras_chave_positivas) : null,
+    analysis.scores.palavras_chave_negativas ? JSON.stringify(analysis.scores.palavras_chave_negativas) : null,
+    analysis.scores.palavras_chave_neutras ? JSON.stringify(analysis.scores.palavras_chave_neutras) : null,
     now,
     now,
   ]);
@@ -564,6 +776,7 @@ async function main() {
 
   try {
     console.log('🔍 Buscando transcrições...');
+    console.log('🔍 Filtrando apenas calls do usuário Vitor (meetime_user_id: 41888)');
     if (args.force) {
       console.log('⚠️  Modo FORCE ativado - re-analisando calls já processadas');
     } else {

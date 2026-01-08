@@ -14,6 +14,7 @@ import {
   Lightbulb
 } from 'lucide-react';
 import { OBJECTION_LIBRARY } from '@/lib/types';
+import { objectionTypeLabels, objectionTypeColors } from '@/lib/objections-constants';
 
 interface ObjectionsAnalysisContentProps {
   data: {
@@ -27,29 +28,29 @@ interface ObjectionsAnalysisContentProps {
   };
 }
 
-const objectionTypeLabels: Record<string, string> = {
-  'preço': 'Preço',
-  'timing': 'Timing',
-  'concorrência': 'Concorrência',
-  'funcionalidades': 'Funcionalidades',
-  'autoridade': 'Autoridade',
-  'necessidade': 'Necessidade',
-  'confiança': 'Confiança',
-  'outros': 'Outros',
-};
-
-const objectionTypeColors: Record<string, string> = {
-  'preço': 'bg-red-500',
-  'timing': 'bg-orange-500',
-  'concorrência': 'bg-purple-500',
-  'funcionalidades': 'bg-blue-500',
-  'autoridade': 'bg-yellow-500',
-  'necessidade': 'bg-pink-500',
-  'confiança': 'bg-green-500',
-  'outros': 'bg-gray-500',
-};
-
 export default function ObjectionsAnalysisContent({ data }: ObjectionsAnalysisContentProps) {
+  const hasData = data.totalObjections > 0;
+
+  if (!hasData) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="py-12">
+            <div className="text-center">
+              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Nenhuma objeção identificada
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Não há objeções registradas nas chamadas analisadas ainda.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* KPIs */}
@@ -137,49 +138,57 @@ export default function ObjectionsAnalysisContent({ data }: ObjectionsAnalysisCo
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {Object.entries(data.objectionsByType)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([type, count]) => {
-                    const typeData = data.objectionOvercomeRate[type];
-                    const rate = typeData
-                      ? (typeData.overcome / typeData.total) * 100
-                      : 0;
+              {Object.keys(data.objectionsByType).length === 0 ? (
+                <p className="text-center text-muted-foreground py-4">
+                  Nenhuma objeção encontrada por tipo
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {Object.entries(data.objectionsByType)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([type, count]) => {
+                      const typeData = data.objectionOvercomeRate[type];
+                      const rate = typeData
+                        ? (typeData.overcome / typeData.total) * 100
+                        : 0;
 
-                    return (
-                      <div key={type} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
+                      return (
+                        <div key={type} className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className={`w-3 h-3 rounded-full ${
+                                  objectionTypeColors[type] || 'bg-gray-500'
+                                }`}
+                              />
+                              <span className="font-medium">
+                                {objectionTypeLabels[type] || type}
+                              </span>
+                              <Badge variant="outline">{count}</Badge>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {rate.toFixed(0)}% superadas
+                            </div>
+                          </div>
+                          <div className="w-full bg-secondary rounded-full h-2">
                             <div
-                              className={`w-3 h-3 rounded-full ${
+                              className={`h-2 rounded-full ${
                                 objectionTypeColors[type] || 'bg-gray-500'
                               }`}
+                              style={{
+                                width: `${
+                                  data.totalObjections > 0
+                                    ? (count / data.totalObjections) * 100
+                                    : 0
+                                }%`,
+                              }}
                             />
-                            <span className="font-medium">
-                              {objectionTypeLabels[type] || type}
-                            </span>
-                            <Badge variant="outline">{count}</Badge>
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {rate.toFixed(0)}% superadas
                           </div>
                         </div>
-                        <div className="w-full bg-secondary rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full ${
-                              objectionTypeColors[type] || 'bg-gray-500'
-                            }`}
-                            style={{
-                              width: `${
-                                (count / data.totalObjections) * 100
-                              }%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
+                      );
+                    })}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -192,37 +201,43 @@ export default function ObjectionsAnalysisContent({ data }: ObjectionsAnalysisCo
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {data.objectionsBySdr.map((sdr, index) => {
-                  const overcomeRate = sdr.total > 0 ? (sdr.overcome / sdr.total) * 100 : 0;
-                  return (
-                    <div
-                      key={sdr.name}
-                      className="flex items-center justify-between p-3 rounded-lg border"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold">
-                          #{index + 1}
+              {!data.objectionsBySdr || data.objectionsBySdr.length === 0 ? (
+                <p className="text-center text-muted-foreground py-4">
+                  Nenhum SDR encontrado com objeções
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {data.objectionsBySdr.map((sdr, index) => {
+                    const overcomeRate = sdr.total > 0 ? (sdr.overcome / sdr.total) * 100 : 0;
+                    return (
+                      <div
+                        key={sdr.name}
+                        className="flex items-center justify-between p-3 rounded-lg border"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold">
+                            #{index + 1}
+                          </div>
+                          <div>
+                            <div className="font-medium">{sdr.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {sdr.overcome}/{sdr.total} superadas
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-medium">{sdr.name}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {sdr.overcome}/{sdr.total} superadas
+                        <div className="text-right">
+                          <div className="text-lg font-bold">
+                            {overcomeRate.toFixed(1)}%
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            taxa de sucesso
                           </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold">
-                          {overcomeRate.toFixed(1)}%
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          taxa de sucesso
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
