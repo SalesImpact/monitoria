@@ -47,7 +47,13 @@ async function getReportsData() {
     const avgScore = totalCalls > 0 
       ? calls.reduce((acc: number, call: CallType) => acc + (call.averageScore || 0), 0) / totalCalls
       : 0;
-    const successfulCalls = calls.filter((c: CallType) => c.result === 'agendado').length;
+    const isSuccessfulCall = (result: string | null | undefined): boolean => {
+      if (!result) return false;
+      const normalized = result.toLowerCase().trim().replace(/_/g, ' ');
+      return normalized === 'agendado' || normalized === 'qualificação sucesso';
+    };
+    
+    const successfulCalls = calls.filter((c: CallType) => isSuccessfulCall(c.result)).length;
     const successRate = totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
 
     return {

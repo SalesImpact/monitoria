@@ -28,6 +28,12 @@ export default function CallsChart({ calls }: CallsChartProps) {
     );
   }
 
+  const isSuccessfulCall = (result: string | null | undefined): boolean => {
+    if (!result) return false;
+    const normalized = result.toLowerCase().trim().replace(/_/g, ' ');
+    return normalized === 'agendado' || normalized === 'qualificação sucesso';
+  };
+
   // Group calls by SDR and calculate averages
   const sdrData = calls.reduce((acc, call) => {
     if (!call.averageScore) return acc;
@@ -44,7 +50,7 @@ export default function CallsChart({ calls }: CallsChartProps) {
     acc[call.sdrName].totalScore += call.averageScore;
     acc[call.sdrName].totalCalls += 1;
     
-    if (call.result === 'agendado' || call.result === 'qualificação_sucesso') {
+    if (isSuccessfulCall(call.result)) {
       acc[call.sdrName].successfulCalls += 1;
     }
     

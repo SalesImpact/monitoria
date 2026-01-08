@@ -26,11 +26,20 @@ export default function DashboardStats({ calls }: DashboardStatsProps) {
   
   // Calculate various statistics
   const totalCalls = safeCalls.length;
-  const averageScore = totalCalls > 0 
+  const averageScoreRaw = totalCalls > 0 
     ? safeCalls.reduce((sum, call) => sum + (call.averageScore || 0), 0) / totalCalls
     : 0;
+  // Convert from 0-5 scale to 0-100 scale
+  const averageScore = averageScoreRaw * 20;
+  
+  const isSuccessfulCall = (result: string | null | undefined): boolean => {
+    if (!result) return false;
+    const normalized = result.toLowerCase().trim().replace(/_/g, ' ');
+    return normalized === 'agendado' || normalized === 'qualificação sucesso';
+  };
+  
   const successfulCalls = safeCalls.filter(call => 
-    call.result === 'agendado' || call.result === 'qualificação_sucesso'
+    isSuccessfulCall(call.result)
   ).length;
   const successRate = totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
   
