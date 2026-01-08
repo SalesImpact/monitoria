@@ -17,6 +17,7 @@ interface CallFromAPI {
   connectedDurationSeconds: number | null;
   callLink: string | null;
   storedAudioUrl: string | null;
+  storedAudioFilename: string | null;
   projectName: string | null;
   meetimeUser: {
     id: number;
@@ -44,6 +45,8 @@ interface Call {
   callType: string;
   result: string;
   audioFile?: string | null;
+  storedAudioUrl?: string | null;
+  storedAudioFilename?: string | null;
   transcription?: string | null;
   averageScore?: number | null;
   sdr: {
@@ -105,6 +108,8 @@ export default function MonitoringPage() {
           callType: 'call_real',
           result: '', // Deixar em branco por enquanto
           audioFile: call.storedAudioUrl || call.callLink || null,
+          storedAudioUrl: call.storedAudioUrl || null,
+          storedAudioFilename: call.storedAudioFilename || null,
           transcription: null,
           averageScore: null,
           sdr: {

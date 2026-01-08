@@ -87,6 +87,8 @@ interface Call {
   callType: string;
   result: string;
   audioFile?: string | null;
+  storedAudioUrl?: string | null;
+  storedAudioFilename?: string | null;
   transcription?: string | null;
   averageScore?: number | null;
   sdr: {
@@ -498,13 +500,17 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
                               </div>
 
                               {/* Audio Player */}
-                              {call.audioFile && (
+                              {(call.audioFile || call.storedAudioUrl) && (
                                 <div className="bg-white p-6 rounded-xl border border-gray-200">
                                   <div className="flex items-center space-x-2 mb-3">
                                     <Volume2 className="w-5 h-5 text-brand-green" />
                                     <h4 className="font-semibold text-brand-dark">Áudio da Ligação</h4>
                                   </div>
-                                  <AudioPlayer audioFile={call.audioFile} />
+                                  <AudioPlayer 
+                                    audioFile={call.audioFile}
+                                    storedAudioUrl={call.storedAudioUrl}
+                                    storedAudioFilename={call.storedAudioFilename}
+                                  />
                                 </div>
                               )}
 

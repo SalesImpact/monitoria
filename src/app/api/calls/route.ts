@@ -95,6 +95,7 @@ export async function GET(request: NextRequest) {
         c.call_type,
         c.call_link,
         c.stored_audio_url,
+        c.stored_audio_filename,
         c.audio_duration_seconds,
         c.created_at,
         mu.id as meetime_user_id,
@@ -134,6 +135,7 @@ export async function GET(request: NextRequest) {
       callType: call.call_type,
       callLink: call.call_link,
       storedAudioUrl: call.stored_audio_url,
+      storedAudioFilename: call.stored_audio_filename,
       audioDurationSeconds: call.audio_duration_seconds,
       createdAt: call.created_at,
       meetimeUser: call.meetime_user_id ? {

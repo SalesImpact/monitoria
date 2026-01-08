@@ -4,47 +4,116 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { Play, Pause, Volume2, VolumeX, RotateCcw, RotateCw } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, RotateCcw, RotateCw, Loader2 } from 'lucide-react';
 
 interface AudioPlayerProps {
-  audioFile: string;
+  audioFile?: string | null;
+  storedAudioUrl?: string | null;
+  storedAudioFilename?: string | null;
 }
 
-export default function AudioPlayer({ audioFile }: AudioPlayerProps) {
+export default function AudioPlayer({ 
+  audioFile, 
+  storedAudioUrl, 
+  storedAudioFilename 
+}: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Buscar URL assinada do DigitalOcean Spaces
+  useEffect(() => {
+    const fetchSignedUrl = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Se já temos uma URL completa (não do Spaces), usar diretamente
+        if (audioFile && (audioFile.startsWith('http://') || audioFile.startsWith('https://'))) {
+          setAudioUrl(audioFile);
+          setIsLoading(false);
+          return;
+        }
+
+        // Se não temos nenhuma informação de áudio, não fazer nada
+        if (!audioFile && !storedAudioUrl && !storedAudioFilename) {
+          setIsLoading(false);
+          setError('Nenhum arquivo de áudio disponível');
+          return;
+        }
+
+        // Construir parâmetros para a API
+        const params = new URLSearchParams();
+        if (storedAudioFilename) {
+          params.append('filename', storedAudioFilename);
+        } else if (storedAudioUrl) {
+          params.append('storedAudioUrl', storedAudioUrl);
+        } else if (audioFile) {
+          params.append('filename', audioFile);
+        }
+
+        const response = await fetch(`/api/audio/url?${params.toString()}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao buscar URL do áudio');
+        }
+
+        const data = await response.json();
+        setAudioUrl(data.url);
+      } catch (err: any) {
+        console.error('Erro ao buscar URL do áudio:', err);
+        setError(err.message || 'Erro ao carregar áudio');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSignedUrl();
+  }, [audioFile, storedAudioUrl, storedAudioFilename]);
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !audioUrl) return;
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
     const handleEnded = () => setIsPlaying(false);
+    const handleError = () => {
+      setError('Erro ao reproduzir áudio');
+      setIsPlaying(false);
+    };
 
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime);
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
     };
-  }, []);
+  }, [audioUrl]);
 
   const togglePlayPause = () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !audioUrl) return;
 
     if (isPlaying) {
       audio.pause();
     } else {
-      audio.play();
+      audio.play().catch((err) => {
+        console.error('Erro ao reproduzir:', err);
+        setError('Erro ao reproduzir áudio');
+      });
     }
     setIsPlaying(!isPlaying);
   };
@@ -103,11 +172,28 @@ export default function AudioPlayer({ audioFile }: AudioPlayerProps) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center space-x-2">
+        <Loader2 className="w-5 h-5 animate-spin text-brand-green" />
+        <span className="text-sm text-gray-600">Carregando áudio...</span>
+      </div>
+    );
+  }
+
+  if (error || !audioUrl) {
+    return (
+      <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+        <p className="text-sm text-red-600">{error || 'Áudio não disponível'}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 p-4 rounded-lg border space-y-3">
       <audio
         ref={audioRef}
-        src={`/${audioFile}`}
+        src={audioUrl}
         preload="metadata"
       />
       
@@ -143,6 +229,7 @@ export default function AudioPlayer({ audioFile }: AudioPlayerProps) {
             size="sm"
             onClick={togglePlayPause}
             className="p-2"
+            disabled={!audioUrl}
           >
             {isPlaying ? (
               <Pause className="w-4 h-4" />
