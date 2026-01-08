@@ -5,105 +5,100 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Target, TrendingUp, Award, PlayCircle, BookOpen, Video, FileText, AlertCircle, Users } from 'lucide-react';
-import { CRITERIA_WEIGHTS } from '@/lib/types';
+import { Target, TrendingUp, PlayCircle, Video, FileText, AlertCircle, Users } from 'lucide-react';
 
-// Função para calcular áreas de melhoria
-function calculateImprovementAreas(calls: any[]) {
-  const criteriaScores: { [key: string]: { total: number; count: number; weight: number } } = {};
-  
-  calls.forEach(call => {
-    if (!call.scores) return;
-    
-    Object.entries(call.scores).forEach(([key, value]) => {
-      if (typeof value === 'number' && key !== 'id' && key !== 'callId') {
-        const category = getCategoryForCriteria(key);
-        const weight = (CRITERIA_WEIGHTS as any)[category]?.[toCamelCase(key)] || 1.0;
-        
-        if (!criteriaScores[key]) {
-          criteriaScores[key] = { total: 0, count: 0, weight };
-        }
-        criteriaScores[key].total += value;
-        criteriaScores[key].count += 1;
-      }
-    });
-  });
-  
-  const improvements = Object.entries(criteriaScores)
-    .map(([criterio, data]) => {
-      const scoreAtual = data.total / data.count;
-      const gap = 5 - scoreAtual;
-      return {
-        criterio: formatCriteriaName(criterio),
-        categoria: getCategoryForCriteria(criterio),
-        score_atual: scoreAtual,
-        score_ideal: 5,
-        gap: gap,
-        prioridade: gap > 2 ? 'alta' : gap > 1 ? 'média' : 'baixa',
-        peso: data.weight,
-      };
-    })
-    .sort((a, b) => (b.gap * b.peso) - (a.gap * a.peso))
-    .slice(0, 3);
-  
-  return improvements;
-}
-
-function getCategoryForCriteria(criterio: string): string {
-  const categories: { [key: string]: string } = {
-    'saudacaoApresentacao': 'abertura',
-    'apresentacaoEmpresa': 'abertura',
-    'solicitacaoConfirmacaoNome': 'abertura',
-    'tomVoz': 'abertura',
-    'rapport': 'abertura',
-    'perguntasValidacao': 'validacao_objetivo',
-    'escutaAtiva': 'validacao_objetivo',
-    'pitchSolucao': 'validacao_objetivo',
-    'historiaCliente': 'validacao_objetivo',
-    'perguntasSituacao': 'spin_selling',
-    'perguntasProblema': 'spin_selling',
-    'perguntasImplicacao': 'spin_selling',
-    'perguntasNecessidadeSolucao': 'spin_selling',
-    'confirmouEntendimento': 'proximos_passos',
-    'vendeuProximoPasso': 'proximos_passos',
-    'agendouConcluiu': 'proximos_passos',
-    'nivelEngajamentoCliente': 'sentimento',
-    'confiancaSdr': 'sentimento',
-  };
-  return categories[criterio] || 'outros';
-}
-
-function toCamelCase(str: string): string {
-  return str.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-}
-
-function formatCriteriaName(criterio: string): string {
-  const names: { [key: string]: string } = {
-    'saudacaoApresentacao': 'Saudação e Apresentação',
-    'apresentacaoEmpresa': 'Apresentação da Empresa',
-    'solicitacaoConfirmacaoNome': 'Confirmação do Nome',
-    'tomVoz': 'Tom de Voz',
-    'rapport': 'Rapport',
-    'perguntasValidacao': 'Perguntas de Validação',
-    'escutaAtiva': 'Escuta Ativa',
-    'pitchSolucao': 'Pitch da Solução',
-    'historiaCliente': 'História do Cliente',
-    'perguntasSituacao': 'Perguntas de Situação',
-    'perguntasProblema': 'Perguntas de Problema',
-    'perguntasImplicacao': 'Perguntas de Implicação',
-    'perguntasNecessidadeSolucao': 'Perguntas de Necessidade',
-    'confirmouEntendimento': 'Confirmação de Entendimento',
-    'vendeuProximoPasso': 'Venda do Próximo Passo',
-    'agendouConcluiu': 'Agendamento/Conclusão',
-    'nivelEngajamentoCliente': 'Engajamento do Cliente',
-    'confiancaSdr': 'Confiança do SDR',
-  };
-  return names[criterio] || criterio;
-}
-
-// Micro treinamentos simulados
 function generateMicroTrainings(improvements: any[]) {
-  const trainingLibrary: { [key: string]: any[] } = {
+  const trainingLibrary: Record<string, any[]> = {
+    'Saudação e Apresentação': [
+      {
+        id: 'mt_saudacao_1',
+        titulo: 'Saudação e Apresentação Profissional',
+        tipo: 'vídeo',
+        duracao_minutos: 5,
+        descricao: 'Técnicas para uma saudação calorosa e apresentação clara do seu nome.',
+        nivel: 'iniciante',
+      }
+    ],
+    'Apresentação da Empresa': [
+      {
+        id: 'mt_empresa_1',
+        titulo: 'Como Apresentar sua Empresa de Forma Clara',
+        tipo: 'vídeo',
+        duracao_minutos: 6,
+        descricao: 'Aprenda a mencionar sua empresa de forma contextualizada e credível.',
+        nivel: 'iniciante',
+      }
+    ],
+    'Confirmação do Nome': [
+      {
+        id: 'mt_nome_1',
+        titulo: 'Confirmação Educada do Nome',
+        tipo: 'artigo',
+        duracao_minutos: 3,
+        descricao: 'Técnicas para confirmar o nome do interlocutor de forma natural.',
+        nivel: 'iniciante',
+      }
+    ],
+    'Tom de Voz': [
+      {
+        id: 'mt_tom_1',
+        titulo: 'Tom de Voz Profissional e Confiante',
+        tipo: 'vídeo',
+        duracao_minutos: 8,
+        descricao: 'Como transmitir profissionalismo e engajamento através do tom de voz.',
+        nivel: 'iniciante',
+      }
+    ],
+    'Rapport': [
+      {
+        id: 'mt_rapport_1',
+        titulo: 'Construindo Rapport Rapidamente',
+        tipo: 'vídeo',
+        duracao_minutos: 7,
+        descricao: 'Estratégias comprovadas para criar conexão genuína com prospects.',
+        nivel: 'iniciante',
+      }
+    ],
+    'Perguntas de Validação': [
+      {
+        id: 'mt_validacao_1',
+        titulo: 'Perguntas de Validação Eficazes',
+        tipo: 'vídeo',
+        duracao_minutos: 10,
+        descricao: 'Técnicas para fazer perguntas qualificadoras e validar interesse.',
+        nivel: 'intermediário',
+      }
+    ],
+    'Escuta Ativa': [
+      {
+        id: 'mt_escuta_1',
+        titulo: 'Escuta Ativa: Além de Ouvir',
+        tipo: 'artigo',
+        duracao_minutos: 5,
+        descricao: 'Técnicas práticas para melhorar sua escuta ativa e captar sinais importantes.',
+        nivel: 'iniciante',
+      }
+    ],
+    'Pitch da Solução': [
+      {
+        id: 'mt_pitch_1',
+        titulo: 'Pitch Customizado e Focado em Benefícios',
+        tipo: 'vídeo',
+        duracao_minutos: 12,
+        descricao: 'Como criar um pitch relevante que conecta solução às necessidades do cliente.',
+        nivel: 'intermediário',
+      }
+    ],
+    'História do Cliente': [
+      {
+        id: 'mt_historia_1',
+        titulo: 'Usando Cases e Exemplos de Sucesso',
+        tipo: 'vídeo',
+        duracao_minutos: 8,
+        descricao: 'Como contar histórias relevantes e impactantes para aumentar credibilidade.',
+        nivel: 'intermediário',
+      }
+    ],
     'Perguntas de Situação': [
       {
         id: 'mt_spin_situacao_1',
@@ -134,27 +129,37 @@ function generateMicroTrainings(improvements: any[]) {
         nivel: 'avançado',
       }
     ],
-    'Escuta Ativa': [
+    'Perguntas de Necessidade': [
       {
-        id: 'mt_escuta_1',
-        titulo: 'Escuta Ativa: Além de Ouvir',
-        tipo: 'artigo',
-        duracao_minutos: 5,
-        descricao: 'Técnicas práticas para melhorar sua escuta ativa e captar sinais importantes.',
-        nivel: 'iniciante',
-      }
-    ],
-    'Rapport': [
-      {
-        id: 'mt_rapport_1',
-        titulo: 'Construindo Rapport Rapidamente',
+        id: 'mt_spin_necessidade_1',
+        titulo: 'Perguntas de Necessidade-Solução (SPIN)',
         tipo: 'vídeo',
-        duracao_minutos: 7,
-        descricao: 'Estratégias comprovadas para criar conexão genuína com prospects.',
+        duracao_minutos: 10,
+        descricao: 'Técnicas para fazer o cliente verbalizar o valor da solução.',
+        nivel: 'avançado',
+      }
+    ],
+    'Confirmou Entendimento': [
+      {
+        id: 'mt_entendimento_1',
+        titulo: 'Confirmação de Entendimento',
+        tipo: 'artigo',
+        duracao_minutos: 4,
+        descricao: 'Como resumir pontos-chave e confirmar alinhamento para evitar mal-entendidos.',
         nivel: 'iniciante',
       }
     ],
-    'Agendamento/Conclusão': [
+    'Vendeu Próximo Passo': [
+      {
+        id: 'mt_proximo_passo_1',
+        titulo: 'Vendendo o Próximo Passo com Valor',
+        tipo: 'vídeo',
+        duracao_minutos: 9,
+        descricao: 'Técnicas para propor próximo passo com valor claro e manter momentum.',
+        nivel: 'intermediário',
+      }
+    ],
+    'Agendou/Concluiu': [
       {
         id: 'mt_fechamento_1',
         titulo: 'Técnicas de Fechamento e Agendamento',
@@ -182,9 +187,8 @@ function generateMicroTrainings(improvements: any[]) {
   ];
 }
 
-// Role-plays simulados
 function generateRolePlays(improvements: any[]) {
-  const rolePlayLibrary: { [key: string]: any } = {
+  const rolePlayLibrary: Record<string, any> = {
     'spin_selling': {
       id: 'rp_spin_1',
       titulo: 'Prática de SPIN Selling Completo',
@@ -200,6 +204,14 @@ function generateRolePlays(improvements: any[]) {
       objetivo: 'Criar conexão rápida, apresentar valor e conseguir 2 minutos de atenção',
       nivel_dificuldade: 'fácil',
       tempo_estimado_minutos: 10,
+    },
+    'validacao_objetivo': {
+      id: 'rp_validacao_1',
+      titulo: 'Validação e Qualificação de Lead',
+      contexto: 'Lead demonstra interesse inicial mas precisa ser qualificado',
+      objetivo: 'Validar necessidade, orçamento e autoridade para decisão',
+      nivel_dificuldade: 'médio',
+      tempo_estimado_minutos: 12,
     },
     'proximos_passos': {
       id: 'rp_fechamento_1',
@@ -226,17 +238,18 @@ export default function CoachingPage() {
         const response = await fetch('/api/coaching-data');
         const data = await response.json();
         
-        const processedData = data.map((sdr: any) => {
-          const improvements = calculateImprovementAreas(sdr.calls);
-          return {
-            sdr,
-            improvements,
-            microTrainings: generateMicroTrainings(improvements),
-            rolePlays: generateRolePlays(improvements),
-            averageScore: sdr.calls.reduce((acc: number, call: any) => acc + (call.averageScore || 0), 0) / (sdr.calls.length || 1),
-            totalCalls: sdr.calls.length,
-          };
-        });
+        const processedData = data.sdrs.map((sdr: any) => ({
+          sdr: {
+            id: sdr.id,
+            name: sdr.name,
+            email: sdr.email,
+          },
+          improvements: sdr.topImprovements || [],
+          microTrainings: generateMicroTrainings(sdr.topImprovements || []),
+          rolePlays: generateRolePlays(sdr.topImprovements || []),
+          averageScore: sdr.averageScore || 0,
+          totalCalls: sdr.totalCalls || 0,
+        }));
         
         setCoachingData(processedData);
       } catch (error) {
@@ -348,8 +361,8 @@ export default function CoachingPage() {
                           </Badge>
                           <span className="font-medium text-sm">{imp.criterio}</span>
                         </div>
-                        <p className="text-xs text-gray-600 capitalize">
-                          Categoria: {imp.categoria.replace('_', ' ')}
+                        <p className="text-xs text-gray-600">
+                          Categoria: {imp.categoria}
                         </p>
                       </div>
                       <div className="text-right ml-4">
