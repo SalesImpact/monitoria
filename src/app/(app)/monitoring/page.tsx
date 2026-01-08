@@ -20,12 +20,35 @@ interface CallFromAPI {
   storedAudioFilename: string | null;
   averageScore: number | null;
   sentimentoGeral: string | null;
+  sentimentoCliente: string | null;
+  sentimentoSdr: string | null;
   resultado: string | null;
   projectName: string | null;
   meetimeUser: {
     id: number;
     name: string | null;
     email: string | null;
+  } | null;
+  scores?: {
+    saudacaoApresentacao: number;
+    apresentacaoEmpresa: number;
+    solicitacaoConfirmacaoNome: number;
+    tomVoz: number;
+    rapport: number;
+    perguntasValidacao: number;
+    escutaAtiva: number;
+    pitchSolucao: number;
+    historiaCliente: number;
+    perguntasSituacao: number;
+    perguntasProblema: number;
+    perguntasImplicacao: number;
+    perguntasNecessidadeSolucao: number;
+    confirmouEntendimento: number;
+    vendeuProximoPasso: number;
+    agendouConcluiu: number;
+    nivelEngajamentoCliente?: number | null;
+    confiancaSdr?: number | null;
+    aiFeedback?: string | null;
   } | null;
 }
 
@@ -64,6 +87,28 @@ interface Call {
   sentimentJourney?: any;
   detectedTopics?: any;
   detectedKeywords?: any;
+}
+
+function generateEmotionalTone(overall: string, client: string, sdr: string): string {
+  const overallText = overall.toLowerCase();
+  const clientText = client.toLowerCase();
+  const sdrText = sdr.toLowerCase();
+  
+  const overallLabel = overallText === 'positivo' ? 'positivo' : 
+                       overallText === 'negativo' ? 'negativo' : 
+                       overallText === 'entusiasmado' ? 'entusiasmado' : 'neutro';
+  
+  const clientLabel = clientText === 'positivo' ? 'atitude positiva' :
+                      clientText === 'negativo' ? 'atitude negativa' :
+                      clientText === 'frustrado' ? 'frustração' :
+                      clientText === 'entusiasmado' ? 'entusiasmo' : 'atitude neutra';
+  
+  const sdrLabel = sdrText === 'confiante' ? 'postura confiante' :
+                   sdrText === 'positivo' ? 'postura positiva' :
+                   sdrText === 'entusiasmado' ? 'postura entusiasmada' :
+                   sdrText === 'inseguro' ? 'postura insegura' : 'postura neutra';
+  
+  return `Análise geral: ${overallLabel}. Cliente demonstrou ${clientLabel}, SDR apresentou ${sdrLabel}.`;
 }
 
 export default function MonitoringPage() {
@@ -172,15 +217,19 @@ export default function MonitoringPage() {
             name: call.meetimeUser?.name || call.userName || 'Usuário Desconhecido',
             email: call.meetimeUser?.email || '',
           },
-          scores: null,
+          scores: call.scores || null,
           keywords: [],
-          sentimentAnalysis: call.sentimentoGeral ? {
-            overall: call.sentimentoGeral,
-            client: call.sentimentoGeral,
-            sdr: call.sentimentoGeral,
-            confidence: 0,
-            emotionalTone: ''
-          } : undefined, // Usar sentimento_geral da tabela monitoria_call_scores
+          sentimentAnalysis: (call.sentimentoGeral || call.sentimentoCliente || call.sentimentoSdr || call.scores) ? {
+            overall: call.sentimentoGeral || 'neutro',
+            client: call.sentimentoCliente || 'neutro',
+            sdr: call.sentimentoSdr || 'neutro',
+            confidence: call.averageScore ? Math.round((call.averageScore / 5) * 100) : 0,
+            emotionalTone: generateEmotionalTone(
+              call.sentimentoGeral || 'neutro',
+              call.sentimentoCliente || 'neutro',
+              call.sentimentoSdr || 'neutro'
+            )
+          } : undefined,
           sentimentJourney: undefined,
           detectedTopics: undefined,
           detectedKeywords: undefined,

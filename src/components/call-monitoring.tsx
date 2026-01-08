@@ -579,7 +579,7 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
                                           {call.sentimentAnalysis.overall}
                                         </Badge>
                                         <p className="text-xs text-gray-500 mt-2">
-                                          Confiança: {call.sentimentAnalysis.confidence}%
+                                          Confiança: {call.sentimentAnalysis.confidence || (call.averageScore ? Math.round((call.averageScore / 5) * 100) : 0)}%
                                         </p>
                                       </CardContent>
                                     </Card>
@@ -593,9 +593,13 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
                                         <Badge className={`${getSentimentBadgeColor(call.sentimentAnalysis.client)} text-sm capitalize`}>
                                           {call.sentimentAnalysis.client}
                                         </Badge>
-                                        {call.scores?.nivelEngajamentoCliente && (
+                                        {call.scores?.nivelEngajamentoCliente !== null && call.scores?.nivelEngajamentoCliente !== undefined ? (
                                           <p className="text-xs text-gray-500 mt-2">
                                             Engajamento: {call.scores.nivelEngajamentoCliente}/5
+                                          </p>
+                                        ) : (
+                                          <p className="text-xs text-gray-400 mt-2">
+                                            Engajamento: N/A
                                           </p>
                                         )}
                                       </CardContent>
@@ -610,9 +614,13 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
                                         <Badge className={`${getSentimentBadgeColor(call.sentimentAnalysis.sdr)} text-sm capitalize`}>
                                           {call.sentimentAnalysis.sdr}
                                         </Badge>
-                                        {call.scores?.confiancaSdr && (
+                                        {call.scores?.confiancaSdr !== null && call.scores?.confiancaSdr !== undefined ? (
                                           <p className="text-xs text-gray-500 mt-2">
                                             Confiança: {call.scores.confiancaSdr}/5
+                                          </p>
+                                        ) : (
+                                          <p className="text-xs text-gray-400 mt-2">
+                                            Confiança: N/A
                                           </p>
                                         )}
                                       </CardContent>
@@ -620,12 +628,14 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
                                   </div>
 
                                   {/* Emotional Tone */}
-                                  <Card>
-                                    <CardContent className="p-4">
-                                      <h4 className="font-semibold text-gray-900 mb-2">Tom Emocional</h4>
-                                      <p className="text-sm text-gray-700">{call.sentimentAnalysis.emotionalTone}</p>
-                                    </CardContent>
-                                  </Card>
+                                  {call.sentimentAnalysis.emotionalTone && (
+                                    <Card>
+                                      <CardContent className="p-4">
+                                        <h4 className="font-semibold text-gray-900 mb-2">Tom Emocional</h4>
+                                        <p className="text-sm text-gray-700">{call.sentimentAnalysis.emotionalTone}</p>
+                                      </CardContent>
+                                    </Card>
+                                  )}
 
                                   {/* Sentiment Journey Chart */}
                                   {call.sentimentJourney && call.sentimentJourney.length > 0 && (
@@ -635,6 +645,12 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
                                     />
                                   )}
                                 </>
+                              )}
+                              {!call.sentimentAnalysis && (
+                                <div className="text-center py-8">
+                                  <Meh className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                  <p className="text-gray-600">Nenhuma análise de sentimento disponível para esta ligação</p>
+                                </div>
                               )}
                             </TabsContent>
 
