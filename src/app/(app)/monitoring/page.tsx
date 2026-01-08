@@ -18,6 +18,9 @@ interface CallFromAPI {
   callLink: string | null;
   storedAudioUrl: string | null;
   storedAudioFilename: string | null;
+  averageScore: number | null;
+  sentimentoGeral: string | null;
+  resultado: string | null;
   projectName: string | null;
   meetimeUser: {
     id: number;
@@ -72,16 +75,69 @@ export default function MonitoringPage() {
   const [pageSize, setPageSize] = useState(25);
   const [total, setTotal] = useState(0);
   const [hasAccounts, setHasAccounts] = useState(true);
+  
+  // Filtros e valores únicos
+  const [filters, setFilters] = useState<{
+    sdr?: string;
+    result?: string;
+    sentiment?: string;
+    type?: string;
+  }>({});
+  const [filterOptions, setFilterOptions] = useState<{
+    sdrs: string[];
+    results: string[];
+    sentiments: string[];
+    types: string[];
+  }>({
+    sdrs: [],
+    results: [],
+    sentiments: [],
+    types: []
+  });
+
+  useEffect(() => {
+    fetchFilterOptions();
+  }, []);
 
   useEffect(() => {
     fetchCalls();
-  }, [filter, currentPage, pageSize]);
+  }, [filter, currentPage, pageSize, filters]);
+
+  const fetchFilterOptions = async () => {
+    try {
+      const response = await fetch('/api/calls/filters');
+      if (response.ok) {
+        const data = await response.json();
+        setFilterOptions({
+          sdrs: data.sdrs || [],
+          results: data.results || [],
+          sentiments: data.sentiments || [],
+          types: data.types || []
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao buscar opções de filtro:', error);
+    }
+  };
 
   const fetchCalls = async () => {
     try {
       setLoading(true);
       const offset = (currentPage - 1) * pageSize;
-      const response = await fetch(`/api/calls?filter=${filter}&limit=${pageSize}&offset=${offset}`);
+      
+      // Construir query string com filtros
+      const params = new URLSearchParams({
+        filter: filter,
+        limit: String(pageSize),
+        offset: String(offset),
+      });
+      
+      if (filters.sdr && filters.sdr !== 'all') params.append('sdr', filters.sdr);
+      if (filters.result && filters.result !== 'all') params.append('result', filters.result);
+      if (filters.sentiment && filters.sentiment !== 'all') params.append('sentiment', filters.sentiment);
+      if (filters.type && filters.type !== 'all') params.append('type', filters.type);
+      
+      const response = await fetch(`/api/calls?${params.toString()}`);
       
       if (!response.ok) {
         throw new Error('Erro ao buscar ligações');
@@ -105,20 +161,26 @@ export default function MonitoringPage() {
           prospectName: call.receiverPhone || 'N/A',
           date: new Date(call.date),
           duration: duration,
-          callType: 'call_real',
-          result: '', // Deixar em branco por enquanto
+          callType: call.callType || 'call_real',
+          result: call.resultado || '', // Usar resultado da tabela monitoria_call_scores
           audioFile: call.storedAudioUrl || call.callLink || null,
           storedAudioUrl: call.storedAudioUrl || null,
           storedAudioFilename: call.storedAudioFilename || null,
           transcription: null,
-          averageScore: null,
+          averageScore: call.averageScore || null, // Usar average_score da tabela monitoria_call_scores
           sdr: {
             name: call.meetimeUser?.name || call.userName || 'Usuário Desconhecido',
             email: call.meetimeUser?.email || '',
           },
           scores: null,
           keywords: [],
-          sentimentAnalysis: undefined, // Deixar em branco por enquanto
+          sentimentAnalysis: call.sentimentoGeral ? {
+            overall: call.sentimentoGeral,
+            client: call.sentimentoGeral,
+            sdr: call.sentimentoGeral,
+            confidence: 0,
+            emotionalTone: ''
+          } : undefined, // Usar sentimento_geral da tabela monitoria_call_scores
           sentimentJourney: undefined,
           detectedTopics: undefined,
           detectedKeywords: undefined,
@@ -188,9 +250,16 @@ export default function MonitoringPage() {
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
         </div>
-      ) : (
-        <>
-          <CallMonitoring calls={calls} />
+          ) : (
+            <>
+            <CallMonitoring 
+              calls={calls} 
+              filterOptions={filterOptions}
+              onFiltersChange={(newFilters) => {
+                setFilters(newFilters);
+                setCurrentPage(1); // Resetar página ao mudar filtros
+              }}
+            />
 
           {/* Paginação */}
           {totalPages > 1 && (

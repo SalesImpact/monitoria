@@ -20,6 +20,12 @@ export async function GET(request: NextRequest) {
     const filter = searchParams.get('filter'); // 'my-calls' | 'all'
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 100;
     const offset = searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0;
+    
+    // Filtros adicionais
+    const sdrFilter = searchParams.get('sdr');
+    const resultFilter = searchParams.get('result');
+    const sentimentFilter = searchParams.get('sentiment');
+    const typeFilter = searchParams.get('type');
 
     // Sempre buscar apenas calls de usuários Meetime associados a usuários cadastrados
     // Buscar todos os IDs Meetime que estão associados a usuários do sistema
@@ -75,14 +81,43 @@ export async function GET(request: NextRequest) {
     // Se filter === 'all', já está filtrado por associatedMeetimeUserIds acima
 
     // Construir condição WHERE para a query SQL
-    let whereCondition = 'TRUE';
+    let whereConditions: string[] = [];
+    
+    // Filtro de usuários
     if (whereClause.userId && whereClause.userId.in) {
       const userIds = whereClause.userId.in.map(id => id.toString()).join(',');
-      whereCondition = `c.user_id IN (${userIds})`;
+      whereConditions.push(`c.user_id IN (${userIds})`);
     }
+    
+    // Filtro de SDR (nome do usuário)
+    if (sdrFilter && sdrFilter !== 'all') {
+      const escapedSdr = sdrFilter.replace(/'/g, "''");
+      whereConditions.push(`(mu.name = '${escapedSdr}' OR c.user_name = '${escapedSdr}')`);
+    }
+    
+    // Filtro de Resultado
+    if (resultFilter && resultFilter !== 'all') {
+      const escapedResult = resultFilter.replace(/'/g, "''");
+      whereConditions.push(`mcs.resultado = '${escapedResult}'`);
+    }
+    
+    // Filtro de Sentimento
+    if (sentimentFilter && sentimentFilter !== 'all') {
+      const escapedSentiment = sentimentFilter.replace(/'/g, "''");
+      whereConditions.push(`mcs.sentimento_geral = '${escapedSentiment}'`);
+    }
+    
+    // Filtro de Tipo
+    if (typeFilter && typeFilter !== 'all') {
+      const escapedType = typeFilter.replace(/'/g, "''");
+      whereConditions.push(`c.call_type = '${escapedType}'`);
+    }
+    
+    const whereCondition = whereConditions.length > 0 ? whereConditions.join(' AND ') : 'TRUE';
 
     // Buscar calls com paginação e projeto (cliente) via cadência
     // Join: calls -> activities -> leads -> prospections -> cadences -> projects
+    // Join: calls -> monitoria_call_scores (para scores, sentimento e resultado)
     const callsWithProject = await prisma.$queryRawUnsafe<any[]>(`
       SELECT DISTINCT ON (c.id)
         c.id,
@@ -101,7 +136,10 @@ export async function GET(request: NextRequest) {
         mu.id as meetime_user_id,
         mu.name as meetime_user_name,
         mu.email as meetime_user_email,
-        p.name as project_name
+        p.name as project_name,
+        mcs.average_score,
+        mcs.sentimento_geral,
+        mcs.resultado
       FROM calls c
       LEFT JOIN meetime_users mu ON mu.id = c.user_id
       LEFT JOIN activities a ON a.call_id = c.id
@@ -109,16 +147,19 @@ export async function GET(request: NextRequest) {
       LEFT JOIN prospections pr ON (pr.id = l.current_prospection_id OR pr.lead_id = l.id)
       LEFT JOIN cadences cad ON cad.id = pr.cadence_id
       LEFT JOIN projects p ON p.id = cad.project_id
+      LEFT JOIN monitoria_call_scores mcs ON mcs.call_id = c.id::text
       WHERE ${whereCondition}
       ORDER BY c.id, c.date DESC
       LIMIT ${limit}
       OFFSET ${offset}
     `);
 
-    // Contar total de calls
+    // Contar total de calls (aplicando os mesmos filtros)
     const totalResult = await prisma.$queryRawUnsafe<[{ count: bigint }]>(`
       SELECT COUNT(DISTINCT c.id) as count
       FROM calls c
+      LEFT JOIN meetime_users mu ON mu.id = c.user_id
+      LEFT JOIN monitoria_call_scores mcs ON mcs.call_id = c.id::text
       WHERE ${whereCondition}
     `);
     const total = Number(totalResult[0]?.count || 0);
@@ -138,6 +179,9 @@ export async function GET(request: NextRequest) {
       storedAudioFilename: call.stored_audio_filename,
       audioDurationSeconds: call.audio_duration_seconds,
       createdAt: call.created_at,
+      averageScore: call.average_score ? Number(call.average_score) : null,
+      sentimentoGeral: call.sentimento_geral || null,
+      resultado: call.resultado || null,
       meetimeUser: call.meetime_user_id ? {
         id: Number(call.meetime_user_id),
         name: call.meetime_user_name,

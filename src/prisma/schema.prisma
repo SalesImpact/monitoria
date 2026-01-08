@@ -1,146 +1,739 @@
 generator client {
-    provider = "prisma-client-js"
-    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Organization {
   id        String   @id
   name      String
   slug      String   @unique
-  users     User[]
   createdAt DateTime @default(now()) @map("createdAt")
   updatedAt DateTime @updatedAt @map("updatedAt")
+  users     User[]
 
   @@map("monitoria_organizations")
 }
 
 model User {
-  id              String       @id
+  id              String               @id
   name            String?
   email           String
   password        String?
-  emailVerified   DateTime?    @map("emailVerified")
+  emailVerified   DateTime?            @map("emailVerified")
   image           String?
-  role            String?      @default("sdr")
-  organizationId  String       @map("organizationId")
-  meetimeId       String?      @map("meetimeId")
-  lastLogin       DateTime?    @map("lastLogin")
-  organization    Organization @relation(fields: [organizationId], references: [id])
+  role            String?              @default("sdr")
+  organizationId  String               @map("organizationId")
+  meetimeId       String?              @map("meetimeId")
+  lastLogin       DateTime?            @map("lastLogin")
+  createdAt       DateTime             @default(now()) @map("createdAt")
+  updatedAt       DateTime             @updatedAt @map("updatedAt")
+  organization    Organization         @relation(fields: [organizationId], references: [id])
   meetimeAccounts UserMeetimeAccount[]
 
-  createdAt DateTime @default(now()) @map("createdAt")
-  updatedAt DateTime @updatedAt @map("updatedAt")
-
-  @@unique([email, organizationId], name: "monitoria_users_email_organizationId_key")
+  @@unique([email, organizationId])
   @@map("monitoria_users")
 }
 
-model MeetimeUser {
-  id          BigInt    @id
-  email       String?
-  name        String?
-  module      String?
-  role        String?
-  active      Boolean?  @default(true)
-  deletedAt   DateTime? @map("deleted_at")
-  syncedAt    DateTime? @default(now()) @map("synced_at")
-  userAccounts UserMeetimeAccount[]
-  calls       Call[]
-  callScores  CallScore[]
-
-  @@map("meetime_users")
-}
-
 model UserMeetimeAccount {
-  id            String      @id @default(cuid())
-  userId        String      @map("user_id")
-  meetimeUserId BigInt      @map("meetime_user_id")
-  createdAt     DateTime    @default(now()) @map("created_at")
-  
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  meetimeUser   MeetimeUser @relation(fields: [meetimeUserId], references: [id], onDelete: Cascade)
+  id            String        @id @default(cuid())
+  userId        String        @map("user_id")
+  meetimeUserId BigInt        @map("meetime_user_id")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  meetime_users meetime_users @relation(fields: [meetimeUserId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@unique([userId, meetimeUserId])
+  @@unique([userId, meetimeUserId], map: "user_meetime_accounts_unique")
+  @@index([meetimeUserId], map: "idx_user_meetime_accounts_meetime_user_id")
+  @@index([userId], map: "idx_user_meetime_accounts_user_id")
   @@map("user_meetime_accounts")
 }
 
-model Call {
-  id                        BigInt    @id
-  date                      DateTime  @db.Timestamptz
-  userId                    BigInt?   @map("user_id")
-  userName                  String?   @map("user_name") @db.VarChar(255)
-  important                 Boolean?  @default(false)
-  startedAt                 DateTime? @map("started_at") @db.Timestamptz
-  originPhone               String?   @map("origin_phone") @db.VarChar(20)
-  originType                String?   @map("origin_type") @db.VarChar(20)
-  receiverPhone             String    @map("receiver_phone") @db.VarChar(20)
-  receiverType              String?   @map("receiver_type") @db.VarChar(20)
-  connectedDurationSeconds  Int?      @default(0) @map("connected_duration_seconds")
-  price                     Decimal?  @default(0) @map("price") @db.Decimal(10, 3)
-  output                    String?   @map("output") @db.VarChar(50)
-  status                    String    @db.VarChar(50)
-  callType                  String?   @map("call_type") @db.VarChar(20)
-  notes                     String?   @db.Text
-  callLink                  String?   @map("call_link") @db.VarChar(500)
-  updated                   DateTime? @map("updated") @db.Timestamptz
-  dialerParameters          Json?     @map("dialer_parameters")
-  recordingUrl              String?   @map("recording_url") @db.VarChar(1000)
-  recordingFetchedAt        DateTime? @map("recording_fetched_at") @db.Timestamptz
-  storedAudioUrl            String?   @map("stored_audio_url") @db.VarChar(1000)
-  storedAudioFilename       String?   @map("stored_audio_filename") @db.VarChar(255)
-  audioStoredAt             DateTime? @map("audio_stored_at") @db.Timestamptz
-  audioDurationSeconds      Int?      @map("audio_duration_seconds")
-  audioFileSizeBytes        BigInt?   @map("audio_file_size_bytes")
-  createdAt                 DateTime? @default(now()) @map("created_at") @db.Timestamptz
-  
-  meetimeUser               MeetimeUser? @relation(fields: [userId], references: [id])
+model MonitoriaCallScore {
+  id                          String         @id @default(cuid())
+  callId                      String         @unique @map("call_id")
+  saudacaoApresentacao        Float          @default(0) @map("saudacao_apresentacao")
+  apresentacaoEmpresa         Float          @default(0) @map("apresentacao_empresa")
+  solicitacaoConfirmacaoNome  Float          @default(0) @map("solicitacao_confirmacao_nome")
+  tomVoz                      Float          @default(0) @map("tom_voz")
+  rapport                     Float          @default(0)
+  perguntasValidacao          Float          @default(0) @map("perguntas_validacao")
+  escutaAtiva                 Float          @default(0) @map("escuta_ativa")
+  pitchSolucao                Float          @default(0) @map("pitch_solucao")
+  historiaCliente             Float          @default(0) @map("historia_cliente")
+  perguntasSituacao           Float          @default(0) @map("perguntas_situacao")
+  perguntasProblema           Float          @default(0) @map("perguntas_problema")
+  perguntasImplicacao         Float          @default(0) @map("perguntas_implicacao")
+  perguntasNecessidadeSolucao Float          @default(0) @map("perguntas_necessidade_solucao")
+  confirmouEntendimento       Float          @default(0) @map("confirmou_entendimento")
+  vendeuProximoPasso          Float          @default(0) @map("vendeu_proximo_passo")
+  agendouConcluiu             Float          @default(0) @map("agendou_concluiu")
+  nivelEngajamentoCliente     Float?         @map("nivel_engajamento_cliente")
+  confiancaSdr                Float?         @map("confianca_sdr")
+  averageScore                Float          @default(0) @map("average_score")
+  weightedScore               Float          @default(0) @map("weighted_score")
+  aiFeedback                  String?        @map("ai_feedback")
+  createdAt                   DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                   DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user_id                     BigInt?
+  resultado                   String?        @db.VarChar(50)
+  sentimento_geral            String?        @db.VarChar(20)
+  sentimento_cliente          String?        @db.VarChar(20)
+  sentimento_sdr              String?        @db.VarChar(20)
+  obje__es                    Json?          @map("objeções")
+  obje__es_superadas          Json?          @map("objeções_superadas")
+  palavras_chave_positivas    Json?
+  palavras_chave_negativas    Json?
+  palavras_chave_neutras      Json?
+  meetime_users               meetime_users? @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_monitoria_call_scores_user_id")
 
-  @@map("calls")
+  @@index([saudacaoApresentacao, apresentacaoEmpresa, solicitacaoConfirmacaoNome, tomVoz, rapport], map: "idx_monitoria_call_scores_abertura")
+  @@index([averageScore], map: "idx_monitoria_call_scores_average_score")
+  @@index([callId], map: "idx_monitoria_call_scores_call_id")
+  @@index([createdAt], map: "idx_monitoria_call_scores_created_at")
+  @@index([confirmouEntendimento, vendeuProximoPasso, agendouConcluiu], map: "idx_monitoria_call_scores_proximos_passos")
+  @@index([perguntasSituacao, perguntasProblema, perguntasImplicacao, perguntasNecessidadeSolucao], map: "idx_monitoria_call_scores_spin_selling")
+  @@index([updatedAt], map: "idx_monitoria_call_scores_updated_at")
+  @@index([user_id], map: "idx_monitoria_call_scores_user_id")
+  @@index([perguntasValidacao, escutaAtiva, pitchSolucao, historiaCliente], map: "idx_monitoria_call_scores_validacao_objetivo")
+  @@index([weightedScore], map: "idx_monitoria_call_scores_weighted_score")
+  @@map("monitoria_call_scores")
 }
 
-model CallScore {
-  id                        String    @id @default(cuid())
-  callId                    String    @unique @map("call_id")
-  userId                    BigInt?   @map("user_id")
-  saudacaoApresentacao      Float     @map("saudacao_apresentacao")
-  apresentacaoEmpresa       Float     @map("apresentacao_empresa")
-  solicitacaoConfirmacaoNome Float    @map("solicitacao_confirmacao_nome")
-  tomVoz                    Float     @map("tom_voz")
-  rapport                   Float
-  perguntasValidacao        Float     @map("perguntas_validacao")
-  escutaAtiva               Float     @map("escuta_ativa")
-  pitchSolucao              Float     @map("pitch_solucao")
-  historiaCliente           Float     @map("historia_cliente")
-  perguntasSituacao         Float     @map("perguntas_situacao")
-  perguntasProblema         Float     @map("perguntas_problema")
-  perguntasImplicacao       Float     @map("perguntas_implicacao")
-  perguntasNecessidadeSolucao Float   @map("perguntas_necessidade_solucao")
-  confirmouEntendimento     Float     @map("confirmou_entendimento")
-  vendeuProximoPasso        Float     @map("vendeu_proximo_passo")
-  agendouConcluiu           Float     @map("agendou_concluiu")
-  nivelEngajamentoCliente   Float?    @map("nivel_engajamento_cliente")
-  confiancaSdr              Float?    @map("confianca_sdr")
-  averageScore              Float     @map("average_score")
-  weightedScore             Float     @map("weighted_score")
-  aiFeedback                String?   @map("ai_feedback") @db.Text
-  resultado                 String?   @db.VarChar(50)
-  sentimentoGeral           String?   @map("sentimento_geral") @db.VarChar(20)
-  sentimentoCliente         String?   @map("sentimento_cliente") @db.VarChar(20)
-  sentimentoSdr             String?   @map("sentimento_sdr") @db.VarChar(20)
-  objeções                  Json?     @map("objeções")
-  objeçõesSuperadas         Json?     @map("objeções_superadas")
-  palavrasChavePositivas    Json?     @map("palavras_chave_positivas")
-  palavrasChaveNegativas    Json?     @map("palavras_chave_negativas")
-  palavrasChaveNeutras      Json?     @map("palavras_chave_neutras")
-  createdAt                 DateTime  @default(now()) @map("created_at")
-  updatedAt                 DateTime  @updatedAt @map("updated_at")
-  
-  meetimeUser               MeetimeUser? @relation(fields: [userId], references: [id])
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ChatMessage {
+  id              BigInt            @id @default(autoincrement())
+  sessionId       String            @db.Uuid
+  role            String
+  content         String
+  sqlGenerated    String?
+  dataReturned    Json?
+  executionTimeMs Int?
+  tokensUsed      Int?
+  errorMessage    String?
+  createdAt       DateTime          @default(now())
+  ChatSession     ChatSession       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  QueryCorrection QueryCorrection[]
+  QueryFeedback   QueryFeedback[]
 
-  @@map("monitoria_call_scores")
+  @@index([createdAt])
+  @@index([sessionId, createdAt])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ChatSession {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          Int?
+  organizationId  Int?
+  startedAt       DateTime          @default(now())
+  lastActivityAt  DateTime          @default(now())
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  ChatMessage     ChatMessage[]
+  Organization    Organization?     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  User            User?             @relation(fields: [userId], references: [id])
+  QueryCorrection QueryCorrection[]
+  QueryFeedback   QueryFeedback[]
+
+  @@index([isActive, lastActivityAt])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model Organization {
+  id          Int           @id @default(autoincrement())
+  name        String
+  cnpj        String?       @unique
+  domain      String?
+  status      String        @default("active")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  ChatSession ChatSession[]
+  User        User[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QueryCorrection {
+  id               BigInt       @id @default(autoincrement())
+  sessionId        String?      @db.Uuid
+  messageId        BigInt?
+  originalQuestion String
+  originalSql      String
+  correctedSql     String
+  correctionReason String?
+  trained          Boolean      @default(false)
+  trainedAt        DateTime?
+  correctedBy      Int?
+  createdAt        DateTime     @default(now())
+  User             User?        @relation(fields: [correctedBy], references: [id])
+  ChatMessage      ChatMessage? @relation(fields: [messageId], references: [id])
+  ChatSession      ChatSession? @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId])
+  @@index([trained, createdAt])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model QueryFeedback {
+  id           BigInt       @id @default(autoincrement())
+  messageId    BigInt?
+  sessionId    String?      @db.Uuid
+  rating       Int?
+  feedbackType String?
+  comment      String?
+  createdAt    DateTime     @default(now())
+  ChatMessage  ChatMessage? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  ChatSession  ChatSession? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([feedbackType])
+  @@index([messageId])
+  @@index([rating])
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  organizationId  Int?
+  name            String
+  email           String
+  passwordHash    String
+  role            Role              @default(client)
+  isActive        Boolean           @default(true)
+  lastLogin       DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  ChatSession     ChatSession[]
+  QueryCorrection QueryCorrection[]
+  Organization    Organization?     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  password_reset  password_reset[]
+
+  @@unique([organizationId, email])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model activities {
+  id                   BigInt        @id
+  name                 String?       @db.VarChar(255)
+  activity_template_id BigInt?
+  call_id              BigInt?
+  type                 String?       @db.VarChar(50)
+  status               String?       @db.VarChar(50)
+  scope                String?       @db.VarChar(50)
+  available_from       DateTime?     @db.Timestamptz(6)
+  goal_date            DateTime?     @db.Timestamptz(6)
+  execution_date       DateTime?     @db.Timestamptz(6)
+  deleted_date         DateTime?     @db.Timestamptz(6)
+  assigned_to_id       BigInt?
+  executed_by_id       BigInt?
+  cadence_id           BigInt?
+  cadence              String?       @db.VarChar(500)
+  prospection_id       BigInt?
+  lead_id              BigInt?
+  activity_annotation  String?
+  updated              DateTime?     @db.Timestamptz(6)
+  created_at           DateTime?     @default(now()) @db.Timestamptz(6)
+  cadences             cadences?     @relation(fields: [cadence_id], references: [id], onUpdate: NoAction, map: "fk_activities_cadence")
+  calls                calls?        @relation(fields: [call_id], references: [id], onUpdate: NoAction, map: "fk_activities_call")
+  leads                leads?        @relation(fields: [lead_id], references: [id], onUpdate: NoAction, map: "fk_activities_lead")
+  prospections         prospections? @relation(fields: [prospection_id], references: [id], onUpdate: NoAction, map: "fk_activities_prospection")
+}
+
+model cadences {
+  id            BigInt         @id
+  name          String         @db.VarChar(255)
+  description   String?
+  created_by_id BigInt?
+  created_at    DateTime?      @db.Timestamptz(6)
+  deleted       DateTime?      @db.Timestamptz(6)
+  token         String?        @db.VarChar(255)
+  owner_id      BigInt?
+  executing     Boolean?
+  type          String?        @db.VarChar(30)
+  cadence_focus String?        @db.VarChar(50)
+  priority      String?        @db.VarChar(30)
+  api_endpoint  String?        @db.VarChar(500)
+  updated_at    DateTime?      @default(now()) @db.Timestamptz(6)
+  project_id    BigInt?
+  activities    activities[]
+  projects      projects?      @relation(fields: [project_id], references: [id], onUpdate: NoAction, map: "fk_cadences_project")
+  prospections  prospections[]
+
+  @@index([project_id], map: "idx_cadences_project_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model call_analysis {
+  id                         BigInt    @id @default(autoincrement())
+  call_id                    BigInt    @unique
+  classification             String    @db.VarChar(50)
+  summary                    String?
+  interest_level             String?   @db.VarChar(20)
+  interest_score             Int?
+  sdr_talk_time_seconds      Int?      @default(0)
+  prospect_talk_time_seconds Int?      @default(0)
+  talk_ratio                 Decimal?  @db.Decimal(5, 2)
+  key_topics                 Json?
+  sentiment                  String?   @db.VarChar(20)
+  objections                 Json?
+  next_steps                 String?
+  openai_model               String?   @db.VarChar(50)
+  prompt_tokens              Int?
+  completion_tokens          Int?
+  processing_time_seconds    Decimal?  @db.Decimal(10, 2)
+  created_at                 DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime? @default(now()) @db.Timestamptz(6)
+  calls                      calls     @relation(fields: [call_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_call_analysis_call")
+
+  @@index([call_id], map: "idx_call_analysis_call_id")
+}
+
+model call_transcriptions {
+  id                      BigInt    @id @default(autoincrement())
+  call_id                 BigInt    @unique
+  transcription_text      String
+  transcription_language  String?   @db.VarChar(10)
+  transcription_segments  Json?
+  whisper_model           String?   @db.VarChar(50)
+  processing_time_seconds Decimal?  @db.Decimal(10, 2)
+  word_count              Int?
+  confidence_score        Decimal?  @db.Decimal(5, 4)
+  created_at              DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime? @default(now()) @db.Timestamptz(6)
+  calls                   calls     @relation(fields: [call_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_call_transcriptions_call")
+
+  @@index([call_id], map: "idx_call_transcriptions_call_id")
+}
+
+model calls {
+  id                         BigInt               @id
+  date                       DateTime             @db.Timestamptz(6)
+  user_id                    BigInt?
+  user_name                  String?              @db.VarChar(255)
+  important                  Boolean?             @default(false)
+  started_at                 DateTime?            @db.Timestamptz(6)
+  origin_phone               String?              @db.VarChar(20)
+  origin_type                String?              @db.VarChar(20)
+  receiver_phone             String               @db.VarChar(20)
+  receiver_type              String?              @db.VarChar(20)
+  connected_duration_seconds Int?                 @default(0)
+  price                      Decimal?             @default(0) @db.Decimal(10, 3)
+  output                     String?              @db.VarChar(50)
+  status                     String               @db.VarChar(50)
+  call_type                  String?              @db.VarChar(20)
+  notes                      String?
+  call_link                  String?              @db.VarChar(500)
+  updated                    DateTime?            @db.Timestamptz(6)
+  dialer_parameters          Json?
+  recording_url              String?              @db.VarChar(1000)
+  recording_fetched_at       DateTime?            @db.Timestamptz(6)
+  stored_audio_url           String?              @db.VarChar(1000)
+  stored_audio_filename      String?              @db.VarChar(255)
+  audio_stored_at            DateTime?            @db.Timestamptz(6)
+  audio_duration_seconds     Int?
+  audio_file_size_bytes      BigInt?
+  created_at                 DateTime?            @default(now()) @db.Timestamptz(6)
+  activities                 activities[]
+  call_analysis              call_analysis?
+  call_transcriptions        call_transcriptions?
+
+  @@index([date], map: "idx_calls_date")
+  @@index([date, status], map: "idx_calls_date_status")
+}
+
+model companies {
+  id                BigInt             @id @default(autoincrement())
+  name              String             @db.VarChar(255)
+  cnpj              String?            @db.VarChar(32)
+  domain            String?            @db.VarChar(255)
+  created_at        DateTime?          @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?          @default(now()) @db.Timestamptz(6)
+  company_receitaws company_receitaws?
+  company_tca       company_tca?
+  leads             leads[]
+
+  @@index([created_at], map: "idx_companies_created_at")
+  @@index([created_at], map: "idx_companies_created_at_brin", type: Brin)
+  @@index([created_at(sort: Desc), id, name, cnpj, domain, updated_at], map: "idx_companies_list_covering")
+  @@index([name], map: "idx_companies_name")
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model company_receitaws {
+  company_id                   BigInt    @id
+  status                       String?   @db.VarChar(50)
+  ultima_atualizacao           DateTime? @db.Timestamptz(6)
+  cnpj                         String    @db.VarChar(32)
+  tipo                         String?   @db.VarChar(20)
+  porte                        String?   @db.VarChar(50)
+  nome                         String?   @db.VarChar(255)
+  fantasia                     String?   @db.VarChar(255)
+  abertura                     DateTime? @db.Date
+  atividade_principal_codes    String[]
+  atividade_principal_texts    String[]
+  atividades_secundarias_codes String[]
+  atividades_secundarias_texts String[]
+  natureza_juridica            String?   @db.VarChar(255)
+  logradouro                   String?   @db.VarChar(255)
+  numero                       String?   @db.VarChar(50)
+  complemento                  String?   @db.VarChar(255)
+  cep                          String?   @db.VarChar(20)
+  bairro                       String?   @db.VarChar(255)
+  municipio                    String?   @db.VarChar(255)
+  uf                           String?   @db.VarChar(10)
+  email                        String?   @db.VarChar(255)
+  telefone                     String?   @db.VarChar(100)
+  efr                          String?   @db.VarChar(255)
+  situacao                     String?   @db.VarChar(50)
+  data_situacao                DateTime? @db.Date
+  motivo_situacao              String?   @db.VarChar(255)
+  situacao_especial            String?   @db.VarChar(255)
+  data_situacao_especial       DateTime? @db.Date
+  capital_social               Decimal?  @db.Decimal(18, 2)
+  qsa_nomes                    String[]
+  qsa_quals                    String[]
+  qsa_paises_origem            String[]
+  qsa_nomes_rep_legal          String[]
+  qsa_quals_rep_legal          String[]
+  simples_optante              Boolean?
+  simples_data_opcao           DateTime? @db.Timestamptz(6)
+  simples_data_exclusao        DateTime? @db.Timestamptz(6)
+  simples_ultima_atualizacao   DateTime? @db.Timestamptz(6)
+  simei_optante                Boolean?
+  simei_data_opcao             DateTime? @db.Timestamptz(6)
+  simei_data_exclusao          DateTime? @db.Timestamptz(6)
+  simei_ultima_atualizacao     DateTime? @db.Timestamptz(6)
+  billing_free                 Boolean?
+  billing_database             Boolean?
+  companies                    companies @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_company_receitaws_company")
+
+  @@index([cnpj], map: "idx_company_receitaws_cnpj")
+  @@index([company_id], map: "idx_company_receitaws_company_id")
+  @@index([nome], map: "idx_company_receitaws_nome")
+  @@index([uf], map: "idx_company_receitaws_uf")
+}
+
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model company_tca {
+  company_id                      BigInt     @id
+  domain                          String?    @db.VarChar(255)
+  domain_alias                    String?    @db.VarChar(255)
+  domain_name                     String?    @db.VarChar(255)
+  domain_registrar                String?    @db.VarChar(255)
+  domain_state                    String?    @db.VarChar(100)
+  domain_status_code              Int?
+  domain_tld                      String?    @db.VarChar(50)
+  domain_redirection              String?    @db.VarChar(255)
+  about_business_type             String?    @db.VarChar(100)
+  about_industry                  String?    @db.VarChar(255)
+  about_industries                String[]
+  about_languages                 String[]
+  about_name                      String?    @db.VarChar(255)
+  about_name_alts                 String[]
+  about_name_legal                String?    @db.VarChar(255)
+  about_total_employees_band      String?    @db.VarChar(50)
+  about_total_employees_exact     Int?
+  about_year_founded              Int?
+  about_year_founded_place        String?    @db.VarChar(255)
+  analytics_monthly_visitors_band String?    @db.VarChar(50)
+  assets_cover_src                String?    @db.VarChar(1000)
+  assets_cover_width              Int?
+  assets_cover_height             Int?
+  assets_logo_square_src          String?    @db.VarChar(1000)
+  assets_logo_square_width        Int?
+  assets_logo_square_height       Int?
+  assets_color_primary            String?    @db.VarChar(20)
+  codes_naics                     String[]
+  codes_sic                       String[]
+  subsidiaries_names              String[]
+  subsidiaries_domains            String[]
+  subsidiaries_descriptions       String[]
+  acquisitions_names              String[]
+  acquisitions_domains            String[]
+  acquisitions_descriptions       String[]
+  contacts_emails_categories      String[]
+  contacts_emails_values          String[]
+  contacts_phones_categories      String[]
+  contacts_phones_values          String[]
+  desc_primary                    String?
+  desc_tagline                    String?
+  desc_website                    String?
+  finances_revenue_band           String?    @db.VarChar(50)
+  finances_stock_exchange         String?    @db.VarChar(50)
+  finances_stock_symbol           String?    @db.VarChar(50)
+  hq_address_raw                  String?    @db.VarChar(1000)
+  hq_city_code                    String?    @db.VarChar(255)
+  hq_city_name                    String?    @db.VarChar(255)
+  hq_city_postcode                String?    @db.VarChar(40)
+  hq_city_lat                     Float?
+  hq_city_lon                     Float?
+  hq_continent_code               String?    @db.VarChar(10)
+  hq_continent_name               String?    @db.VarChar(100)
+  hq_continent_lat                Float?
+  hq_continent_lon                Float?
+  hq_country_code                 String?    @db.VarChar(10)
+  hq_country_name                 String?    @db.VarChar(100)
+  hq_country_lat                  Float?
+  hq_country_lon                  Float?
+  hq_county_code                  String?    @db.VarChar(255)
+  hq_county_name                  String?    @db.VarChar(255)
+  hq_county_lat                   Float?
+  hq_county_lon                   Float?
+  hq_state_code                   String?    @db.VarChar(255)
+  hq_state_name                   String?    @db.VarChar(255)
+  hq_state_lat                    Float?
+  hq_state_lon                    Float?
+  hq_address_lat                  Float?
+  hq_address_lon                  Float?
+  meta_mysql_id                   BigInt?
+  meta_score                      Int?
+  meta_similarity                 Decimal?   @db.Decimal(10, 4)
+  meta_synced_at                  DateTime?  @db.Timestamptz(6)
+  meta_list_ids                   BigInt[]
+  patterns_patterns               String[]
+  patterns_usage_percentages      Decimal[]  @db.Decimal(10, 4)
+  social_linkedin_id              String?    @db.VarChar(255)
+  social_linkedin_id_numeric      String?    @db.VarChar(50)
+  social_linkedin_url             String?    @db.VarChar(1000)
+  social_linkedin_sales_nav_url   String?    @db.VarChar(1000)
+  social_twitter_id               String?    @db.VarChar(255)
+  social_twitter_url              String?    @db.VarChar(1000)
+  social_facebook_id              String?    @db.VarChar(255)
+  social_facebook_url             String?    @db.VarChar(1000)
+  social_instagram_id             String?    @db.VarChar(255)
+  social_instagram_url            String?    @db.VarChar(1000)
+  social_youtube_id               String?    @db.VarChar(255)
+  social_youtube_url              String?    @db.VarChar(1000)
+  social_wellfound_id             String?    @db.VarChar(255)
+  social_wellfound_url            String?    @db.VarChar(1000)
+  tech_active                     String[]
+  tech_categories                 String[]
+  tech_details_slugs              String[]
+  tech_details_detected_at        DateTime[] @db.Timestamptz
+  tech_details_detection_types    String[]
+  url_about                       String?    @db.VarChar(1000)
+  url_careers                     String?    @db.VarChar(1000)
+  url_glassdoor                   String?    @db.VarChar(1000)
+  url_partnership                 String?    @db.VarChar(1000)
+  url_sales_navigator             String?    @db.VarChar(1000)
+  url_updates                     String?    @db.VarChar(1000)
+  url_sitemap                     String?    @db.VarChar(1000)
+  url_wikidata                    String?    @db.VarChar(1000)
+  url_wikipedia                   String?    @db.VarChar(1000)
+  url_registrar                   String?    @db.VarChar(1000)
+  podcasts_apple_ids              String[]
+  podcasts_apple_urls             String[]
+  companies                       companies  @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_company_tca_company")
+
+  @@index([about_name], map: "idx_company_tca_about_name")
+  @@index([company_id], map: "idx_company_tca_company_id")
+  @@index([hq_country_code], map: "idx_company_tca_country")
+  @@index([domain], map: "idx_company_tca_domain")
+  @@index([meta_synced_at], map: "idx_company_tca_synced")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model leads {
+  id                                                      BigInt         @id
+  current_prospection_id                                  BigInt?
+  lead_created_date                                       DateTime?      @db.Timestamptz(6)
+  lead_deleted_date                                       DateTime?      @db.Timestamptz(6)
+  lead_updated_date                                       DateTime?      @db.Timestamptz(6)
+  lead_email                                              String?        @db.VarChar(255)
+  lead_name                                               String?        @db.VarChar(255)
+  lead_company                                            String?        @db.VarChar(255)
+  lead_position                                           String?        @db.VarChar(255)
+  lead_site                                               String?        @db.VarChar(255)
+  lead_city                                               String?        @db.VarChar(255)
+  lead_state                                              String?        @db.VarChar(255)
+  lead_twitter                                            String?        @db.VarChar(255)
+  lead_facebook                                           String?        @db.VarChar(255)
+  lead_linkedin                                           String?        @db.VarChar(500)
+  lead_annotations                                        String?
+  lead_fit_score                                          Int?
+  public_url                                              String?        @db.VarChar(500)
+  external_reference                                      String?        @db.VarChar(255)
+  phones                                                  Json?
+  phones_string                                           String?        @db.VarChar(500)
+  primary_phone_string                                    String?        @db.VarChar(100)
+  sobre_a_empresa_linkedin                                String?
+  nivel_do_cargo                                          String?        @db.VarChar(255)
+  id_pessoa                                               BigInt?
+  id_negocio                                              BigInt?
+  id_organizacao                                          BigInt?
+  setor                                                   String?        @db.VarChar(100)
+  linkedin_da_empresa                                     String?        @db.VarChar(500)
+  pitch_entregue                                          Boolean?
+  principal_concorrente                                   String?        @db.VarChar(255)
+  status_reuniao                                          String?        @db.VarChar(100)
+  dia_reuniao                                             Int?
+  mes_reuniao                                             Int?
+  ano_reuniao                                             Int?
+  hora_reuniao                                            Int?
+  minuto_reuniao                                          Int?
+  email_pessoa                                            String?        @db.VarChar(255)
+  contact_score_atual                                     Int?
+  contact_score_inicial                                   Int?
+  company_score_atual                                     Int?
+  company_score_inicial                                   Int?
+  origem_do_lead                                          String?        @db.VarChar(255)
+  campo_coringa_utilidade                                 String?
+  cnpj                                                    String?        @db.VarChar(32)
+  origem_do_contato                                       String?        @db.VarChar(255)
+  anotacoes_sdr                                           String?
+  nivel_de_maturidade                                     String?        @db.VarChar(255)
+  infraestrutura                                          String?        @db.VarChar(255)
+  referral                                                String?        @db.VarChar(255)
+  canal                                                   String?        @db.VarChar(255)
+  funil                                                   String?        @db.VarChar(255)
+  id_salesforce                                           String?        @db.VarChar(255)
+  nome_produto                                            String?        @db.VarChar(255)
+  account_manager                                         String?        @db.VarChar(255)
+  data_pitch                                              DateTime?      @db.Timestamptz(6)
+  data_lead                                               DateTime?      @db.Timestamptz(6)
+  data_reuniao                                            DateTime?      @db.Timestamptz(6)
+  segmento                                                String?        @db.VarChar(255)
+  subsegmento                                             String?        @db.VarChar(255)
+  faixa_faturamento                                       String?        @db.VarChar(100)
+  faixa_funcionario                                       String?        @db.VarChar(100)
+  created_at                                              DateTime?      @default(now()) @db.Timestamptz(6)
+  updated_at                                              DateTime?      @default(now()) @db.Timestamptz(6)
+  company_id                                              BigInt?
+  activities                                              activities[]
+  companies                                               companies?     @relation(fields: [company_id], references: [id], onUpdate: NoAction, map: "fk_leads_company")
+  prospections_leads_current_prospection_idToprospections prospections?  @relation("leads_current_prospection_idToprospections", fields: [current_prospection_id], references: [id], onUpdate: NoAction, map: "fk_leads_current_prospection")
+  prospections_prospections_lead_idToleads                prospections[] @relation("prospections_lead_idToleads")
+
+  @@index([company_id], map: "ix_leads_company_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model meetime_users {
+  id                    BigInt               @id
+  email                 String?              @unique(map: "idx_meetime_users_email") @db.VarChar(255)
+  name                  String?              @db.VarChar(255)
+  module                String?              @db.VarChar(50)
+  role                  String?              @db.VarChar(50)
+  active                Boolean?             @default(true)
+  deleted_at            DateTime?            @db.Timestamp(6)
+  deleted_before        DateTime?            @db.Timestamp(6)
+  deleted_after         DateTime?            @db.Timestamp(6)
+  created_at            DateTime?            @db.Timestamp(6)
+  updated_at            DateTime?            @db.Timestamp(6)
+  synced_at             DateTime?            @default(now()) @db.Timestamp(6)
+  monitoria_call_scores MonitoriaCallScore[]
+  user_meetime_accounts UserMeetimeAccount[]
+
+  @@index([active], map: "idx_meetime_users_active")
+  @@index([deleted_at], map: "idx_meetime_users_deleted_at")
+  @@index([module], map: "idx_meetime_users_module")
+  @@index([role], map: "idx_meetime_users_role")
+}
+
+model password_reset {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  token_hash String
+  expires_at DateTime  @db.Timestamptz(6)
+  used_at    DateTime? @db.Timestamptz(6)
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  User       User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, token_hash], map: "unique_active_reset")
+  @@index([expires_at], map: "idx_password_reset_expires_at")
+  @@index([token_hash], map: "idx_password_reset_token_hash")
+}
+
+model projects {
+  id          BigInt     @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  description String?
+  client_name String?    @db.VarChar(255)
+  status      String?    @default("active") @db.VarChar(50)
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  deleted_at  DateTime?  @db.Timestamptz(6)
+  cadences    cadences[]
+
+  @@index([name], map: "idx_projects_name")
+  @@index([status], map: "idx_projects_status")
+}
+
+/// This model has constraints using non-default deferring rules and requires additional setup for migrations. Visit https://pris.ly/d/constraint-deferring for more info.
+model prospections {
+  id                                               BigInt       @id
+  lead_id                                          BigInt?
+  owner_id                                         BigInt?
+  owner_name                                       String?      @db.VarChar(255)
+  cadence                                          String?      @db.VarChar(255)
+  cadence_id                                       BigInt?
+  lead_base                                        String?      @db.VarChar(255)
+  lead_base_id                                     BigInt?
+  rd_conversion_date                               DateTime?    @db.Timestamptz(6)
+  created_date                                     DateTime?    @db.Timestamptz(6)
+  deleted_date                                     DateTime?    @db.Timestamptz(6)
+  begin_date                                       DateTime?    @db.Timestamptz(6)
+  scheduled_date                                   DateTime?    @db.Timestamptz(6)
+  end_date                                         DateTime?    @db.Timestamptz(6)
+  status                                           String?      @db.VarChar(50)
+  lost_reason_id                                   BigInt?
+  lost_reason                                      String?      @db.VarChar(255)
+  first_activity_date                              DateTime?    @db.Timestamptz(6)
+  last_activity_date                               DateTime?    @db.Timestamptz(6)
+  lead_origin_channel                              String?      @db.VarChar(100)
+  lead_origin_source                               String?      @db.VarChar(255)
+  lead_origin_campaign                             String?      @db.VarChar(255)
+  conversion                                       String?      @db.VarChar(255)
+  created_at                                       DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at                                       DateTime?    @default(now()) @db.Timestamptz(6)
+  activities                                       activities[]
+  leads_leads_current_prospection_idToprospections leads[]      @relation("leads_current_prospection_idToprospections")
+  cadences                                         cadences?    @relation(fields: [cadence_id], references: [id], onUpdate: NoAction, map: "fk_prospections_cadence")
+  leads_prospections_lead_idToleads                leads?       @relation("prospections_lead_idToleads", fields: [lead_id], references: [id], onUpdate: NoAction, map: "fk_prospections_lead")
+}
+
+model sync_log {
+  id               BigInt    @id @default(autoincrement())
+  entity_type      String    @db.VarChar(50)
+  sync_started_at  DateTime  @db.Timestamp(6)
+  sync_finished_at DateTime? @db.Timestamp(6)
+  status           String    @db.VarChar(20)
+  records_fetched  Int?      @default(0)
+  error_message    String?
+  parameters       Json?
+
+  @@index([entity_type], map: "idx_sync_log_entity_type")
+  @@index([sync_started_at], map: "idx_sync_log_started_at")
+}
+
+enum CallEventType {
+  CALL_STARTED
+  CALL_PHONE_EVENT
+  CALL_FINISHED
+  CALL_UPDATED
+  LEAD_WON
+  LEAD_LOST
+  LEAD_ACTIVITY_FINISHED
+  LEAD_ACTIVITY_IGNORED
+}
+
+enum Role {
+  client
+  admin
+  superadmin
+  admin_client
+  internal
+  backoffice
+}
+
+enum UserRole {
+  SDR
+  MANAGER
+  ADMIN
 }
