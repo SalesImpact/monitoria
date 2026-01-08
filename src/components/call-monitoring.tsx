@@ -45,6 +45,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AudioPlayer from '@/components/audio-player';
 import CallScoresDisplay from '@/components/call-scores-display';
 import SentimentJourneyChart from '@/components/sentiment-journey-chart';
+import TranscriptionChat from '@/components/transcription-chat';
 
 interface SentimentAnalysis {
   overall: string;
@@ -127,6 +128,18 @@ interface Call {
 
 interface CallMonitoringProps {
   calls: Call[];
+  filterOptions?: {
+    sdrs: string[];
+    results: string[];
+    sentiments: string[];
+    types: string[];
+  };
+  onFiltersChange?: (filters: {
+    sdr?: string;
+    result?: string;
+    sentiment?: string;
+    type?: string;
+  }) => void;
 }
 
 function getSentimentIcon(sentiment: string) {
@@ -171,7 +184,7 @@ function getTopicBadgeColor(relevance: number): string {
   return 'bg-gray-100 text-gray-800 border-gray-200';
 }
 
-export default function CallMonitoring({ calls }: CallMonitoringProps) {
+export default function CallMonitoring({ calls, filterOptions, onFiltersChange }: CallMonitoringProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSDR, setSelectedSDR] = useState<string>('all');
   const [selectedResult, setSelectedResult] = useState<string>('all');
@@ -182,15 +195,41 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
   // Handle undefined or empty calls
   const safeCalls = calls || [];
 
-  const uniqueSDRs = [...new Set(safeCalls.map(call => call.sdrName).filter(Boolean))];
-  const uniqueResults = [...new Set(safeCalls.map(call => call.result).filter(Boolean))];
-  const uniqueTypes = [...new Set(safeCalls.map(call => call.callType).filter(Boolean))];
-  const uniqueSentiments = [...new Set(safeCalls.flatMap(call => 
-    call.sentimentAnalysis ? [call.sentimentAnalysis.overall] : []
-  ).filter(Boolean))];
+  // Usar valores únicos dos filtros passados como prop, ou calcular dos calls
+  const uniqueSDRs = filterOptions?.sdrs && filterOptions.sdrs.length > 0 
+    ? filterOptions.sdrs 
+    : [...new Set(safeCalls.map(call => call.sdrName).filter(Boolean))];
+  const uniqueResults = filterOptions?.results && filterOptions.results.length > 0
+    ? filterOptions.results
+    : [...new Set(safeCalls.map(call => call.result).filter(Boolean))];
+  const uniqueTypes = filterOptions?.types && filterOptions.types.length > 0
+    ? filterOptions.types
+    : [...new Set(safeCalls.map(call => call.callType).filter(Boolean))];
+  const uniqueSentiments = filterOptions?.sentiments && filterOptions.sentiments.length > 0
+    ? filterOptions.sentiments
+    : [...new Set(safeCalls.flatMap(call => 
+        call.sentimentAnalysis ? [call.sentimentAnalysis.overall] : []
+      ).filter(Boolean))];
   const uniqueTopics = [...new Set(safeCalls.flatMap(call => 
     call.detectedTopics ? call.detectedTopics.map(t => t.category) : []
   ).filter(Boolean))];
+
+  // Função para atualizar filtros e notificar o componente pai
+  const handleFilterChange = (filterType: 'sdr' | 'result' | 'sentiment' | 'type', value: string) => {
+    if (filterType === 'sdr') setSelectedSDR(value);
+    if (filterType === 'result') setSelectedResult(value);
+    if (filterType === 'sentiment') setSelectedSentiment(value);
+    if (filterType === 'type') setSelectedType(value);
+    
+    if (onFiltersChange) {
+      const newFilters: any = {};
+      if (filterType === 'sdr') newFilters.sdr = value;
+      if (filterType === 'result') newFilters.result = value;
+      if (filterType === 'sentiment') newFilters.sentiment = value;
+      if (filterType === 'type') newFilters.type = value;
+      onFiltersChange(newFilters);
+    }
+  };
 
   const filteredCalls = safeCalls.filter((call) => {
     const matchesSearch =
@@ -258,7 +297,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
             </div>
 
             {/* SDR Filter */}
-            <Select value={selectedSDR} onValueChange={setSelectedSDR}>
+            <Select value={selectedSDR} onValueChange={(value) => handleFilterChange('sdr', value)}>
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Todos os SDRs" />
               </SelectTrigger>
@@ -273,7 +312,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
             </Select>
 
             {/* Result Filter */}
-            <Select value={selectedResult} onValueChange={setSelectedResult}>
+            <Select value={selectedResult} onValueChange={(value) => handleFilterChange('result', value)}>
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Todos os resultados" />
               </SelectTrigger>
@@ -288,7 +327,7 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
             </Select>
 
             {/* Type Filter */}
-            <Select value={selectedType} onValueChange={setSelectedType}>
+            <Select value={selectedType} onValueChange={(value) => handleFilterChange('type', value)}>
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Todos os tipos" />
               </SelectTrigger>
@@ -302,8 +341,8 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
               </SelectContent>
             </Select>
 
-            {/* Sentiment Filter - NEW */}
-            <Select value={selectedSentiment} onValueChange={setSelectedSentiment}>
+            {/* Sentiment Filter */}
+            <Select value={selectedSentiment} onValueChange={(value) => handleFilterChange('sentiment', value)}>
               <SelectTrigger className="border-gray-300">
                 <SelectValue placeholder="Sentimento" />
               </SelectTrigger>
@@ -711,14 +750,16 @@ export default function CallMonitoring({ calls }: CallMonitoringProps) {
                             {/* TRANSCRIPTION TAB */}
                             <TabsContent value="transcription">
                               <div className="bg-white p-6 rounded-xl border border-gray-200">
-                                <div className="flex items-center space-x-2 mb-3">
+                                <div className="flex items-center space-x-2 mb-4">
                                   <FileText className="w-5 h-5 text-brand-green" />
-                                  <h4 className="font-semibold text-brand-dark">Transcrição Completa</h4>
+                                  <h4 className="font-semibold text-brand-dark">Transcrição Diarizada</h4>
                                 </div>
-                                <div className="bg-gray-50 p-4 rounded-lg border max-h-[500px] overflow-y-auto">
-                                  <pre className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
-                                    {call.transcription || 'Transcrição não disponível'}
-                                  </pre>
+                                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border border-gray-200 p-4">
+                                  <TranscriptionChat
+                                    callId={call.id}
+                                    sdrName={call.sdrName}
+                                    prospectName={call.prospectName}
+                                  />
                                 </div>
                               </div>
                             </TabsContent>
