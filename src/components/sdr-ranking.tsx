@@ -44,9 +44,15 @@ export default function SDRRanking({ sdrs }: SDRRankingProps) {
       ? callsWithScores.reduce((sum, call) => sum + (call.averageScore || 0), 0) / callsWithScores.length
       : 0;
     
+    const isSuccessfulCall = (result: string | null | undefined): boolean => {
+      if (!result) return false;
+      const normalized = result.toLowerCase().trim().replace(/_/g, ' ');
+      return normalized === 'agendado' || normalized === 'qualificação sucesso';
+    };
+    
     const totalCalls = sdr.calls.length;
     const successfulCalls = sdr.calls.filter(call => 
-      call.result === 'agendado' || call.result === 'qualificação_sucesso'
+      isSuccessfulCall(call.result)
     ).length;
     const conversionRate = totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
 
