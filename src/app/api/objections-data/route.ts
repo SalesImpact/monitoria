@@ -34,7 +34,7 @@ export async function GET() {
       );
     }
 
-    const userMeetimeAccounts = await (prisma as any).userMeetimeAccount.findMany({
+    const userMeetimeAccounts = await prisma.userMeetimeAccount.findMany({
       where: {
         user: {
           organizationId: organizationId,
@@ -74,13 +74,13 @@ export async function GET() {
       (account: typeof userMeetimeAccounts[0]) => account.meetimeUserId
     );
 
-    const callScoresResult = await (prisma as any).callScore.findMany({
+    const callScoresResult = await prisma.monitoriaCallScore.findMany({
       where: {
-        userId: {
+        user_id: {
           in: meetimeUserIds,
         },
       },
-    }) as any[];
+    });
 
     type CallScoreType = typeof callScoresResult[0];
 
@@ -126,8 +126,8 @@ export async function GET() {
     };
 
     callScoresResult.forEach((callScore: CallScoreType) => {
-      const objectionsRaw = (callScore as any).objeções;
-      const objectionsOvercomeRaw = (callScore as any).objeçõesSuperadas || {};
+      const objectionsRaw = (callScore as any).obje__es;
+      const objectionsOvercomeRaw = (callScore as any).obje__es_superadas || {};
       
       if (!objectionsRaw || objectionsRaw === null || typeof objectionsRaw !== 'object') {
         return;
