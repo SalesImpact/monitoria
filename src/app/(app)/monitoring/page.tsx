@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import CallMonitoring from '@/components/call-monitoring';
 
@@ -128,7 +129,10 @@ export default function MonitoringPage() {
     result?: string;
     sentiment?: string;
     type?: string;
-  }>({});
+    minDuration?: number;
+  }>({
+    minDuration: 30 // Default de 30 segundos
+  });
   const [filterOptions, setFilterOptions] = useState<{
     sdrs: string[];
     results: string[];
@@ -182,6 +186,9 @@ export default function MonitoringPage() {
       if (filters.result && filters.result !== 'all') params.append('result', filters.result);
       if (filters.sentiment && filters.sentiment !== 'all') params.append('sentiment', filters.sentiment);
       if (filters.type && filters.type !== 'all') params.append('type', filters.type);
+      if (filters.minDuration !== undefined && filters.minDuration > 0) {
+        params.append('minDuration', String(filters.minDuration));
+      }
       
       const response = await fetch(`/api/calls?${params.toString()}`);
       
@@ -284,6 +291,23 @@ export default function MonitoringPage() {
                   <SelectItem value="my-calls">Minhas Ligações</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium">Duração mínima:</label>
+              <Input
+                type="number"
+                min="0"
+                value={filters.minDuration || 30}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 0;
+                  setFilters(prev => ({ ...prev, minDuration: value }));
+                  setCurrentPage(1);
+                }}
+                className="w-[100px]"
+                placeholder="30"
+              />
+              <span className="text-sm text-gray-600">segundos</span>
             </div>
 
             <div className="flex items-center gap-4">

@@ -26,6 +26,9 @@ export async function GET(request: NextRequest) {
     const resultFilter = searchParams.get('result');
     const sentimentFilter = searchParams.get('sentiment');
     const typeFilter = searchParams.get('type');
+    const minDurationFilter = searchParams.get('minDuration') 
+      ? parseInt(searchParams.get('minDuration')!) 
+      : 30; // Default de 30 segundos
 
     // Sempre buscar apenas calls de usuários Meetime associados a usuários cadastrados
     // Buscar todos os IDs Meetime que estão associados a usuários do sistema
@@ -111,6 +114,11 @@ export async function GET(request: NextRequest) {
     if (typeFilter && typeFilter !== 'all') {
       const escapedType = typeFilter.replace(/'/g, "''");
       whereConditions.push(`c.call_type = '${escapedType}'`);
+    }
+    
+    // Filtro de Duração Mínima
+    if (minDurationFilter > 0) {
+      whereConditions.push(`c.connected_duration_seconds >= ${minDurationFilter}`);
     }
     
     const whereCondition = whereConditions.length > 0 ? whereConditions.join(' AND ') : 'TRUE';
