@@ -16,10 +16,10 @@ export async function GET() {
       );
     }
 
-    const meetimeUsers = await prisma.meetimeUser.findMany({
+    const meetimeUsers = await prisma.meetime_users.findMany({
       where: { 
         active: true, 
-        deletedAt: null 
+        deleted_at: null 
       },
       orderBy: { name: 'asc' },
       select: { 

@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -13,26 +14,36 @@ async function main() {
   console.log('Creating admin user...');
   const hashedPassword = await bcrypt.hash('johndoe123', 12);
   
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'john@doe.com' },
-    update: {},
-    create: {
-      email: 'john@doe.com',
-      name: 'Admin User',
-      role: 'admin'
-    }
+  let adminUser = await prisma.user.findFirst({
+    where: { email: 'john@doe.com' }
   });
+  if (!adminUser) {
+    adminUser = await prisma.user.create({
+      data: {
+        id: `cl${randomBytes(16).toString('hex')}`,
+        email: 'john@doe.com',
+        name: 'Admin User',
+        role: 'admin',
+        organizationId: 'default-org-id'
+      }
+    });
+  }
 
   // Create manager user
-  const managerUser = await prisma.user.upsert({
-    where: { email: 'gestor@salesimpact.com' },
-    update: {},
-    create: {
-      email: 'gestor@salesimpact.com',
-      name: 'Gestor Sales Impact',
-      role: 'manager'
-    }
+  let managerUser = await prisma.user.findFirst({
+    where: { email: 'gestor@salesimpact.com' }
   });
+  if (!managerUser) {
+    managerUser = await prisma.user.create({
+      data: {
+        id: `cl${randomBytes(16).toString('hex')}`,
+        email: 'gestor@salesimpact.com',
+        name: 'Gestor Sales Impact',
+        role: 'manager',
+        organizationId: 'default-org-id'
+      }
+    });
+  }
 
   // Read the calls analysis JSON
   const jsonPath = path.join(process.cwd(), 'data', 'sdr_calls_analysis.json');
@@ -49,15 +60,20 @@ async function main() {
     const sdrNameStr = String(sdrName);
     const email = `${sdrNameStr.toLowerCase().replace(/\s+/g, '.')}@salesimpact.com`;
     
-    const sdr = await prisma.sDR.upsert({
-      where: { email },
-      update: {},
-      create: {
-        name: sdrNameStr,
-        email: email,
-        status: 'active',
-      }
+    let sdr = await prisma.user.findFirst({
+      where: { email }
     });
+    if (!sdr) {
+      sdr = await prisma.user.create({
+        data: {
+          id: `cl${randomBytes(16).toString('hex')}`,
+          name: sdrNameStr,
+          email: email,
+          role: 'sdr',
+          organizationId: 'default-org-id'
+        }
+      });
+    }
     
     sdrMap[sdrNameStr] = sdr.id;
     console.log(`Created SDR: ${sdrNameStr}`);
@@ -73,36 +89,42 @@ async function main() {
     // Get audio filename from path
     const audioFilename = callData.audio_file ? path.basename(callData.audio_file) : null;
     
-    // Create call
-    const call = await prisma.call.create({
+    // Get user_id from meetime_users if available, or create a placeholder
+    // Note: The calls table uses BigInt for user_id, which references meetime_users
+    // For now, we'll set it to null since we're using the User model, not meetime_users
+    const userId = null; // Would need to map to meetime_users.id if available
+    
+    // Create call with correct schema fields
+    const call = await prisma.calls.create({
       data: {
-        sdrId: sdrMap[callData.sdr_name],
-        sdrName: callData.sdr_name,
-        client: callData.client,
-        prospectName: callData.prospect_name,
+        id: BigInt(Date.now() + Math.random() * 1000), // Generate a unique BigInt ID
         date: callDate,
-        duration: callData.duration,
-        callType: callData.call_type,
-        result: callData.result,
-        audioFile: audioFilename,
-        transcription: callData.transcription,
-        averageScore: callData.average_score,
-        // NEW: Análise de sentimento e tópicos
-        sentimentAnalysis: callData.sentiment_analysis || null,
-        sentimentJourney: callData.sentiment_journey || null,
-        detectedTopics: callData.detected_topics || null,
-        detectedKeywords: callData.detected_keywords || null,
-        // NEW: Análise de objeções e linguagem avançada
-        detectedObjections: callData.detected_objections || null,
-        languageAnalysis: callData.language_analysis || null,
+        user_id: userId,
+        user_name: callData.sdr_name || null,
+        status: callData.result || 'completed',
+        call_type: callData.call_type || null,
+        receiver_phone: '00000000000', // Required field, using placeholder
+        stored_audio_filename: audioFilename,
+        notes: callData.transcription || null,
+        dialer_parameters: {
+          client: callData.client,
+          prospect_name: callData.prospect_name,
+          duration: callData.duration,
+          sentiment_analysis: callData.sentiment_analysis || null,
+          sentiment_journey: callData.sentiment_journey || null,
+          detected_topics: callData.detected_topics || null,
+          detected_keywords: callData.detected_keywords || null,
+          detected_objections: callData.detected_objections || null,
+          language_analysis: callData.language_analysis || null,
+        } as any,
       }
     });
 
     // Create call scores
     const scores = callData.scores;
-    await prisma.callScore.create({
+    await prisma.monitoriaCallScore.create({
       data: {
-        callId: call.id,
+        callId: call.id.toString(),
         // Abertura
         saudacaoApresentacao: scores.abertura.saudacao_apresentacao,
         apresentacaoEmpresa: scores.abertura.apresentacao_empresa,
@@ -123,25 +145,18 @@ async function main() {
         confirmouEntendimento: scores.proximos_passos.confirmou_entendimento,
         vendeuProximoPasso: scores.proximos_passos.vendeu_proximo_passo,
         agendouConcluiu: scores.proximos_passos.agendou_concluiu,
-        // NEW: Sentimento
+        // Sentimento
         nivelEngajamentoCliente: scores.sentimento?.nivel_engajamento_cliente || null,
         confiancaSdr: scores.sentimento?.confianca_sdr || null,
         // AI Feedback
         aiFeedback: callData.ai_feedback,
+        averageScore: callData.average_score || 0,
+        weightedScore: callData.average_score || 0,
+        resultado: callData.result || null,
       }
     });
 
-    // Create keywords
-    for (const keyword of callData.keywords) {
-      await prisma.keyword.create({
-        data: {
-          callId: call.id,
-          word: keyword,
-        }
-      });
-    }
-
-    console.log(`✅ Created call with scores and keywords: ${callData.id}`);
+    console.log(`✅ Created call with scores: ${callData.id}`);
   }
 
   console.log('Seed completed successfully!');

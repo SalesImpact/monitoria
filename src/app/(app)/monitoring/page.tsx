@@ -14,6 +14,7 @@ interface CallFromAPI {
   userName: string | null;
   receiverPhone: string;
   status: string;
+  callType: string | null;
   connectedDurationSeconds: number | null;
   callLink: string | null;
   storedAudioUrl: string | null;

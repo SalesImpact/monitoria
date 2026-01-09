@@ -14,38 +14,32 @@ export const dynamic = 'force-dynamic';
 
 async function getReportsData() {
   try {
-    const calls = await prisma.call.findMany({
-    select: {
-      id: true,
-      sdrName: true,
-      client: true,
-      prospectName: true,
-      date: true,
-      duration: true,
-      averageScore: true,
-      result: true,
-      sentimentAnalysis: true,
-      detectedObjections: true,
-      languageAnalysis: true,
-    },
-    orderBy: {
-      date: 'desc',
-    },
-  });
+    const callsResult = await prisma.$queryRawUnsafe<any[]>(`
+      SELECT 
+        c.id::text as id,
+        mcs.average_score,
+        mcs.resultado
+      FROM calls c
+      LEFT JOIN monitoria_call_scores mcs ON mcs.call_id = c.id::text
+      ORDER BY c.date DESC
+    `);
 
-  const sdrs = await prisma.sDR.findMany({
-    select: {
-      name: true,
-      email: true,
-    },
-  });
-
-    type CallType = typeof calls[0];
+    const sdrs = await prisma.meetime_users.findMany({
+      select: {
+        name: true,
+        email: true,
+      },
+      where: {
+        active: true,
+        deleted_at: null,
+      },
+    });
 
     // Estatísticas gerais
-    const totalCalls = calls.length;
-    const avgScore = totalCalls > 0 
-      ? calls.reduce((acc: number, call: CallType) => acc + (call.averageScore || 0), 0) / totalCalls
+    const totalCalls = callsResult.length;
+    const callsWithScore = callsResult.filter((c: any) => c.average_score !== null);
+    const avgScore = callsWithScore.length > 0 
+      ? callsWithScore.reduce((acc: number, call: any) => acc + Number(call.average_score || 0), 0) / callsWithScore.length
       : 0;
     const isSuccessfulCall = (result: string | null | undefined): boolean => {
       if (!result) return false;
@@ -53,12 +47,12 @@ async function getReportsData() {
       return normalized === 'agendado' || normalized === 'qualificação sucesso';
     };
     
-    const successfulCalls = calls.filter((c: CallType) => isSuccessfulCall(c.result)).length;
+    const successfulCalls = callsResult.filter((c: any) => isSuccessfulCall(c.resultado)).length;
     const successRate = totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0;
 
     return {
-      calls,
-      sdrs,
+      calls: callsResult,
+      sdrs: sdrs.map(sdr => ({ name: sdr.name || 'Desconhecido', email: sdr.email || '' })),
       stats: {
         totalCalls,
         avgScore,

@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,12 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists in this organization
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findFirst({
       where: { 
-        email_organizationId: {
-          email,
-          organizationId
-        }
+        email,
+        organizationId
       },
     });
 
@@ -45,9 +44,13 @@ export async function POST(request: NextRequest) {
 
     // Create user with Meetime accounts in a transaction
     const result = await prisma.$transaction(async (tx) => {
+      // Generate a CUID-like ID
+      const userId = `cl${randomBytes(16).toString('hex')}`;
+      
       // Create user
       const user = await tx.user.create({
         data: {
+          id: userId,
           email,
           name: fullName || email.split('@')[0],
           password: hashedPassword,

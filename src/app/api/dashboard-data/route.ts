@@ -40,7 +40,7 @@ export async function GET() {
             email: true,
           },
         },
-        meetimeUser: {
+        meetime_users: {
           select: {
             id: true,
             name: true,
@@ -94,8 +94,8 @@ export async function GET() {
     if (callScores.length === 0) {
       const sdrs = userMeetimeAccounts.map((account) => ({
         id: account.user.id,
-        name: account.user.name || account.meetimeUser.name || 'N/A',
-        email: account.user.email || account.meetimeUser.email || '',
+        name: account.user.name || account.meetime_users.name || 'N/A',
+        email: account.user.email || account.meetime_users.email || '',
         status: 'active',
         calls: [],
       }));
@@ -178,17 +178,17 @@ export async function GET() {
 
       const sdrName =
         account?.user.name ||
-        account?.meetimeUser.name ||
+        account?.meetime_users.name ||
         call.user_name ||
         'N/A';
 
       const userId = account?.user.id || 'unknown';
-      const userEmail = account?.user.email || account?.meetimeUser.email || '';
+      const userEmail = account?.user.email || account?.meetime_users.email || '';
 
       if (!sdrsMap.has(userId)) {
         sdrsMap.set(userId, {
           id: userId,
-          name: account?.user.name || account?.meetimeUser.name || sdrName,
+          name: account?.user.name || account?.meetime_users.name || sdrName,
           email: userEmail,
           status: 'active',
           calls: [],

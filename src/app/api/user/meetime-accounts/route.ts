@@ -20,7 +20,7 @@ export async function GET() {
     const accounts = await prisma.userMeetimeAccount.findMany({
       where: { userId: session.user.id },
       include: {
-        meetimeUser: {
+        meetime_users: {
           select: {
             id: true,
             name: true,
@@ -39,8 +39,8 @@ export async function GET() {
       ...account,
       meetimeUserId: Number(account.meetimeUserId),
       meetimeUser: {
-        ...account.meetimeUser,
-        id: Number(account.meetimeUser.id)
+        ...account.meetime_users,
+        id: Number(account.meetime_users.id)
       }
     }));
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar se o usuário Meetime existe e está ativo
-    const meetimeUser = await prisma.meetimeUser.findUnique({
+    const meetimeUser = await prisma.meetime_users.findUnique({
       where: { id: BigInt(meetimeUserId) }
     });
 
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!meetimeUser.active || meetimeUser.deletedAt) {
+    if (!meetimeUser.active || meetimeUser.deleted_at) {
       return NextResponse.json(
         { error: 'Usuário Meetime inativo ou deletado' },
         { status: 400 }
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
         meetimeUserId: BigInt(meetimeUserId)
       },
       include: {
-        meetimeUser: {
+        meetime_users: {
           select: {
             id: true,
             name: true,
@@ -135,8 +135,8 @@ export async function POST(request: NextRequest) {
       ...account,
       meetimeUserId: Number(account.meetimeUserId),
       meetimeUser: {
-        ...account.meetimeUser,
-        id: Number(account.meetimeUser.id)
+        ...account.meetime_users,
+        id: Number(account.meetime_users.id)
       }
     };
 

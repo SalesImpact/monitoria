@@ -40,7 +40,7 @@ export async function GET() {
             email: true,
           },
         },
-        meetimeUser: {
+        meetime_users: {
           select: {
             id: true,
             name: true,
@@ -58,9 +58,9 @@ export async function GET() {
       (account) => account.meetimeUserId
     );
 
-    const callScores = await prisma.callScore.findMany({
+    const callScores = await prisma.monitoriaCallScore.findMany({
       where: {
-        userId: {
+        user_id: {
           in: meetimeUserIds,
         },
       },
@@ -76,7 +76,7 @@ export async function GET() {
 
     const callIds = callScores.map((score) => score.callId);
 
-    const calls = await prisma.call.findMany({
+    const calls = await prisma.calls.findMany({
       where: {
         id: {
           in: callIds.map((id) => BigInt(id)),
@@ -85,9 +85,9 @@ export async function GET() {
       select: {
         id: true,
         date: true,
-        receiverPhone: true,
-        userName: true,
-        userId: true,
+        receiver_phone: true,
+        user_name: true,
+        user_id: true,
       },
     });
 
@@ -108,14 +108,14 @@ export async function GET() {
       const call = callsMap.get(score.callId);
       if (!call) continue;
 
-      const account = score.userId
-        ? userMeetimeAccountMap.get(score.userId)
+      const account = score.user_id
+        ? userMeetimeAccountMap.get(score.user_id)
         : null;
 
       const sdrName =
         account?.user.name ||
-        account?.meetimeUser.name ||
-        call.userName ||
+        account?.meetime_users.name ||
+        call.user_name ||
         'N/A';
 
       const userId = account?.user.id;
@@ -131,7 +131,7 @@ export async function GET() {
       callsData.push({
         id: score.callId,
         sdrName: sdrName,
-        client: call.receiverPhone || 'N/A',
+        client: call.receiver_phone || 'N/A',
         date: call.date,
         averageScore: score.averageScore,
         scores: {

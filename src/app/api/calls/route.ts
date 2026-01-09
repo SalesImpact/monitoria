@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
     
     // Filtro de usuários
     if (whereClause.userId && whereClause.userId.in) {
-      const userIds = whereClause.userId.in.map(id => id.toString()).join(',');
+      const userIds = whereClause.userId.in.map((id: number) => id.toString()).join(',');
       whereConditions.push(`c.user_id IN (${userIds})`);
     }
     

@@ -1,7 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { hashPassword } from '../lib/auth-utils';
+import { randomBytes } from 'crypto';
 
 const prisma = new PrismaClient();
+
+function generateId(): string {
+  return `cl${randomBytes(16).toString('hex')}`;
+}
 
 async function main() {
   console.log('Starting auth seed...');
@@ -10,6 +15,7 @@ async function main() {
     where: { slug: 'sales-impact' },
     update: {},
     create: {
+      id: generateId(),
       name: 'Sales Impact',
       slug: 'sales-impact',
     },
@@ -21,6 +27,7 @@ async function main() {
     where: { slug: 'tech-solutions' },
     update: {},
     create: {
+      id: generateId(),
       name: 'Tech Solutions',
       slug: 'tech-solutions',
     },
@@ -30,79 +37,91 @@ async function main() {
 
   const password = await hashPassword('senha123');
 
-  const adminUser = await prisma.user.upsert({
+  let adminUser = await prisma.user.findFirst({
     where: {
-      email_organizationId: {
-        email: 'admin@salesimpact.com',
-        organizationId: org1.id,
-      },
-    },
-    update: {},
-    create: {
       email: 'admin@salesimpact.com',
-      name: 'Admin User',
-      password: password,
-      role: 'admin',
       organizationId: org1.id,
     },
   });
+  
+  if (!adminUser) {
+    adminUser = await prisma.user.create({
+      data: {
+        id: generateId(),
+        email: 'admin@salesimpact.com',
+        name: 'Admin User',
+        password: password,
+        role: 'admin',
+        organizationId: org1.id,
+      },
+    });
+  }
 
   console.log(`✅ Created admin user: ${adminUser.email}`);
 
-  const managerUser = await prisma.user.upsert({
+  let managerUser = await prisma.user.findFirst({
     where: {
-      email_organizationId: {
-        email: 'manager@salesimpact.com',
-        organizationId: org1.id,
-      },
-    },
-    update: {},
-    create: {
       email: 'manager@salesimpact.com',
-      name: 'Manager User',
-      password: password,
-      role: 'manager',
       organizationId: org1.id,
     },
   });
+  
+  if (!managerUser) {
+    managerUser = await prisma.user.create({
+      data: {
+        id: generateId(),
+        email: 'manager@salesimpact.com',
+        name: 'Manager User',
+        password: password,
+        role: 'manager',
+        organizationId: org1.id,
+      },
+    });
+  }
 
   console.log(`✅ Created manager user: ${managerUser.email}`);
 
-  const sdrUser = await prisma.user.upsert({
+  let sdrUser = await prisma.user.findFirst({
     where: {
-      email_organizationId: {
-        email: 'sdr@salesimpact.com',
-        organizationId: org1.id,
-      },
-    },
-    update: {},
-    create: {
       email: 'sdr@salesimpact.com',
-      name: 'SDR User',
-      password: password,
-      role: 'sdr',
       organizationId: org1.id,
     },
   });
+  
+  if (!sdrUser) {
+    sdrUser = await prisma.user.create({
+      data: {
+        id: generateId(),
+        email: 'sdr@salesimpact.com',
+        name: 'SDR User',
+        password: password,
+        role: 'sdr',
+        organizationId: org1.id,
+      },
+    });
+  }
 
   console.log(`✅ Created SDR user: ${sdrUser.email}`);
 
-  const adminOrg2 = await prisma.user.upsert({
+  let adminOrg2 = await prisma.user.findFirst({
     where: {
-      email_organizationId: {
-        email: 'admin@techsolutions.com',
-        organizationId: org2.id,
-      },
-    },
-    update: {},
-    create: {
       email: 'admin@techsolutions.com',
-      name: 'Admin Tech Solutions',
-      password: password,
-      role: 'admin',
       organizationId: org2.id,
     },
   });
+  
+  if (!adminOrg2) {
+    adminOrg2 = await prisma.user.create({
+      data: {
+        id: generateId(),
+        email: 'admin@techsolutions.com',
+        name: 'Admin Tech Solutions',
+        password: password,
+        role: 'admin',
+        organizationId: org2.id,
+      },
+    });
+  }
 
   console.log(`✅ Created admin user for org2: ${adminOrg2.email}`);
 

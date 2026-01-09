@@ -28,16 +28,16 @@ type SdrObjectionStats = {
 
 async function getObjectionsData() {
   try {
-    const callsResult = await prisma.call.findMany({
-      select: {
-        id: true,
-        sdrName: true,
-        detectedObjections: true,
-        result: true,
-      },
-    });
-
-    type CallType = typeof callsResult[0];
+    const callsResult = await prisma.$queryRawUnsafe<any[]>(`
+      SELECT 
+        c.id::text as id,
+        c.user_name as sdr_name,
+        mcs.objeções as detected_objections,
+        mcs.resultado as result
+      FROM calls c
+      INNER JOIN monitoria_call_scores mcs ON mcs.call_id = c.id::text
+      WHERE mcs.objeções IS NOT NULL
+    `);
 
     const objectionsByType: Record<string, number> = {};
     const objectionsBySdr: Record<string, SdrObjectionStats> = {};
@@ -45,8 +45,8 @@ async function getObjectionsData() {
     let totalObjections = 0;
     let totalOvercome = 0;
 
-    callsResult.forEach((call: CallType) => {
-      const objections = (call.detectedObjections as DetectedObjection[]) || [];
+    callsResult.forEach((call: any) => {
+      const objections = (call.detected_objections as DetectedObjection[]) || [];
       if (!objections || !Array.isArray(objections)) return;
 
       objections.forEach((obj: DetectedObjection) => {
@@ -71,20 +71,21 @@ async function getObjectionsData() {
         }
 
         // Conta por SDR
-        if (!objectionsBySdr[call.sdrName]) {
-          objectionsBySdr[call.sdrName] = {
-            name: call.sdrName,
+        const sdrName = call.sdr_name || 'Desconhecido';
+        if (!objectionsBySdr[sdrName]) {
+          objectionsBySdr[sdrName] = {
+            name: sdrName,
             total: 0,
             overcome: 0,
             byType: {} as Record<string, number>,
           };
         }
-        objectionsBySdr[call.sdrName].total++;
+        objectionsBySdr[sdrName].total++;
         if (obj.wasOvercome) {
-          objectionsBySdr[call.sdrName].overcome++;
+          objectionsBySdr[sdrName].overcome++;
         }
-        objectionsBySdr[call.sdrName].byType[type] = 
-          (objectionsBySdr[call.sdrName].byType[type] || 0) + 1;
+        objectionsBySdr[sdrName].byType[type] = 
+          (objectionsBySdr[sdrName].byType[type] || 0) + 1;
       });
     });
 

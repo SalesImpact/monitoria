@@ -48,7 +48,7 @@ export async function GET() {
             email: true,
           },
         },
-        meetimeUser: {
+        meetime_users: {
           select: {
             id: true,
             name: true,
@@ -134,10 +134,10 @@ export async function GET() {
       }
       
       if (Array.isArray(objectionsRaw)) {
-        const account = callScore.userId ? userMeetimeAccountMap.get(callScore.userId) : null;
+        const account = callScore.user_id ? userMeetimeAccountMap.get(callScore.user_id) : null;
         const sdrName =
           account?.user.name ||
-          account?.meetimeUser.name ||
+          account?.meetime_users.name ||
           'N/A';
 
         objectionsRaw.forEach((obj: DetectedObjection) => {
@@ -175,10 +175,10 @@ export async function GET() {
           callScoresWithObjections++;
         }
       } else {
-        const account = callScore.userId ? userMeetimeAccountMap.get(callScore.userId) : null;
+        const account = callScore.user_id ? userMeetimeAccountMap.get(callScore.user_id) : null;
         const sdrName =
           account?.user.name ||
-          account?.meetimeUser.name ||
+          account?.meetime_users.name ||
           'N/A';
 
         const objectionsObj = objectionsRaw as Record<string, boolean>;
