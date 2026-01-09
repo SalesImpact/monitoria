@@ -1,11 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Dialog,
@@ -16,7 +13,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { 
-  Search, 
   Calendar, 
   Clock, 
   User, 
@@ -26,7 +22,6 @@ import {
   ChevronRight,
   Volume2,
   FileText,
-  Heart,
   Tag,
   TrendingUp,
   Smile,
@@ -128,18 +123,6 @@ interface Call {
 
 interface CallMonitoringProps {
   calls: Call[];
-  filterOptions?: {
-    sdrs: string[];
-    results: string[];
-    sentiments: string[];
-    types: string[];
-  };
-  onFiltersChange?: (filters: {
-    sdr?: string;
-    result?: string;
-    sentiment?: string;
-    type?: string;
-  }) => void;
 }
 
 function getSentimentIcon(sentiment: string) {
@@ -184,69 +167,12 @@ function getTopicBadgeColor(relevance: number): string {
   return 'bg-gray-100 text-gray-800 border-gray-200';
 }
 
-export default function CallMonitoring({ calls, filterOptions, onFiltersChange }: CallMonitoringProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSDR, setSelectedSDR] = useState<string>('all');
-  const [selectedResult, setSelectedResult] = useState<string>('all');
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [selectedSentiment, setSelectedSentiment] = useState<string>('all');
-  const [selectedTopic, setSelectedTopic] = useState<string>('all');
-
+export default function CallMonitoring({ calls }: CallMonitoringProps) {
   // Handle undefined or empty calls
   const safeCalls = calls || [];
-
-  // Usar valores únicos dos filtros passados como prop, ou calcular dos calls
-  const uniqueSDRs = filterOptions?.sdrs && filterOptions.sdrs.length > 0 
-    ? filterOptions.sdrs 
-    : [...new Set(safeCalls.map(call => call.sdrName).filter(Boolean))];
-  const uniqueResults = filterOptions?.results && filterOptions.results.length > 0
-    ? filterOptions.results
-    : [...new Set(safeCalls.map(call => call.result).filter(Boolean))];
-  const uniqueTypes = filterOptions?.types && filterOptions.types.length > 0
-    ? filterOptions.types
-    : [...new Set(safeCalls.map(call => call.callType).filter(Boolean))];
-  const uniqueSentiments = filterOptions?.sentiments && filterOptions.sentiments.length > 0
-    ? filterOptions.sentiments
-    : [...new Set(safeCalls.flatMap(call => 
-        call.sentimentAnalysis ? [call.sentimentAnalysis.overall] : []
-      ).filter(Boolean))];
-  const uniqueTopics = [...new Set(safeCalls.flatMap(call => 
-    call.detectedTopics ? call.detectedTopics.map(t => t.category) : []
-  ).filter(Boolean))];
-
-  // Função para atualizar filtros e notificar o componente pai
-  const handleFilterChange = (filterType: 'sdr' | 'result' | 'sentiment' | 'type', value: string) => {
-    if (filterType === 'sdr') setSelectedSDR(value);
-    if (filterType === 'result') setSelectedResult(value);
-    if (filterType === 'sentiment') setSelectedSentiment(value);
-    if (filterType === 'type') setSelectedType(value);
-    
-    if (onFiltersChange) {
-      const newFilters: any = {};
-      if (filterType === 'sdr') newFilters.sdr = value;
-      if (filterType === 'result') newFilters.result = value;
-      if (filterType === 'sentiment') newFilters.sentiment = value;
-      if (filterType === 'type') newFilters.type = value;
-      onFiltersChange(newFilters);
-    }
-  };
-
-  const filteredCalls = safeCalls.filter((call) => {
-    const matchesSearch =
-      call.sdrName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      call.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      call.prospectName.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesSDR = selectedSDR === 'all' || call.sdrName === selectedSDR;
-    const matchesResult = selectedResult === 'all' || call.result === selectedResult;
-    const matchesType = selectedType === 'all' || call.callType === selectedType;
-    const matchesSentiment = selectedSentiment === 'all' || 
-      (call.sentimentAnalysis && call.sentimentAnalysis.overall === selectedSentiment);
-    const matchesTopic = selectedTopic === 'all' || 
-      (call.detectedTopics && call.detectedTopics.some(t => t.category === selectedTopic));
-
-    return matchesSearch && matchesSDR && matchesResult && matchesType && matchesSentiment && matchesTopic;
-  });
+  
+  // As chamadas já vêm filtradas da página principal
+  const filteredCalls = safeCalls;
 
   const getInitials = (name: string) => {
     return name
@@ -283,97 +209,6 @@ export default function CallMonitoring({ calls, filterOptions, onFiltersChange }
     <div className="space-y-6">
       <Card className="card-hover border-gray-200">
         <CardContent className="p-6">
-          {/* Filters Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
-            {/* Search */}
-            <div className="lg:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Buscar por SDR, cliente ou prospect..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-300 focus:border-brand-green focus:ring-brand-green"
-              />
-            </div>
-
-            {/* SDR Filter */}
-            <Select value={selectedSDR} onValueChange={(value) => handleFilterChange('sdr', value)}>
-              <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Todos os SDRs" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os SDRs</SelectItem>
-                {uniqueSDRs.filter(sdr => sdr && sdr.trim() !== '').map((sdr) => (
-                  <SelectItem key={sdr} value={sdr}>
-                    {sdr}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Result Filter */}
-            <Select value={selectedResult} onValueChange={(value) => handleFilterChange('result', value)}>
-              <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Todos os resultados" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os resultados</SelectItem>
-                {uniqueResults.filter(result => result && result.trim() !== '').map((result) => (
-                  <SelectItem key={result} value={result}>
-                    {getResultLabel(result)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Type Filter */}
-            <Select value={selectedType} onValueChange={(value) => handleFilterChange('type', value)}>
-              <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Todos os tipos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os tipos</SelectItem>
-                {uniqueTypes.filter(type => type && type.trim() !== '').map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type === 'call_real' ? 'Ligação Real' : 'Roleplay'}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Sentiment Filter */}
-            <Select value={selectedSentiment} onValueChange={(value) => handleFilterChange('sentiment', value)}>
-              <SelectTrigger className="border-gray-300">
-                <SelectValue placeholder="Sentimento" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os sentimentos</SelectItem>
-                {uniqueSentiments.filter(sentiment => sentiment && sentiment.trim() !== '').map((sentiment) => (
-                  <SelectItem key={sentiment} value={sentiment}>
-                    {sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Topic Filter - Second Row */}
-          <div className="mb-6">
-            <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-              <SelectTrigger className="border-gray-300 max-w-xs">
-                <SelectValue placeholder="Filtrar por tópico discutido" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os tópicos</SelectItem>
-                {uniqueTopics.filter(topic => topic && topic.trim() !== '').map((topic) => (
-                  <SelectItem key={topic} value={topic}>
-                    {topic.charAt(0).toUpperCase() + topic.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Table */}
           <Table>
             <TableHeader>

@@ -6,7 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight, Search, Filter, FilterX, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import CallMonitoring from '@/components/call-monitoring';
 
 interface CallFromAPI {
@@ -122,13 +123,13 @@ export default function MonitoringPage() {
   const [pageSize, setPageSize] = useState(25);
   const [total, setTotal] = useState(0);
   const [hasAccounts, setHasAccounts] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   
   // Filtros e valores únicos
   const [filters, setFilters] = useState<{
     sdr?: string;
     result?: string;
     sentiment?: string;
-    type?: string;
     minDuration?: number;
   }>({
     minDuration: 30 // Default de 30 segundos
@@ -137,12 +138,10 @@ export default function MonitoringPage() {
     sdrs: string[];
     results: string[];
     sentiments: string[];
-    types: string[];
   }>({
     sdrs: [],
     results: [],
-    sentiments: [],
-    types: []
+    sentiments: []
   });
 
   useEffect(() => {
@@ -151,7 +150,7 @@ export default function MonitoringPage() {
 
   useEffect(() => {
     fetchCalls();
-  }, [filter, currentPage, pageSize, filters]);
+  }, [filter, currentPage, pageSize, filters, searchTerm]);
 
   const fetchFilterOptions = async () => {
     try {
@@ -161,8 +160,7 @@ export default function MonitoringPage() {
         setFilterOptions({
           sdrs: data.sdrs || [],
           results: data.results || [],
-          sentiments: data.sentiments || [],
-          types: data.types || []
+          sentiments: data.sentiments || []
         });
       }
     } catch (error) {
@@ -185,7 +183,6 @@ export default function MonitoringPage() {
       if (filters.sdr && filters.sdr !== 'all') params.append('sdr', filters.sdr);
       if (filters.result && filters.result !== 'all') params.append('result', filters.result);
       if (filters.sentiment && filters.sentiment !== 'all') params.append('sentiment', filters.sentiment);
-      if (filters.type && filters.type !== 'all') params.append('type', filters.type);
       if (filters.minDuration !== undefined && filters.minDuration > 0) {
         params.append('minDuration', String(filters.minDuration));
       }
@@ -253,13 +250,55 @@ export default function MonitoringPage() {
     }
   };
 
+  // Aplicar busca local se houver searchTerm
+  const filteredCalls = searchTerm 
+    ? calls.filter((call) => {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          call.sdrName.toLowerCase().includes(searchLower) ||
+          call.client.toLowerCase().includes(searchLower) ||
+          call.prospectName.toLowerCase().includes(searchLower)
+        );
+      })
+    : calls;
+
+  const displayedTotal = searchTerm ? filteredCalls.length : total;
   const totalPages = Math.ceil(total / pageSize);
+
+  // Contar filtros ativos
+  const activeFiltersCount = [
+    filter !== 'all',
+    filters.sdr && filters.sdr !== 'all',
+    filters.result && filters.result !== 'all',
+    filters.sentiment && filters.sentiment !== 'all',
+    filters.minDuration && filters.minDuration > 30,
+    searchTerm && searchTerm.trim() !== ''
+  ].filter(Boolean).length;
+
+  const hasActiveFilters = activeFiltersCount > 0;
+
+  // Função para limpar todos os filtros
+  const clearAllFilters = () => {
+    setFilter('all');
+    setFilters({ minDuration: 30 });
+    setSearchTerm('');
+    setCurrentPage(1);
+  };
 
   const formatDuration = (seconds: number | null) => {
     if (!seconds) return '0s';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  };
+
+  const getResultLabel = (result: string) => {
+    const labels: { [key: string]: string } = {
+      'agendado': 'Agendado',
+      'não_agendado': 'Não Agendado',
+      'qualificação_sucesso': 'Qualificação Sucesso',
+    };
+    return labels[result] || result;
   };
 
   return (
@@ -273,28 +312,227 @@ export default function MonitoringPage() {
         </div>
       </div>
 
-      {/* Filtro de Ligações */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium">Filtro:</span>
-              <Select value={filter} onValueChange={(value: 'my-calls' | 'all') => {
-                setFilter(value);
-                setCurrentPage(1); // Resetar para primeira página ao mudar filtro
-              }}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as Ligações</SelectItem>
-                  <SelectItem value="my-calls">Minhas Ligações</SelectItem>
-                </SelectContent>
-              </Select>
+      {/* Filtros Unificados */}
+      <Card className={`border-gray-200 shadow-sm transition-all ${hasActiveFilters ? 'ring-2 ring-brand-green/20' : ''}`}>
+        <CardContent className="p-4">
+          {/* Header compacto */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Filter className={`w-4 h-4 ${hasActiveFilters ? 'text-brand-green' : 'text-gray-500'}`} />
+              <span className="text-sm font-semibold text-brand-dark">Filtros</span>
+              {hasActiveFilters && (
+                <Badge variant="secondary" className="text-xs py-0 px-1.5">
+                  {activeFiltersCount}
+                </Badge>
+              )}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-600">
+                {searchTerm ? 'Exibindo' : 'Total'}: <span className="font-semibold text-brand-green">{displayedTotal}</span>
+              </span>
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearAllFilters}
+                  className="h-7 px-2 text-xs text-gray-600 hover:text-brand-dark"
+                >
+                  <FilterX className="w-3 h-3 mr-1" />
+                  Limpar
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Filtros ativos como badges compactos */}
+          {hasActiveFilters && (
+            <div className="flex flex-wrap items-center gap-1.5 mb-3 pb-2 border-b border-gray-200">
+              {filter !== 'all' && (
+                <Badge variant="secondary" className="text-xs py-0.5 px-2 gap-1 h-6">
+                  {filter === 'my-calls' ? 'Minhas Ligações' : 'Todas'}
+                  <button
+                    onClick={() => {
+                      setFilter('all');
+                      setCurrentPage(1);
+                    }}
+                    className="ml-0.5 hover:bg-gray-300 rounded-full p-0.5"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </Badge>
+              )}
+              {filters.sdr && filters.sdr !== 'all' && (
+                <Badge variant="secondary" className="text-xs py-0.5 px-2 gap-1 h-6">
+                  {filters.sdr}
+                  <button
+                    onClick={() => {
+                      setFilters(prev => ({ ...prev, sdr: undefined }));
+                      setCurrentPage(1);
+                    }}
+                    className="ml-0.5 hover:bg-gray-300 rounded-full p-0.5"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </Badge>
+              )}
+              {filters.result && filters.result !== 'all' && (
+                <Badge variant="secondary" className="text-xs py-0.5 px-2 gap-1 h-6">
+                  {getResultLabel(filters.result)}
+                  <button
+                    onClick={() => {
+                      setFilters(prev => ({ ...prev, result: undefined }));
+                      setCurrentPage(1);
+                    }}
+                    className="ml-0.5 hover:bg-gray-300 rounded-full p-0.5"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </Badge>
+              )}
+              {filters.sentiment && filters.sentiment !== 'all' && (
+                <Badge variant="secondary" className="text-xs py-0.5 px-2 gap-1 h-6">
+                  {filters.sentiment.charAt(0).toUpperCase() + filters.sentiment.slice(1)}
+                  <button
+                    onClick={() => {
+                      setFilters(prev => ({ ...prev, sentiment: undefined }));
+                      setCurrentPage(1);
+                    }}
+                    className="ml-0.5 hover:bg-gray-300 rounded-full p-0.5"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </Badge>
+              )}
+              {filters.minDuration && filters.minDuration > 30 && (
+                <Badge variant="secondary" className="text-xs py-0.5 px-2 gap-1 h-6">
+                  ≥{filters.minDuration}s
+                  <button
+                    onClick={() => {
+                      setFilters(prev => ({ ...prev, minDuration: 30 }));
+                      setCurrentPage(1);
+                    }}
+                    className="ml-0.5 hover:bg-gray-300 rounded-full p-0.5"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </Badge>
+              )}
+              {searchTerm && searchTerm.trim() !== '' && (
+                <Badge variant="secondary" className="text-xs py-0.5 px-2 gap-1 h-6 max-w-[150px] truncate">
+                  "{searchTerm}"
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setCurrentPage(1);
+                    }}
+                    className="ml-0.5 hover:bg-gray-300 rounded-full p-0.5"
+                  >
+                    <X className="w-2.5 h-2.5" />
+                  </button>
+                </Badge>
+              )}
+            </div>
+          )}
+          
+          {/* Grid compacto de filtros */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2.5">
+            {/* Busca - ocupa 2 colunas */}
+            <div className="lg:col-span-2 relative">
+              <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
+              <Input
+                placeholder="Buscar SDR, cliente ou prospect..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="pl-8 h-9 text-sm border-gray-300 focus:border-brand-green focus:ring-brand-green"
+              />
             </div>
 
-            <div className="flex items-center gap-4">
-              <label className="text-sm font-medium">Duração mínima:</label>
+            {/* Escopo */}
+            <Select value={filter} onValueChange={(value: 'my-calls' | 'all') => {
+              setFilter(value);
+              setCurrentPage(1);
+            }}>
+              <SelectTrigger className="h-9 text-sm border-gray-300">
+                <SelectValue placeholder="Escopo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Ligações</SelectItem>
+                <SelectItem value="my-calls">Minhas Ligações</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* SDR */}
+            <Select 
+              value={filters.sdr || 'all'} 
+              onValueChange={(value) => {
+                setFilters(prev => ({ ...prev, sdr: value }));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="h-9 text-sm border-gray-300">
+                <SelectValue placeholder="SDR" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os SDRs</SelectItem>
+                {filterOptions.sdrs.filter(sdr => sdr && sdr.trim() !== '').map((sdr) => (
+                  <SelectItem key={sdr} value={sdr}>
+                    {sdr}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Resultado */}
+            <Select 
+              value={filters.result || 'all'} 
+              onValueChange={(value) => {
+                setFilters(prev => ({ ...prev, result: value }));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="h-9 text-sm border-gray-300">
+                <SelectValue placeholder="Resultado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os resultados</SelectItem>
+                {filterOptions.results.filter(result => result && result.trim() !== '').map((result) => (
+                  <SelectItem key={result} value={result}>
+                    {result === 'agendado' ? 'Agendado' : 
+                     result === 'não_agendado' ? 'Não Agendado' : 
+                     result === 'qualificação_sucesso' ? 'Qualificação Sucesso' : result}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Segunda linha compacta: Sentimento e Duração */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 mt-2.5">
+            <Select 
+              value={filters.sentiment || 'all'} 
+              onValueChange={(value) => {
+                setFilters(prev => ({ ...prev, sentiment: value }));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="h-9 text-sm border-gray-300">
+                <SelectValue placeholder="Sentimento" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os sentimentos</SelectItem>
+                {filterOptions.sentiments.filter(sentiment => sentiment && sentiment.trim() !== '').map((sentiment) => (
+                  <SelectItem key={sentiment} value={sentiment}>
+                    {sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center gap-2">
               <Input
                 type="number"
                 min="0"
@@ -304,16 +542,10 @@ export default function MonitoringPage() {
                   setFilters(prev => ({ ...prev, minDuration: value }));
                   setCurrentPage(1);
                 }}
-                className="w-[100px]"
+                className="h-9 text-sm border-gray-300 w-20"
                 placeholder="30"
               />
-              <span className="text-sm text-gray-600">segundos</span>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
-                Total: {total} ligações
-              </span>
+              <span className="text-xs text-gray-600 whitespace-nowrap">seg mín</span>
             </div>
           </div>
         </CardContent>
@@ -327,12 +559,7 @@ export default function MonitoringPage() {
           ) : (
             <>
             <CallMonitoring 
-              calls={calls} 
-              filterOptions={filterOptions}
-              onFiltersChange={(newFilters) => {
-                setFilters(newFilters);
-                setCurrentPage(1); // Resetar página ao mudar filtros
-              }}
+              calls={filteredCalls}
             />
 
           {/* Paginação */}
