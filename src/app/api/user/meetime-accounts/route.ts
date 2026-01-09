@@ -36,11 +36,17 @@ export async function GET() {
 
     // Converter BigInt para Number para serialização JSON
     const serializedAccounts = accounts.map(account => ({
-      ...account,
+      id: account.id,
+      userId: account.userId,
       meetimeUserId: Number(account.meetimeUserId),
+      createdAt: account.createdAt,
       meetimeUser: {
-        ...account.meetime_users,
-        id: Number(account.meetime_users.id)
+        id: Number(account.meetime_users.id),
+        name: account.meetime_users.name,
+        email: account.meetime_users.email,
+        role: account.meetime_users.role,
+        module: account.meetime_users.module,
+        active: account.meetime_users.active
       }
     }));
 
@@ -132,11 +138,16 @@ export async function POST(request: NextRequest) {
 
     // Converter BigInt para Number para serialização JSON
     const serializedAccount = {
-      ...account,
+      id: account.id,
+      userId: account.userId,
       meetimeUserId: Number(account.meetimeUserId),
+      createdAt: account.createdAt,
       meetimeUser: {
-        ...account.meetime_users,
-        id: Number(account.meetime_users.id)
+        id: Number(account.meetime_users.id),
+        name: account.meetime_users.name,
+        email: account.meetime_users.email,
+        role: account.meetime_users.role,
+        module: account.meetime_users.module
       }
     };
 
