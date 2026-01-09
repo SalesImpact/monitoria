@@ -1,0 +1,19 @@
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import OrganizationsContent from './organizations-content';
+
+export default async function OrganizationsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/');
+  }
+
+  if (session.user.role !== 'admin') {
+    redirect('/dashboard');
+  }
+
+  return <OrganizationsContent />;
+}
+

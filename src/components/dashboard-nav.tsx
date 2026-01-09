@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import {
   BarChart3,
@@ -24,18 +24,20 @@ import {
   GraduationCap,
   LogOut,
   UserCircle,
+  Building2,
 } from 'lucide-react';
 
 const navigation = [
-  { name: 'Dashboards', href: '/dashboard', icon: BarChart3 },
-  { name: 'Monitoria de Ligações', href: '/monitoring', icon: Phone },
-  { name: 'Análise por SDR', href: '/sdr-analysis', icon: Users },
-  { name: 'Coaching com IA', href: '/coaching', icon: Lightbulb },
-  { name: 'Roleplay', href: '/simulator', icon: MessageSquare },
-  { name: 'Melhores Práticas', href: '/best-practices', icon: Award },
-  { name: 'Tendências', href: '/trends', icon: TrendingUp },
-  { name: 'Guia/Manual', href: '/manual', icon: BookOpen },
-  { name: 'Perfil', href: '/profile', icon: UserCircle },
+  { name: 'Dashboards', href: '/dashboard', icon: BarChart3, adminOnly: false },
+  { name: 'Monitoria de Ligações', href: '/monitoring', icon: Phone, adminOnly: false },
+  { name: 'Análise por SDR', href: '/sdr-analysis', icon: Users, adminOnly: false },
+  { name: 'Coaching com IA', href: '/coaching', icon: Lightbulb, adminOnly: false },
+  { name: 'Roleplay', href: '/simulator', icon: MessageSquare, adminOnly: false },
+  { name: 'Melhores Práticas', href: '/best-practices', icon: Award, adminOnly: false },
+  { name: 'Tendências', href: '/trends', icon: TrendingUp, adminOnly: false },
+  { name: 'Guia/Manual', href: '/manual', icon: BookOpen, adminOnly: false },
+  { name: 'Empresas', href: '/organizations', icon: Building2, adminOnly: true },
+  { name: 'Perfil', href: '/profile', icon: UserCircle, adminOnly: false },
 ];
 
 export default function DashboardNav() {
@@ -43,6 +45,10 @@ export default function DashboardNav() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'admin';
+  
+  const filteredNavigation = navigation.filter(item => !item.adminOnly || isAdmin);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -75,7 +81,7 @@ export default function DashboardNav() {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            {navigation.map((item) => {
+            {filteredNavigation.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
@@ -141,7 +147,7 @@ export default function DashboardNav() {
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="px-2 pb-3 space-y-1 bg-brand-dark border-t border-slate-700">
-            {navigation.map((item) => {
+            {filteredNavigation.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link

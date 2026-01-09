@@ -26,6 +26,7 @@ export default withAuth(
       '/training',
       '/select-organization',
       '/profile',
+      '/organizations',
     ];
 
     const isProtectedPath = protectedPaths.some(path => 
@@ -34,6 +35,14 @@ export default withAuth(
 
     if (isProtectedPath) {
       const selectedOrgId = token.selectedOrganizationId;
+
+      // Apenas admins podem acessar /organizations
+      if (pathname === '/organizations' || pathname.startsWith('/organizations/')) {
+        if (!isAdmin) {
+          return NextResponse.redirect(new URL('/dashboard', req.url));
+        }
+        return NextResponse.next();
+      }
 
       // Admins sempre podem acessar a página de seleção
       if (isAdmin && pathname === '/select-organization') {
@@ -75,6 +84,7 @@ export const config = {
     '/training/:path*',
     '/select-organization/:path*',
     '/profile/:path*',
+    '/organizations/:path*',
   ],
 };
 
