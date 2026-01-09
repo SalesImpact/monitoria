@@ -126,6 +126,7 @@ export async function GET(request: NextRequest) {
     // Buscar calls com paginação e projeto (cliente) via cadência
     // Join: calls -> activities -> leads -> prospections -> cadences -> projects
     // Join: calls -> monitoria_call_scores (para scores, sentimento e resultado)
+    // Join: calls -> leads (via telefone receiver_phone = primary_phone_string para obter lead_company)
     const callsWithProject = await prisma.$queryRawUnsafe<any[]>(`
       SELECT DISTINCT ON (c.id)
         c.id,
@@ -145,6 +146,7 @@ export async function GET(request: NextRequest) {
         mu.name as meetime_user_name,
         mu.email as meetime_user_email,
         p.name as project_name,
+        ll.lead_company,
         mcs.average_score,
         mcs.sentimento_geral,
         mcs.resultado,
@@ -176,6 +178,7 @@ export async function GET(request: NextRequest) {
       LEFT JOIN prospections pr ON (pr.id = l.current_prospection_id OR pr.lead_id = l.id)
       LEFT JOIN cadences cad ON cad.id = pr.cadence_id
       LEFT JOIN projects p ON p.id = cad.project_id
+      LEFT JOIN leads ll ON ll.primary_phone_string = c.receiver_phone
       LEFT JOIN monitoria_call_scores mcs ON mcs.call_id = c.id::text
       WHERE ${whereCondition}
       ORDER BY c.id, c.date DESC
@@ -204,6 +207,7 @@ export async function GET(request: NextRequest) {
         userId: call.user_id ? Number(call.user_id) : null,
         userName: call.user_name,
         receiverPhone: call.receiver_phone,
+        leadCompany: call.lead_company || null,
         connectedDurationSeconds: call.connected_duration_seconds,
         status: call.status,
         callType: call.call_type,

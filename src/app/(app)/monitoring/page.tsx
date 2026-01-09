@@ -15,6 +15,7 @@ interface CallFromAPI {
   date: string;
   userName: string | null;
   receiverPhone: string;
+  leadCompany: string | null;
   status: string;
   callType: string | null;
   connectedDurationSeconds: number | null;
@@ -208,7 +209,7 @@ export default function MonitoringPage() {
           id: String(call.id),
           sdrName: call.meetimeUser?.name || call.userName || 'Usuário Desconhecido',
           client: call.projectName || 'N/A', // Cliente é o projeto da cadência
-          prospectName: call.receiverPhone || 'N/A',
+          prospectName: call.leadCompany || call.receiverPhone || 'N/A',
           date: new Date(call.date),
           duration: duration,
           callType: call.callType || 'call_real',
